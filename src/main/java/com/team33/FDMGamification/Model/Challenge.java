@@ -58,4 +58,15 @@ public class Challenge {
     public void setQuestion(Map<Integer, Question> question) {
         this.question = question;
     }
+
+    @Override
+    public String toString() {
+        return "Challenge{" +
+                "id=" + id +
+                ", introduction='" + introduction + '\'' +
+                ", completion=" + completion +
+                ", question=" + question +
+                '}';
+    }
+
 }

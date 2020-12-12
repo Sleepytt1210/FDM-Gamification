@@ -60,4 +60,14 @@ public class Question {
     public void setChoices(Map<Integer, Choice> choices) {
         this.choices = choices;
     }
+
+    @Override
+    public String toString() {
+        return "Question{" +
+                "questionId=" + questionId +
+                ", questionText='" + questionText + '\'' +
+                ", challenge=" + challenge +
+                ", choices=" + choices +
+                '}';
+    }
 }

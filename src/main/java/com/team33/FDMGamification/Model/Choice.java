@@ -55,4 +55,14 @@ public class Choice {
     public void setId(Integer id) {
         this.id = id;
     }
+
+    @Override
+    public String toString() {
+        return "Choice{" +
+                "id=" + id +
+                ", choice_text='" + choice_text + '\'' +
+                ", weight=" + weight +
+                ", question=" + question +
+                '}';
+    }
 }
