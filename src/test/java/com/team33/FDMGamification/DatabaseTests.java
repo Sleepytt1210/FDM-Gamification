@@ -189,20 +189,6 @@ public class DatabaseTests {
     }
 
     @Test
-    public void testQuestionAndChoicesOnDeleteCascade() {
-        challengeS.delete(1);
-
-        // Ensure questions are deleted
-        assertThrows(EntityNotFoundException.class, () -> questionS.findById(1));
-        assertEquals(0, questionS.getAll().size());
-
-        // Ensure choices are deleted
-        assertThrows(EntityNotFoundException.class, () -> choiceS.findById(1));
-        assertThrows(EntityNotFoundException.class, () -> choiceS.findById(2));
-        assertEquals(0, choiceS.getAll().size());
-    }
-
-    @Test
     public void testQuestionCreateWithProperties() {
         assertDoesNotThrow(() -> questionS.create("This is question two.", 1));
         assertEquals(2, questionRepo.findAll().size());
@@ -386,6 +372,35 @@ public class DatabaseTests {
         assertEquals(2, choiceS.getAll().size());
         assertThrows(EntityNotFoundException.class, () -> choiceS.findById(3), "Expected Entity Not Found to be thrown!");
         assertThrows(EntityNotFoundException.class, () -> choiceS.findById(4), "Expected Entity Not Found to be thrown!");
+    }
+
+    @Test
+    public void testQuestionAndChoicesOnDeleteCascade() {
+        challengeS.delete(1);
+
+        // Ensure questions are deleted
+        assertThrows(EntityNotFoundException.class, () -> questionS.findById(1));
+        assertEquals(0, questionS.getAll().size());
+
+        // Ensure choices are deleted
+        assertThrows(EntityNotFoundException.class, () -> choiceS.findById(1));
+        assertThrows(EntityNotFoundException.class, () -> choiceS.findById(2));
+        assertEquals(0, choiceS.getAll().size());
+    }
+
+    @Test
+    public void testChoicesOnDeleteCascade() {
+        questionS.delete(1);
+
+        // Ensure question is deleted
+        assertThrows(EntityNotFoundException.class, () -> questionS.findById(1));
+        assertEquals(0, questionS.getAll().size());
+        assertEquals(0, challenge1.getQuestion().size());
+
+        // Ensure choices are deleted
+        assertThrows(EntityNotFoundException.class, () -> choiceS.findById(1));
+        assertThrows(EntityNotFoundException.class, () -> choiceS.findById(2));
+        assertEquals(0, choiceS.getAll().size());
     }
 
 }
