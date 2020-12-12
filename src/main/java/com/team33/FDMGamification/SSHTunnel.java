@@ -2,6 +2,8 @@ package com.team33.FDMGamification;
 
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
@@ -31,9 +33,11 @@ public class SSHTunnel {
     @Value("${database.rhost}")
     private String rhost;
 
-    private int rport = 3306;
+    @Value("${database.rport}")
+    private int rport;
 
     private Session session;
+    private final Logger log =LoggerFactory.getLogger(SSHTunnel.class);
 
     @PostConstruct
     public void init() throws Exception {
@@ -42,15 +46,18 @@ public class SSHTunnel {
         session = jsch.getSession(username, host, port);
         session.setPassword(password);
         java.util.Properties config = new java.util.Properties();
+
         // Never automatically add new host keys to the host file
         config.put("StrictHostKeyChecking", "no");
         session.setConfig(config);
+
         // Connect to remote server
         session.connect();
-        System.out.println("Connected to " + host);
+        log.info("Connected to " + host);
         int assignedPort = session.setPortForwardingL(lport, rhost, rport);
-        System.out.println("localhost:" + assignedPort +" -> "+ rhost + ":" + rport);
-        System.out.println("Port forwarded");
+
+        log.info("localhost:" + assignedPort +" -> "+ rhost + ":" + rport);
+        log.info("Port forwarded");
 
     }
 
