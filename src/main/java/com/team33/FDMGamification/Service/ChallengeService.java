@@ -1,10 +1,8 @@
 package com.team33.FDMGamification.Service;
 
-import com.sun.istack.NotNull;
 import com.team33.FDMGamification.DAO.ChallengeRepository;
 import com.team33.FDMGamification.Model.Challenge;
 import com.team33.FDMGamification.Model.Question;
-import org.hibernate.annotations.NotFound;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +26,10 @@ public class ChallengeService {
         return challenge;
     }
 
+    public Challenge create(Challenge challenge) {
+        return challengeRepo.saveAndFlush(challenge);
+    }
+
     public List<Challenge> getAll() {
         return challengeRepo.findAll();
     }
@@ -48,7 +50,7 @@ public class ChallengeService {
     }
 
     public void batchDelete(List<Challenge> challenges) {
-        challengeRepo.deleteInBatch(challenges);
+        challengeRepo.deleteAll(challenges);
     }
 
     public Challenge findById(Integer challengeId) {
