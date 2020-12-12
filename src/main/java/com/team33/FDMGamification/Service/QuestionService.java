@@ -53,14 +53,23 @@ public class QuestionService {
     }
 
     public void delete(Integer questionId) {
+        Question question = findById(questionId);
+        Challenge challenge = question.getChallenge();
+        challenge.getQuestion().remove(questionId);
         questionRepo.deleteById(questionId);
     }
 
     public void delete(Question question) {
+        Challenge challenge = question.getChallenge();
+        challenge.getQuestion().remove(question.getQuestionId());
         questionRepo.delete(question);
     }
 
     public void batchDelete(List<Question> questions) {
+        for (Question q : questions) {
+            Challenge challenge = q.getChallenge();
+            challenge.getQuestion().remove(q.getQuestionId());
+        }
         questionRepo.deleteAll(questions);
     }
 
@@ -68,7 +77,7 @@ public class QuestionService {
         return questionRepo.findById(questionId).orElseThrow(() -> new EntityNotFoundException("Challenge not found!"));
     }
 
-    public void addChoices(Integer questionId, Choice choice) throws InstanceAlreadyExistsException{
+    public void addChoice(Integer questionId, Choice choice) throws InstanceAlreadyExistsException{
         Question question = findById(questionId);
         Map<Integer, Choice> choices = question.getChoices();
         if(choices.put(choice.getId(), choice) != null) {

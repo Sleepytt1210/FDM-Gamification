@@ -28,7 +28,7 @@ public class ChoiceService {
         Choice choice = new Choice(choiceText, weight);
         choice.setQuestion(question);
         choice = choiceRepo.saveAndFlush(choice);
-        qts.addChoices(questionId, choice);
+        qts.addChoice(questionId, choice);
         return choice;
     }
 
@@ -36,7 +36,7 @@ public class ChoiceService {
         Question question = qts.findById(questionId);
         choice.setQuestion(question);
         choice = choiceRepo.saveAndFlush(choice);
-        qts.addChoices(questionId, choice);
+        qts.addChoice(questionId, choice);
         return choice;
     }
 
@@ -52,14 +52,23 @@ public class ChoiceService {
     }
 
     public void delete(Integer choiceId) {
+        Choice choice = findById(choiceId);
+        Question question = choice.getQuestion();
+        question.getChoices().remove(choiceId);
         choiceRepo.deleteById(choiceId);
     }
 
     public void delete(Choice choice) {
+        Question question = choice.getQuestion();
+        question.getChoices().remove(choice.getId());
         choiceRepo.delete(choice);
     }
 
     public void batchDelete(List<Choice> choices) {
+        for(Choice choice : choices) {
+            Question question = choice.getQuestion();
+            question.getChoices().remove(choice.getId());
+        }
         choiceRepo.deleteAll(choices);
     }
 
