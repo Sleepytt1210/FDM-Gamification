@@ -18,7 +18,7 @@ public class Challenge {
     @Column(name = "completion")
     private Integer completion;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "challenge", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "challenge", cascade = CascadeType.ALL, orphanRemoval = true)
     @MapKeyColumn(name = "question_id")
     private Map<Integer, Question> question = new HashMap<>();
 

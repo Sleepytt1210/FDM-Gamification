@@ -21,7 +21,7 @@ public class Question {
     @JoinColumn(name = "scenario_id")
     private Challenge challenge;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "question", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
     @MapKeyColumn(name = "choice_id")
     private Map<Integer, Choice> choices = new HashMap<>();
 
