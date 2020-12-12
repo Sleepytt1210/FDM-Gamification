@@ -1,6 +1,7 @@
 package com.team33.FDMGamification.Model;
 
 import javax.persistence.*;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -16,12 +17,13 @@ public class Question {
     @Column(name = "question_text")
     private String questionText;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "scenario_id")
     private Challenge challenge;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "question")
-    private Map<Integer, Choice> choices;
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "question", cascade = CascadeType.ALL)
+    @MapKeyColumn(name = "choice_id")
+    private Map<Integer, Choice> choices = new HashMap<>();
 
     public Question(){}
 

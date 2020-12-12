@@ -12,7 +12,7 @@ public class Choice {
     private String choice_text;
     private int weight;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "question_id")
     private Question question;
 

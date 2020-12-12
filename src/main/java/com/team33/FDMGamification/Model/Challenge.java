@@ -1,6 +1,7 @@
 package com.team33.FDMGamification.Model;
 
 import javax.persistence.*;
+import java.util.HashMap;
 import java.util.Map;
 
 @Entity(name="Challenge")
@@ -17,8 +18,9 @@ public class Challenge {
     @Column(name = "completion")
     private Integer completion;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "challenge")
-    private Map<Integer, Question> question;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "challenge", cascade = CascadeType.ALL)
+    @MapKeyColumn(name = "question_id")
+    private Map<Integer, Question> question = new HashMap<>();
 
     public Challenge(){}
 
