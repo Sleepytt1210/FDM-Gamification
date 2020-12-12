@@ -62,7 +62,7 @@ public class Choice {
                 "id=" + id +
                 ", choice_text='" + choice_text + '\'' +
                 ", weight=" + weight +
-                ", question=" + question +
+                ", question=" + question.getQuestionId() +
                 '}';
     }
 }

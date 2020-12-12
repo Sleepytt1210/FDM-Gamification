@@ -68,7 +68,7 @@ public class Question {
         return "Question{" +
                 "questionId=" + questionId +
                 ", questionText='" + questionText + '\'' +
-                ", challenge=" + challenge +
+                ", challengeId=" + challenge.getId() +
                 ", choices=" + choices +
                 '}';
     }
