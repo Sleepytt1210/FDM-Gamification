@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import javax.management.InstanceAlreadyExistsException;
 import javax.persistence.EntityNotFoundException;
-import javax.persistence.criteria.CriteriaBuilder;
 import java.util.List;
 import java.util.Map;
 
@@ -26,11 +25,21 @@ public class QuestionService {
 
     private static final Logger log = LoggerFactory.getLogger(QuestionService.class);
 
-    public Question create(String questionText, Integer challengeId) {
+    public Question create(String questionText, Integer challengeId) throws InstanceAlreadyExistsException{
         Challenge challenge = cls.findById(challengeId);
         Question question = new Question(questionText);
         question.setChallenge(challenge);
-        return questionRepo.saveAndFlush(question);
+        question = questionRepo.saveAndFlush(question);
+        cls.addQuestion(challengeId, question);
+        return question;
+    }
+
+    public Question create(Question question, Integer challengeId) throws InstanceAlreadyExistsException{
+        Challenge challenge = cls.findById(challengeId);
+        question.setChallenge(challenge);
+        question = questionRepo.saveAndFlush(question);
+        cls.addQuestion(challengeId, question);
+        return question;
     }
 
     public List<Question> getAll(){
@@ -52,7 +61,7 @@ public class QuestionService {
     }
 
     public void batchDelete(List<Question> questions) {
-        questionRepo.deleteInBatch(questions);
+        questionRepo.deleteAll(questions);
     }
 
     public Question findById(Integer questionId) {
@@ -63,8 +72,8 @@ public class QuestionService {
         Question question = findById(questionId);
         Map<Integer, Choice> choices = question.getChoices();
         if(choices.put(choice.getId(), choice) != null) {
-            throw new InstanceAlreadyExistsException("The choice " + choice.getChoiceText() +" already exists in question " + questionId + "!");
+            throw new InstanceAlreadyExistsException("The choice " + choice.getChoiceText() +" already exists in question " + question.getQuestionText() + "!");
         }
-        questionRepo.save(question);
+        questionRepo.saveAndFlush(question);
     }
 }

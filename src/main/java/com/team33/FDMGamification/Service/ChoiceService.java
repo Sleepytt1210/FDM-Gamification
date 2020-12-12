@@ -1,7 +1,6 @@
 package com.team33.FDMGamification.Service;
 
 import com.team33.FDMGamification.DAO.ChoiceRepository;
-import com.team33.FDMGamification.DAO.QuestionRepository;
 import com.team33.FDMGamification.Model.Question;
 import com.team33.FDMGamification.Model.Choice;
 import org.slf4j.Logger;
@@ -12,7 +11,6 @@ import org.springframework.stereotype.Service;
 import javax.management.InstanceAlreadyExistsException;
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class ChoiceService {
@@ -25,11 +23,21 @@ public class ChoiceService {
 
     private static final Logger log = LoggerFactory.getLogger(ChoiceService.class);
 
-    public Choice create(String choiceText, Integer weight, Integer questionId) {
+    public Choice create(String choiceText, Integer weight, Integer questionId) throws InstanceAlreadyExistsException {
         Question question = qts.findById(questionId);
         Choice choice = new Choice(choiceText, weight);
         choice.setQuestion(question);
-        return choiceRepo.saveAndFlush(choice);
+        choice = choiceRepo.saveAndFlush(choice);
+        qts.addChoices(questionId, choice);
+        return choice;
+    }
+
+    public Choice create(Choice choice, Integer questionId) throws InstanceAlreadyExistsException {
+        Question question = qts.findById(questionId);
+        choice.setQuestion(question);
+        choice = choiceRepo.saveAndFlush(choice);
+        qts.addChoices(questionId, choice);
+        return choice;
     }
 
     public List<Choice> getAll(){
@@ -52,7 +60,7 @@ public class ChoiceService {
     }
 
     public void batchDelete(List<Choice> choices) {
-        choiceRepo.deleteInBatch(choices);
+        choiceRepo.deleteAll(choices);
     }
 
     public Choice findById(Integer choiceId) {
