@@ -35,3 +35,6 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### Properties Config ###
+src/main/resources/sshConfig.properties
