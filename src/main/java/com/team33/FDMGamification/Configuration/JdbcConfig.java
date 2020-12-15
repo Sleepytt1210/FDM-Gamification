@@ -1,4 +1,4 @@
-package com.team33.FDMGamification;
+package com.team33.FDMGamification.Configuration;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;

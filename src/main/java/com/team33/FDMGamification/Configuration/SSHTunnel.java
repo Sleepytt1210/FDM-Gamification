@@ -1,4 +1,4 @@
-package com.team33.FDMGamification;
+package com.team33.FDMGamification.Configuration;
 
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
@@ -64,7 +64,7 @@ public class SSHTunnel {
     @PreDestroy
     public void shutdown() throws Exception {
         if (session != null && session.isConnected()) {
-            System.out.println("Session closed!");
+            log.info("Session closed!");
             session.disconnect();
         }
     }
