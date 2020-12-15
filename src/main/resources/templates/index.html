@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Home Page</title>
+</head>
+<body>
+    <h1>Welcome to FDM Games!</h1>
+    <div th:if="${param.logout}">
+        You are logged out!
+    </div>
+    <div>
+        Scenarios....
+    </div>
+</body>
+</html>
