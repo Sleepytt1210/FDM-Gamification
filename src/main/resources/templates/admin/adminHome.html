@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin</title>
+</head>
+<body>
+    <h1>Welcome to admin page!</h1>
+    <p><span th:text="${admin.getFirstname() + ' ' + admin.getLastname()}"></span></p>
+    <table>
+        <tbody>
+        <tr th:each="challenge : ${challenges}">
+            <td><a th:href="@{'/admin/' + ${challenge.getId()}}" th:text="${'Challenge ' + challenge.getId()}"></a></td>
+        </tr>
+        </tbody>
+    </table>
+    <form th:action="@{/logout}" method="post">
+        <input type="submit" value="Log Out"/>
+    </form>
+</body>
+</html>
