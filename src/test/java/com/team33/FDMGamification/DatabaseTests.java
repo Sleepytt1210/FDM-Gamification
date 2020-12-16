@@ -108,7 +108,9 @@ public class DatabaseTests {
 
     @Test
     public void testChallengeFindById() {
-        assertEquals("This is challenge one.", challengeS.findById(1).getIntroduction());
+        Challenge challenge = challengeS.findById(1);
+        assertNotNull(challenge);
+        assertEquals("This is challenge one.", challenge.getIntroduction());
         assertEquals(0, challengeS.findById(1).getCompletion());
         assertThrows(EntityNotFoundException.class, () -> challengeS.findById(2), "Expected Entity Not Found to be thrown!");
     }
@@ -401,6 +403,26 @@ public class DatabaseTests {
         assertThrows(EntityNotFoundException.class, () -> choiceS.findById(1));
         assertThrows(EntityNotFoundException.class, () -> choiceS.findById(2));
         assertEquals(0, choiceS.getAll().size());
+    }
+
+    // Child entity retrieved from database check
+
+    @Test
+    public void testChallengeFromDatabaseHasQuestion() {
+        Challenge challenge = challengeS.findById(1);
+        System.out.println(challenge);
+        assertNotNull(challenge);
+        assertEquals(1, challenge.getQuestion().size());
+        assertNotNull(challenge.getQuestion().get(1));
+    }
+
+    @Test
+    public void testQuestionFromDatabaseHasChoices() {
+        Question question = questionS.findById(1);
+        assertNotNull(question);
+        assertEquals(2, question.getChoices().size());
+        assertNotNull(question.getChoices().get(1));
+        assertNotNull(question.getChoices().get(2));
     }
 
 }

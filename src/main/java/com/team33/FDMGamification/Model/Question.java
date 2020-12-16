@@ -18,7 +18,7 @@ public class Question {
     private String questionText;
 
     @ManyToOne
-    @JoinColumn(name = "scenario_id")
+    @JoinColumn(name = "challenge_id")
     private Challenge challenge;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
