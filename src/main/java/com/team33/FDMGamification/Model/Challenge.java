@@ -9,7 +9,7 @@ public class Challenge {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "scenario_id")
+    @Column(name = "challenge_id")
     private Integer id;
 
     @Column(name = "introduction")
