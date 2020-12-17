@@ -18,16 +18,19 @@ public class Admin{
 
     private String lastname;
 
+    private String email;
+
     private String password;
 
     @Column(name = "phone_number")
     private String phoneNo;
 
-    public Admin(String username, String firstname, String lastname, String password, String phoneNo){
+    public Admin(String username, String firstname, String lastname, String email, String password, String phoneNo){
         this.firstname = firstname;
         this.lastname = lastname;
         this.phoneNo = phoneNo;
         this.username = username;
+        this.email = email;
         this.password = password;
     }
 
@@ -66,6 +69,14 @@ public class Admin{
         this.lastname = lastname;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public String getPassword() {
         return password;
     }
@@ -89,6 +100,7 @@ public class Admin{
                 ", username='" + username + '\'' +
                 ", firstname='" + firstname + '\'' +
                 ", lastname='" + lastname + '\'' +
+                ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 ", phoneNo='" + phoneNo + '\'' +
                 '}';

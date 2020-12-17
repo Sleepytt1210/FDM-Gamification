@@ -1,17 +1,22 @@
 package com.team33.FDMGamification.Controller;
 
 import com.team33.FDMGamification.Model.AdminDetails;
+import com.team33.FDMGamification.Model.Challenge;
+import com.team33.FDMGamification.Model.Question;
 import com.team33.FDMGamification.Service.ChallengeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/admin")
@@ -28,11 +33,28 @@ public class AdminController {
         return mav;
     }
 
-    @RequestMapping("/{id}")
-    public ModelAndView renderAdminHome(@PathVariable("id") Integer id){
+    @GetMapping("/{id}")
+    public ModelAndView getChallengeView(@PathVariable("id") Integer id){
         ModelAndView mav = new ModelAndView("admin/adminPanel");
         try {
-            mav.addObject("challenge", challengeService.findById(id));
+            Challenge challenge = challengeService.findById(id);
+            Map<Integer, Question> questions = challenge.getQuestion();
+            mav.addObject("challenge", challenge);
+            mav.addObject("questions", questions);
+        } catch (EntityNotFoundException ex){
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, ex.getMessage(), ex);
+        }
+        return mav;
+    }
+
+    @PostMapping("/{id}")
+    public ModelAndView updateChallenge(@PathVariable("id") Integer id){
+        ModelAndView mav = new ModelAndView("admin/adminPanel");
+        try {
+            Challenge challenge = challengeService.findById(id);
+            Map<Integer, Question> questions = challenge.getQuestion();
+
         } catch (EntityNotFoundException ex){
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND, ex.getMessage(), ex);
