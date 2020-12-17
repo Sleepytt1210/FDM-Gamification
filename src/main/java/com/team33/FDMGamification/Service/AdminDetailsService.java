@@ -19,8 +19,8 @@ public class AdminDetailsService implements UserDetailsService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public Admin createUser(String username, String firstname, String lastname, String password, String phoneNo) {
-        Admin admin = new Admin(username, firstname, lastname, passwordEncoder.encode(password), phoneNo);
+    public Admin createUser(String username, String firstname, String lastname, String email, String password, String phoneNo) {
+        Admin admin = new Admin(username, firstname, lastname, email, passwordEncoder.encode(password), phoneNo);
         return adminRepo.saveAndFlush(admin);
     }
 
@@ -30,6 +30,6 @@ public class AdminDetailsService implements UserDetailsService {
         if(admin == null || !admin.getUsername().equals(username)){
             throw new UsernameNotFoundException("Admin with username " + username + " is not found!");
         }
-        return new AdminDetails(admin.getUsername(), admin.getFirstname(), admin.getLastname(), admin.getPassword(), admin.getPhoneNo(), admin.getId());
+        return new AdminDetails(admin.getUsername(), admin.getFirstname(), admin.getLastname(), admin.getEmail(), admin.getPassword(), admin.getPhoneNo(), admin.getId());
     }
 }

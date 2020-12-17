@@ -42,6 +42,7 @@ public class ApplicationSecurity extends WebSecurityConfigurerAdapter {
                 .createUser(env.getProperty("admin.username")
                         , env.getProperty("admin.firstname")
                         , env.getProperty("admin.lastname")
+                        , env.getProperty("admin.email")
                         , env.getProperty("admin.password")
                         , env.getProperty("admin.phoneNo"));
     }

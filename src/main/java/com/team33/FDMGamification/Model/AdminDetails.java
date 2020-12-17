@@ -11,13 +11,13 @@ import java.util.Set;
 
 public class AdminDetails extends Admin implements UserDetails {
 
-    public AdminDetails(String username, String firstname, String lastname, String password, String phoneNo, Integer id) {
-        super(username, firstname, lastname, password, phoneNo);
+    public AdminDetails(String username, String firstname, String lastname, String email, String password, String phoneNo, Integer id) {
+        super(username, firstname, lastname, email, password, phoneNo);
         setId(id);
     }
 
     public AdminDetails(Admin admin) {
-        super(admin.getUsername(), admin.getFirstname(), admin.getLastname(), admin.getPassword(), admin.getPhoneNo());
+        super(admin.getUsername(), admin.getFirstname(), admin.getLastname(),admin.getEmail(), admin.getPassword(), admin.getPhoneNo());
     }
 
     @Override

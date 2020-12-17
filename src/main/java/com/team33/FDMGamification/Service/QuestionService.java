@@ -23,6 +23,9 @@ public class QuestionService {
     @Autowired
     private ChallengeService cls;
 
+    @Autowired
+    private ChoiceService chs;
+
     private static final Logger log = LoggerFactory.getLogger(QuestionService.class);
 
     public Question create(Integer challengeId, String questionTitle, String questionText, Integer completion) throws InstanceAlreadyExistsException{
@@ -52,6 +55,19 @@ public class QuestionService {
         if(questionText != null) question.setQuestionText(questionText);
         if(completion != null) question.setQuestionCompletion(completion);
         return questionRepo.saveAndFlush(question);
+    }
+
+    public Question update(Integer questionId, Question newQuestion) {
+        Question oldQuestion = findById(questionId);
+        if(newQuestion.getQuestionTitle() != null) oldQuestion.setQuestionTitle(newQuestion.getQuestionTitle());
+        if(newQuestion.getQuestionText() != null) oldQuestion.setQuestionText(newQuestion.getQuestionText());
+        if(newQuestion.getQuestionCompletion() != null) oldQuestion.setQuestionCompletion(newQuestion.getQuestionCompletion());
+        oldQuestion = questionRepo.saveAndFlush(oldQuestion);
+        Map<Integer, Choice> newChoices = newQuestion.getChoices();
+        if(newChoices != null && !newChoices.isEmpty()){
+            newChoices.forEach((k, v) -> chs.update(k, v.getChoiceText(), v.getWeight()));
+        }
+        return oldQuestion;
     }
 
     public void delete(Integer questionId) {
