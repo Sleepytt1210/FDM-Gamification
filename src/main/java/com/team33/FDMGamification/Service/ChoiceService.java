@@ -32,7 +32,7 @@ public class ChoiceService {
         return choice;
     }
 
-    public Choice create(Choice choice, Integer questionId) throws InstanceAlreadyExistsException {
+    public Choice create(Integer questionId, Choice choice) throws InstanceAlreadyExistsException {
         Question question = qts.findById(questionId);
         choice.setQuestion(question);
         choice = choiceRepo.saveAndFlush(choice);

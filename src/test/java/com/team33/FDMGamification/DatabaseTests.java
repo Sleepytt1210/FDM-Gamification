@@ -92,8 +92,8 @@ public class DatabaseTests {
             questionS.create(challenge1.getId(), question1);
             choice1 = new Choice("World", 2);
             choice2 = new Choice("Bye", 1);
-            choiceS.create(choice1, question1.getQuestionId());
-            choiceS.create(choice2, question1.getQuestionId());
+            choiceS.create(question1.getQuestionId(), choice1);
+            choiceS.create(question1.getQuestionId(), choice2);
         } catch(Exception e) {
             System.err.println(e.getMessage());
         }
@@ -126,14 +126,36 @@ public class DatabaseTests {
 
     @Test
     public void testChallengeUpdateOne() {
+        String newTitle = "Challenge 1";
         String newIntro = "This is challenge 1.";
+        Integer newCompletion = 10;
 
+        assertEquals("Challenge 1", challengeS.findById(1).getChallengeTitle());
         assertEquals("This is challenge one.", challengeS.findById(1).getIntroduction());
-        challengeS.update(1, newIntro, 10);
+        challengeS.update(1, newTitle, newIntro, newCompletion, null);
 
         Challenge updatedChallenge = challengeS.findById(1);
+        assertEquals(newTitle, updatedChallenge.getChallengeTitle());
         assertEquals(newIntro, updatedChallenge.getIntroduction());
-        assertEquals(10, updatedChallenge.getCompletion());
+        assertEquals(newCompletion, updatedChallenge.getCompletion());
+    }
+
+    @Test
+    public void testChallengeUpdateOneByEntity() {
+        String newTitle = "Challenge 1";
+        String newIntro = "This is challenge 1.";
+        Integer newCompletion = 10;
+
+        Challenge newChallenge = new Challenge(newTitle, newIntro, newCompletion);
+
+        assertEquals("Challenge 1", challengeS.findById(1).getChallengeTitle());
+        assertEquals("This is challenge one.", challengeS.findById(1).getIntroduction());
+        challengeS.update(1, newChallenge);
+
+        Challenge updatedChallenge = challengeS.findById(1);
+        assertEquals(newTitle, updatedChallenge.getChallengeTitle());
+        assertEquals(newIntro, updatedChallenge.getIntroduction());
+        assertEquals(newCompletion, updatedChallenge.getCompletion());
     }
 
     @Test
@@ -450,5 +472,47 @@ public class DatabaseTests {
         assertEquals(newQuestionText, challenge.getQuestion().get(questionId).getQuestionText());
         assertEquals(newCompletion, challenge.getQuestion().get(questionId).getQuestionCompletion());
     }
+
+    @Test
+    public void testUpdateQuestionFromChallenge() {
+        String newChallengeIntro = "This challenge is updated";
+        Integer newChallengeCompletion = 15;
+
+        String newQuestionTitle = "New question";
+        String newQuestionText = "This is new question.";
+        Integer newQuestionCompletion = 10;
+
+        // Create an updated dummy challenge (Not persisted)
+        Challenge updatedChallenge = new Challenge(null, newChallengeIntro, newChallengeCompletion);
+
+        // Create an update dummy question that is linked to dummy challenge (Not persisted)
+        Question newQuestion = new Question(newQuestionTitle, newQuestionText, newQuestionCompletion);
+        newQuestion.setQuestionId(question1.getQuestionId());
+        newQuestion.setChallenge(challenge1);
+
+        // Put the question into the challenge set.
+        updatedChallenge.getQuestion().put(newQuestion.getQuestionId(), newQuestion);
+
+        // Before updates
+        assertEquals(challenge1.getChallengeTitle(), challengeS.findById(1).getChallengeTitle());
+        assertEquals(challenge1.getIntroduction(), challengeS.findById(1).getIntroduction());
+
+        challengeS.update(newQuestion.getChallenge().getId(), updatedChallenge);
+
+        // After updates
+        updatedChallenge = challengeS.findById(1);
+        Question updatedQuestion = questionS.findById(question1.getQuestionId());
+
+        // Check Challenge update
+        assertEquals(challenge1.getChallengeTitle(), updatedChallenge.getChallengeTitle());
+        assertEquals(newChallengeIntro, updatedChallenge.getIntroduction());
+        assertEquals(newChallengeCompletion, updatedChallenge.getCompletion());
+
+        // Check question update
+        assertEquals(newQuestionTitle, updatedQuestion.getQuestionTitle());
+        assertEquals(newQuestionText, updatedQuestion.getQuestionText());
+        assertEquals(newQuestionCompletion, updatedQuestion.getQuestionCompletion());
+    }
+
 
 }

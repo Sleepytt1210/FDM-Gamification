@@ -11,12 +11,16 @@ import org.springframework.stereotype.Service;
 import javax.management.InstanceAlreadyExistsException;
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ChallengeService {
 
     @Autowired
     private ChallengeRepository challengeRepo;
+
+    @Autowired
+    private QuestionService questionService;
 
     private final Logger log = LoggerFactory.getLogger(ChallengeService.class);
 
@@ -34,11 +38,29 @@ public class ChallengeService {
         return challengeRepo.findAll();
     }
 
-    public Challenge update(Integer challengeId, String introduction, Integer completion) {
-        Challenge challenge = findById(challengeId);
-        if(introduction != null) challenge.setIntroduction(introduction);
-        if(completion != null) challenge.setCompletion(completion);
-        return challengeRepo.saveAndFlush(challenge);
+    public Challenge update(Integer challengeId, String title, String introduction, Integer completion, Map<Integer, Question> questions) {
+        Challenge oldChallenge = findById(challengeId);
+        if(title != null) oldChallenge.setChallengeTitle(title);
+        if(introduction != null) oldChallenge.setIntroduction(introduction);
+        if(completion != null) oldChallenge.setCompletion(completion);
+        oldChallenge = challengeRepo.saveAndFlush(oldChallenge);
+        if(questions != null && !questions.isEmpty()){
+            questions.forEach((k, v) -> questionService.update(k, v));
+        }
+        return oldChallenge;
+    }
+
+    public Challenge update(Integer challengeId, Challenge newChallenge) {
+        Challenge oldChallenge = findById(challengeId);
+        if(newChallenge.getChallengeTitle() != null) oldChallenge.setChallengeTitle(newChallenge.getChallengeTitle());
+        if(newChallenge.getIntroduction() != null) oldChallenge.setIntroduction(newChallenge.getIntroduction());
+        if(newChallenge.getCompletion() != null) oldChallenge.setCompletion(newChallenge.getCompletion());
+        oldChallenge = challengeRepo.saveAndFlush(oldChallenge);
+        Map<Integer, Question> newQuestions = newChallenge.getQuestion();
+        if(newQuestions != null && !newQuestions.isEmpty()){
+            newQuestions.forEach((k, v) -> questionService.update(k, v));
+        }
+        return oldChallenge;
     }
 
     public void delete(Integer challengeId) {
