@@ -20,8 +20,8 @@ public class ChallengeService {
 
     private final Logger log = LoggerFactory.getLogger(ChallengeService.class);
 
-    public Challenge create(String introduction, Integer completion) {
-        Challenge challenge = new Challenge(introduction, completion);
+    public Challenge create(String title, String introduction, Integer completion) {
+        Challenge challenge = new Challenge(title, introduction, completion);
         challengeRepo.saveAndFlush(challenge);
         return challenge;
     }

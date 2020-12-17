@@ -86,10 +86,10 @@ public class DatabaseTests {
     @BeforeEach
     public void setup(){
         try {
-            challenge1 = new Challenge("This is challenge one.", 0);
+            challenge1 = new Challenge("Challenge one", "This is challenge one.", 0);
             challengeS.create(challenge1);
-            question1 = new Question("This is question one.");
-            questionS.create(question1, challenge1.getId());
+            question1 = new Question("Question one","This is question one.", 0);
+            questionS.create(challenge1.getId(), question1);
             choice1 = new Choice("World", 2);
             choice2 = new Choice("Bye", 1);
             choiceS.create(choice1, question1.getQuestionId());
@@ -101,7 +101,7 @@ public class DatabaseTests {
 
     @Test
     public void testChallengeCreateWithProperties() {
-        challengeS.create("This is challenge two.", 1);
+        challengeS.create("Challenge two", "This is challenge two.", 1);
         assertEquals(2, challengeRepo.findAll().size());
         assertEquals("This is challenge two.", challengeS.findById(2).getIntroduction());
     }
@@ -117,10 +117,10 @@ public class DatabaseTests {
 
     @Test
     public void testChallengeGetAll() {
-        challengeS.create("This is challenge two.", 0);
+        challengeS.create("Challenge two", "This is challenge two.", 0);
         assertEquals(2, challengeS.getAll().size());
 
-        challengeS.create("This is challenge three.", 100);
+        challengeS.create("Challenge three", "This is challenge three.", 100);
         assertEquals(3, challengeS.getAll().size());
     }
 
@@ -138,7 +138,7 @@ public class DatabaseTests {
 
     @Test
     public void testChallengeDeleteOneByEntity() {
-        challengeS.create("This is challenge two", 0);
+        challengeS.create("Challenge two", "This is challenge two.", 0);
         assertEquals(2, challengeS.getAll().size());
 
         Challenge challenge2 = challengeS.findById(2);
@@ -150,7 +150,7 @@ public class DatabaseTests {
 
     @Test
     public void testChallengeDeleteOneById() {
-        challengeS.create("This is challenge two", 0);
+        challengeS.create("Challenge two", "This is challenge two.", 0);
         assertEquals(2, challengeS.getAll().size());
 
         challengeS.delete(2);
@@ -160,10 +160,10 @@ public class DatabaseTests {
 
     @Test
     public void testChallengeBatchDelete() {
-        challengeS.create("This is challenge two", 0);
+        challengeS.create("Challenge two", "This is challenge two.", 0);
         assertEquals(2, challengeS.getAll().size());
 
-        challengeS.create("This is challenge three", 0);
+        challengeS.create("Challenge two", "This is challenge three.", 0);
         assertEquals(3, challengeS.getAll().size());
 
         List<Challenge> challengeList = challengeRepo.findAllById(List.of(2,3));
@@ -192,7 +192,7 @@ public class DatabaseTests {
 
     @Test
     public void testQuestionCreateWithProperties() {
-        assertDoesNotThrow(() -> questionS.create("This is question two.", 1));
+        assertDoesNotThrow(() -> questionS.create(1, "Question two", "This is question two.", 0));
         assertEquals(2, questionRepo.findAll().size());
         assertEquals("This is question two.", questionS.findById(2).getQuestionText());
     }
@@ -205,27 +205,31 @@ public class DatabaseTests {
 
     @Test
     public void testQuestionGetAll() {
-        assertDoesNotThrow(() -> questionS.create("This is question two.", 1));
+        assertDoesNotThrow(() -> questionS.create(1, "Question two", "This is question two.", 0));
         assertEquals(2, questionS.getAll().size());
 
-        assertDoesNotThrow(() -> questionS.create("This is question three.", 1));
+        assertDoesNotThrow(() -> questionS.create(1, "Question three", "This is question three.", 0));
         assertEquals(3, questionS.getAll().size());
     }
 
     @Test
     public void testQuestionUpdateOne() {
+        String newQuestionTitle = "Question 1";
         String newQuestionText = "This is question 1.";
+        Integer newCompletion = 100;
 
         assertEquals("This is question one.", questionS.findById(1).getQuestionText());
-        questionS.update(1, newQuestionText);
+        questionS.update(1, newQuestionTitle, newQuestionText, newCompletion);
 
         Question updatedQuestion = questionS.findById(1);
+        assertEquals(newQuestionTitle, updatedQuestion.getQuestionTitle());
         assertEquals(newQuestionText, updatedQuestion.getQuestionText());
+        assertEquals(newCompletion, updatedQuestion.getQuestionCompletion());
     }
 
     @Test
     public void testQuestionDeleteOneByEntity() {
-        assertDoesNotThrow(() -> questionS.create("This is question two.", 1));
+        assertDoesNotThrow(() -> questionS.create(1, "Question two", "This is question two.", 0));
         assertEquals(2, questionS.getAll().size());
 
         Question question2 = questionS.findById(2);
@@ -242,7 +246,7 @@ public class DatabaseTests {
     @Test
     public void testQuestionDeleteOneById() {
         // Create a dummy question for deletion
-        assertDoesNotThrow(() -> questionS.create("This is question two.", 1));
+        assertDoesNotThrow(() -> questionS.create(1, "Question two", "This is question two.", 0));
         assertEquals(2, questionS.getAll().size());
 
         questionS.delete(2);
@@ -257,10 +261,10 @@ public class DatabaseTests {
 
     @Test
     public void testQuestionBatchDelete() {
-        assertDoesNotThrow(() -> questionS.create("This is question two.", 1));
+        assertDoesNotThrow(() -> questionS.create(1, "Question two", "This is question two.", 0));
         assertEquals(2, questionS.getAll().size());
 
-        assertDoesNotThrow(() -> questionS.create("This is question three.", 1));
+        assertDoesNotThrow(() -> questionS.create(1, "Question three", "This is question three.", 0));
         assertEquals(3, questionS.getAll().size());
 
         List<Question> questionList = questionRepo.findAllById(List.of(2,3));
@@ -423,6 +427,28 @@ public class DatabaseTests {
         assertEquals(2, question.getChoices().size());
         assertNotNull(question.getChoices().get(1));
         assertNotNull(question.getChoices().get(2));
+    }
+
+    @Test
+    public void testQuestionUpdatedInChallenge() {
+        // Update the question
+        int questionId = 1;
+        String newQuestionTitle = "Question 1";
+        String newQuestionText = "This is question 1.";
+        Integer newCompletion = 100;
+
+        assertEquals("This is question one.", questionS.findById(1).getQuestionText());
+        questionS.update(questionId, newQuestionTitle, newQuestionText, newCompletion);
+
+        Question updatedQuestion = questionS.findById(questionId);
+        assertEquals(newQuestionTitle, updatedQuestion.getQuestionTitle());
+        assertEquals(newQuestionText, updatedQuestion.getQuestionText());
+        assertEquals(newCompletion, updatedQuestion.getQuestionCompletion());
+
+        Challenge challenge = challengeS.findById(updatedQuestion.getChallenge().getId());
+        assertEquals(newQuestionTitle, challenge.getQuestion().get(questionId).getQuestionTitle());
+        assertEquals(newQuestionText, challenge.getQuestion().get(questionId).getQuestionText());
+        assertEquals(newCompletion, challenge.getQuestion().get(questionId).getQuestionCompletion());
     }
 
 }

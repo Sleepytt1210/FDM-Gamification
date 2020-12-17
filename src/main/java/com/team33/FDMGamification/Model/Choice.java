@@ -9,7 +9,11 @@ public class Choice {
     @Column(name = "choice_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
+    @Column(name = "choice_text")
     private String choice_text;
+
+    @Column(name = "choice_weight")
     private int weight;
 
     @ManyToOne

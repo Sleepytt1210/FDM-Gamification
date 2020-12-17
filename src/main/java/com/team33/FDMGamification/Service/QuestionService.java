@@ -25,16 +25,16 @@ public class QuestionService {
 
     private static final Logger log = LoggerFactory.getLogger(QuestionService.class);
 
-    public Question create(String questionText, Integer challengeId) throws InstanceAlreadyExistsException{
+    public Question create(Integer challengeId, String questionTitle, String questionText, Integer completion) throws InstanceAlreadyExistsException{
         Challenge challenge = cls.findById(challengeId);
-        Question question = new Question(questionText);
+        Question question = new Question(questionTitle, questionText, completion);
         question.setChallenge(challenge);
         question = questionRepo.saveAndFlush(question);
         cls.addQuestion(challengeId, question);
         return question;
     }
 
-    public Question create(Question question, Integer challengeId) throws InstanceAlreadyExistsException{
+    public Question create(Integer challengeId, Question question) throws InstanceAlreadyExistsException{
         Challenge challenge = cls.findById(challengeId);
         question.setChallenge(challenge);
         question = questionRepo.saveAndFlush(question);
@@ -46,9 +46,11 @@ public class QuestionService {
         return questionRepo.findAll();
     }
 
-    public Question update(Integer questionId, String questionText) {
+    public Question update(Integer questionId, String questionTitle, String questionText, Integer completion) {
         Question question = findById(questionId);
+        if(questionTitle != null) question.setQuestionTitle(questionTitle);
         if(questionText != null) question.setQuestionText(questionText);
+        if(completion != null) question.setQuestionCompletion(completion);
         return questionRepo.saveAndFlush(question);
     }
 
