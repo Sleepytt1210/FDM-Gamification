@@ -12,10 +12,13 @@ public class Challenge {
     @Column(name = "challenge_id")
     private Integer id;
 
-    @Column(name = "introduction")
+    @Column(name = "challenge_title")
+    private String challengeTitle;
+
+    @Column(name = "challenge_introduction")
     private String introduction;
 
-    @Column(name = "completion")
+    @Column(name = "challenge_completion")
     private Integer completion;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "challenge", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -24,7 +27,8 @@ public class Challenge {
 
     public Challenge(){}
 
-    public Challenge(String introduction, Integer completion) {
+    public Challenge(String challengeTitle, String introduction, Integer completion) {
+        this.challengeTitle = challengeTitle;
         this.introduction = introduction;
         this.completion = completion;
     }
@@ -35,6 +39,14 @@ public class Challenge {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public String getChallengeTitle() {
+        return challengeTitle;
+    }
+
+    public void setChallengeTitle(String title) {
+        this.challengeTitle = title;
     }
 
     public String getIntroduction() {
@@ -65,6 +77,7 @@ public class Challenge {
     public String toString() {
         return "Challenge{" +
                 "id=" + id +
+                ", title='" + challengeTitle + '\'' +
                 ", introduction='" + introduction + '\'' +
                 ", completion=" + completion +
                 ", question=" + question +
