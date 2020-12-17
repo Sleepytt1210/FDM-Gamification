@@ -2,7 +2,7 @@
 1. Create the file sshConfig.properties in src/main/resources
 2. Fill in the values
 ```properties
-ssh.tunnel.url=linux.cs.ncl.ac.uk
+ssh.tunnel.url=cs-linus.ncl.ac.uk
 ssh.tunnel.username=YOUR_UNI_USERNAME
 ssh.tunnel.password=YOUR_UNI_PASSWORD
 ssh.tunnel.port=22
