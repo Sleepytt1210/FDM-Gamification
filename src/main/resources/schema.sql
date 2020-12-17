@@ -7,21 +7,24 @@ DROP TABLE IF EXISTS Challenge;
 DROP TABLE IF EXISTS Admin;
 
 CREATE TABLE Challenge(
-	challenge_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	introduction TEXT NOT NULL,
-	completion INT NOT NULL
+	challenge_id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    challenge_title VARCHAR(50) NOT NULL ,
+	challenge_introduction TEXT NOT NULL,
+	challenge_completion INT(11) NOT NULL
 )AUTO_INCREMENT=1;
 
 CREATE TABLE Question(
-	question_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	question_id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    question_title VARCHAR(50) NOT NULL ,
 	question_text TEXT NOT NULL,
-	challenge_id INT NOT NULL,
+	question_completion INT(11) NOT NULL ,
+	challenge_id INT(11) NOT NULL,
 	FOREIGN KEY (challenge_id) REFERENCES Challenge(challenge_id) ON DELETE CASCADE
 )AUTO_INCREMENT=1;
 
 CREATE TABLE Choice(
 	choice_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	weight INT NOT NULL,
+	choice_weight INT NOT NULL,
 	choice_text TEXT NOT NULL,
 	question_id INT NOT NULL,
 	FOREIGN KEY (question_id) REFERENCES Question(question_id) ON DELETE CASCADE

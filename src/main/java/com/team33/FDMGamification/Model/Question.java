@@ -3,7 +3,6 @@ package com.team33.FDMGamification.Model;
 import javax.persistence.*;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 
 @Entity(name = "Question")
@@ -14,8 +13,14 @@ public class Question {
     @Column(name = "question_id")
     private Integer questionId;
 
+    @Column(name = "question_title")
+    private String questionTitle;
+
     @Column(name = "question_text")
     private String questionText;
+
+    @Column(name = "question_completion")
+    private Integer questionCompletion;
 
     @ManyToOne
     @JoinColumn(name = "challenge_id")
@@ -27,8 +32,26 @@ public class Question {
 
     public Question(){}
 
-    public Question(String questionText) {
+    public Question(String questionTitle, String questionText, Integer questionCompletion) {
+        this.questionTitle = questionTitle;
         this.questionText = questionText;
+        this.questionCompletion = questionCompletion;
+    }
+
+    public Integer getQuestionId() {
+        return questionId;
+    }
+
+    public void setQuestionId(Integer questionId) {
+        this.questionId = questionId;
+    }
+
+    public String getQuestionTitle() {
+        return questionTitle;
+    }
+
+    public void setQuestionTitle(String questionTitle) {
+        this.questionTitle = questionTitle;
     }
 
     public String getQuestionText() {
@@ -39,20 +62,20 @@ public class Question {
         this.questionText = question;
     }
 
+    public Integer getQuestionCompletion() {
+        return questionCompletion;
+    }
+
+    public void setQuestionCompletion(Integer questionCompletion) {
+        this.questionCompletion = questionCompletion;
+    }
+
     public Challenge getChallenge() {
         return challenge;
     }
 
     public void setChallenge(Challenge challenge) {
         this.challenge = challenge;
-    }
-
-    public Integer getQuestionId() {
-        return questionId;
-    }
-
-    public void setQuestionId(Integer questionId) {
-        this.questionId = questionId;
     }
 
     public Map<Integer, Choice> getChoices() {
@@ -67,7 +90,9 @@ public class Question {
     public String toString() {
         return "Question{" +
                 "questionId=" + questionId +
+                ", questionTitle='" + questionTitle + '\'' +
                 ", questionText='" + questionText + '\'' +
+                ", questionCompletion=" + questionCompletion +
                 ", challengeId=" + challenge.getId() +
                 ", choices=" + choices +
                 '}';
