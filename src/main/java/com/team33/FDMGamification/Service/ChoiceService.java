@@ -23,7 +23,7 @@ public class ChoiceService {
 
     private static final Logger log = LoggerFactory.getLogger(ChoiceService.class);
 
-    public Choice create(String choiceText, Integer weight, Integer questionId) throws InstanceAlreadyExistsException {
+    public Choice create(Integer questionId, String choiceText, Integer weight) throws InstanceAlreadyExistsException {
         Question question = qts.findById(questionId);
         Choice choice = new Choice(choiceText, weight);
         choice.setQuestion(question);

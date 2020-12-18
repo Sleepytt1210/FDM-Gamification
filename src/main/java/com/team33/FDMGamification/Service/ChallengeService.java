@@ -2,6 +2,7 @@ package com.team33.FDMGamification.Service;
 
 import com.team33.FDMGamification.DAO.ChallengeRepository;
 import com.team33.FDMGamification.Model.Challenge;
+import com.team33.FDMGamification.Model.ChallengeFeedback;
 import com.team33.FDMGamification.Model.Question;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +22,9 @@ public class ChallengeService {
 
     @Autowired
     private QuestionService questionService;
+
+    @Autowired
+    private ChallengeFeedbackService challengeFeedbackService;
 
     private final Logger log = LoggerFactory.getLogger(ChallengeService.class);
 
@@ -57,8 +61,12 @@ public class ChallengeService {
         if(newChallenge.getCompletion() != null) oldChallenge.setCompletion(newChallenge.getCompletion());
         oldChallenge = challengeRepo.saveAndFlush(oldChallenge);
         Map<Integer, Question> newQuestions = newChallenge.getQuestion();
+        Map<Boolean, ChallengeFeedback> newFeedback = newChallenge.getChallengeFeedback();
         if(newQuestions != null && !newQuestions.isEmpty()){
             newQuestions.forEach((k, v) -> questionService.update(k, v));
+        }
+        if(newFeedback != null && !newFeedback.isEmpty()) {
+            newFeedback.forEach((k, v) -> challengeFeedbackService.update(v.getFeedback_id(), v.getFeedback_title(), v.getFeedback_text()));
         }
         return oldChallenge;
     }
@@ -79,10 +87,18 @@ public class ChallengeService {
         return challengeRepo.findById(challengeId).orElseThrow(() -> new EntityNotFoundException("Challenge not found!"));
     }
 
-    public void addQuestion(Integer challengeId, Question question) throws InstanceAlreadyExistsException, RuntimeException {
+    public void addQuestion(Integer challengeId, Question question) throws InstanceAlreadyExistsException {
         Challenge challenge = findById(challengeId);
         if(challenge.getQuestion().put(question.getQuestionId(), question) != null){
             throw new InstanceAlreadyExistsException("The question " + question.getQuestionId() + " already exists in challenge " + challengeId + '!');
+        }
+        challengeRepo.saveAndFlush(challenge);
+    }
+
+    public void addChallengeFeedback(Integer challengeId, ChallengeFeedback challengeFeedback) throws InstanceAlreadyExistsException {
+        Challenge challenge = findById(challengeId);
+        if(challenge.getChallengeFeedback().put(challengeFeedback.isPositive(), challengeFeedback) != null){
+            throw new InstanceAlreadyExistsException("The feedback " + challengeFeedback.getFeedback_id() + " already exists in challenge " + challengeId + '!');
         }
         challengeRepo.saveAndFlush(challenge);
     }

@@ -25,6 +25,10 @@ public class Challenge {
     @MapKeyColumn(name = "question_id")
     private Map<Integer, Question> question = new HashMap<>();
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "challenge", cascade = CascadeType.ALL, orphanRemoval = true)
+    @MapKeyColumn(name = "positive")
+    private Map<Boolean, ChallengeFeedback> challengeFeedback = new HashMap<>();
+
     public Challenge(){}
 
     public Challenge(String challengeTitle, String introduction, Integer completion) {
@@ -73,6 +77,14 @@ public class Challenge {
         this.question = question;
     }
 
+    public Map<Boolean, ChallengeFeedback> getChallengeFeedback() {
+        return challengeFeedback;
+    }
+
+    public void setChallengeFeedback(Map<Boolean, ChallengeFeedback> challengeFeedback) {
+        this.challengeFeedback = challengeFeedback;
+    }
+
     @Override
     public String toString() {
         return "Challenge{" +
@@ -81,6 +93,7 @@ public class Challenge {
                 ", introduction='" + introduction + '\'' +
                 ", completion=" + completion +
                 ", question=" + question +
+                ", feedback=" + challengeFeedback +
                 '}';
     }
 
