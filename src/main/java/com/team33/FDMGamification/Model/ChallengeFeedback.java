@@ -26,8 +26,7 @@ public class ChallengeFeedback {
     public ChallengeFeedback() {
     }
 
-    public ChallengeFeedback(Integer feedback_id, String feedback_title, String feedback_text, boolean positive) {
-        this.feedback_id = feedback_id;
+    public ChallengeFeedback(String feedback_title, String feedback_text, boolean positive) {
         this.feedback_title = feedback_title;
         this.feedback_text = feedback_text;
         this.positive = positive;

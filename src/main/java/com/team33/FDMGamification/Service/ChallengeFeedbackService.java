@@ -23,9 +23,9 @@ public class ChallengeFeedbackService {
 
     private static final Logger log = LoggerFactory.getLogger(ChallengeFeedbackService.class);
 
-    public ChallengeFeedback create(Integer challengeId, String challengeFeedbackTitle, String challengeFeedbackText) throws InstanceAlreadyExistsException {
+    public ChallengeFeedback create(Integer challengeId, String challengeFeedbackTitle, String challengeFeedbackText, boolean positive) throws InstanceAlreadyExistsException {
         Challenge challenge = chs.findById(challengeId);
-        ChallengeFeedback challengeFeedback = new ChallengeFeedback();
+        ChallengeFeedback challengeFeedback = new ChallengeFeedback(challengeFeedbackTitle, challengeFeedbackText, positive);
         challengeFeedback.setChallenge(challenge);
         challengeFeedback = challengeFeedbackRepo.saveAndFlush(challengeFeedback);
         chs.addChallengeFeedback(challengeId, challengeFeedback);
@@ -43,6 +43,7 @@ public class ChallengeFeedbackService {
     public List<ChallengeFeedback> getAll(){
         return challengeFeedbackRepo.findAll();
     }
+
 
     public ChallengeFeedback update(Integer challengeFeedbackId, String challengeFeedbackTitle, String challengeFeedbackText) {
         ChallengeFeedback challengeFeedback = findById(challengeFeedbackId);
@@ -77,7 +78,9 @@ public class ChallengeFeedbackService {
     }
 
     public ChallengeFeedback findByPositive(Integer challengeId, boolean positive) {
-        return challengeFeedbackRepo.findByChallengeIdAndChallengeFeedbackPositive(challengeId, positive);
+        ChallengeFeedback feedback = challengeFeedbackRepo.findByChallengeIdAndChallengeFeedbackPositive(challengeId, positive);
+        if (feedback == null) throw new EntityNotFoundException("ChallengeFeedback not found!");
+        return feedback;
     }
 
 }
