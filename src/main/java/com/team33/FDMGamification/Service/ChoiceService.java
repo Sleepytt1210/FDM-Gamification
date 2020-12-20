@@ -23,13 +23,8 @@ public class ChoiceService {
 
     private static final Logger log = LoggerFactory.getLogger(ChoiceService.class);
 
-    public Choice create(String choiceText, Integer weight, Integer questionId) throws InstanceAlreadyExistsException {
-        Question question = qts.findById(questionId);
-        Choice choice = new Choice(choiceText, weight);
-        choice.setQuestion(question);
-        choice = choiceRepo.saveAndFlush(choice);
-        qts.addChoice(questionId, choice);
-        return choice;
+    public Choice create(Integer questionId, String choiceText, Integer weight) throws InstanceAlreadyExistsException {
+        return create(questionId, new Choice(choiceText, weight));
     }
 
     public Choice create(Integer questionId, Choice choice) throws InstanceAlreadyExistsException {
@@ -52,10 +47,7 @@ public class ChoiceService {
     }
 
     public void delete(Integer choiceId) {
-        Choice choice = findById(choiceId);
-        Question question = choice.getQuestion();
-        question.getChoices().remove(choiceId);
-        choiceRepo.deleteById(choiceId);
+        delete(findById(choiceId));
     }
 
     public void delete(Choice choice) {
@@ -64,7 +56,7 @@ public class ChoiceService {
         choiceRepo.delete(choice);
     }
 
-    public void batchDelete(List<Choice> choices) {
+    public void batchDelete(Iterable<Choice> choices) {
         for(Choice choice : choices) {
             Question question = choice.getQuestion();
             question.getChoices().remove(choice.getId());
