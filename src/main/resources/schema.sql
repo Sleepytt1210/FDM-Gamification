@@ -15,6 +15,7 @@ CREATE TABLE Challenge(
     challenge_title VARCHAR(50) NOT NULL ,
 	challenge_introduction TEXT NOT NULL ,
 	challenge_completion INT(11) NOT NULL ,
+	challenge_thumbnail TEXT NOT NULL ,
 	avg_rating varchar(25) DEFAULT 0
 )AUTO_INCREMENT=1;
 

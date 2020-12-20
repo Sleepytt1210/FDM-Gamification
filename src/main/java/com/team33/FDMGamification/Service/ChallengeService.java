@@ -30,8 +30,8 @@ public class ChallengeService {
 
     private final Logger log = LoggerFactory.getLogger(ChallengeService.class);
 
-    public Challenge create(String title, String introduction, Integer completion) {
-        Challenge challenge = new Challenge(title, introduction, completion);
+    public Challenge create(String title, String introduction, String thumbnail, Integer completion) {
+        Challenge challenge = new Challenge(title, introduction, thumbnail, completion);
         challengeRepo.saveAndFlush(challenge);
         return challenge;
     }
@@ -44,8 +44,8 @@ public class ChallengeService {
         return challengeRepo.findAll();
     }
 
-    public Challenge update(Integer challengeId, String title, String introduction, Integer completion, Map<Integer, Question> questions, Map<Boolean, ChallengeFeedback> feedbacks, Set<Rating> ratings){
-        Challenge tempNew = new Challenge(title, introduction, completion);
+    public Challenge update(Integer challengeId, String title, String introduction, String thumbnail, Integer completion, Map<Integer, Question> questions, Map<Boolean, ChallengeFeedback> feedbacks, Set<Rating> ratings){
+        Challenge tempNew = new Challenge(title, introduction, thumbnail, completion);
         tempNew.setQuestion(questions);
         tempNew.setChallengeFeedback(feedbacks);
         tempNew.setRatings(ratings);
@@ -56,6 +56,7 @@ public class ChallengeService {
         Challenge oldChallenge = findById(challengeId);
         if(newChallenge.getChallengeTitle() != null) oldChallenge.setChallengeTitle(newChallenge.getChallengeTitle());
         if(newChallenge.getIntroduction() != null) oldChallenge.setIntroduction(newChallenge.getIntroduction());
+        if(newChallenge.getThumbnail() != null) oldChallenge.setThumbnail(newChallenge.getThumbnail());
         if(newChallenge.getCompletion() != null) oldChallenge.setCompletion(newChallenge.getCompletion());
         oldChallenge = challengeRepo.saveAndFlush(oldChallenge);
         Map<Integer, Question> newQuestions = newChallenge.getQuestion();

@@ -114,7 +114,7 @@ public class DatabaseTests {
     @BeforeEach
     public void setup(){
         try {
-            challenge1 = new Challenge("Challenge one", "This is challenge one.", 0);
+            challenge1 = new Challenge("Challenge one", "This is challenge one.", "Thumbnail", 0);
             challengeS.create(challenge1);
             question1 = new Question("Question one","This is question one.", 0);
             questionS.create(challenge1.getId(), question1);
@@ -170,7 +170,7 @@ public class DatabaseTests {
 
         assertEquals("Challenge one", challengeS.findById(1).getChallengeTitle());
         assertEquals("This is challenge one.", challengeS.findById(1).getIntroduction());
-        challengeS.update(1, newTitle, newIntro, newCompletion, null, null, null);
+        challengeS.update(1, newTitle, newIntro, null, newCompletion, null, null, null);
 
         Challenge updatedChallenge = challengeS.findById(1);
         assertEquals(newTitle, updatedChallenge.getChallengeTitle());
@@ -184,7 +184,7 @@ public class DatabaseTests {
         String newIntro = "This is challenge 1.";
         Integer newCompletion = 10;
 
-        Challenge newChallenge = new Challenge(newTitle, newIntro, newCompletion);
+        Challenge newChallenge = new Challenge(newTitle, newIntro, "Thumbnail2", newCompletion);
 
         assertEquals("Challenge one", challengeS.findById(1).getChallengeTitle());
         assertEquals("This is challenge one.", challengeS.findById(1).getIntroduction());
@@ -678,7 +678,7 @@ public class DatabaseTests {
         Integer newQuestionCompletion = 10;
 
         // Create an updated dummy challenge (Not persisted)
-        Challenge updatedChallenge = new Challenge(null, newChallengeIntro, newChallengeCompletion);
+        Challenge updatedChallenge = new Challenge(null, newChallengeIntro, null, newChallengeCompletion);
 
         // Create an update dummy question that is linked to dummy challenge (Not persisted)
         Question newQuestion = new Question(newQuestionTitle, newQuestionText, newQuestionCompletion);
@@ -718,7 +718,7 @@ public class DatabaseTests {
         Integer newChoiceWeight = 0;
 
         // Create an updated dummy challenge (Not persisted)
-        Challenge updatedChallenge = new Challenge(null, newChallengeIntro, newChallengeCompletion);
+        Challenge updatedChallenge = new Challenge(null, newChallengeIntro, null, newChallengeCompletion);
 
         // Create an update dummy question that is linked to dummy challenge (Not persisted)
         Choice newChoice = new Choice(newChoiceText, newChoiceWeight);
