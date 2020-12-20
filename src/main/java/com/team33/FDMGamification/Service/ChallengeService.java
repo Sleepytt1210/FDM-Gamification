@@ -4,6 +4,7 @@ import com.team33.FDMGamification.DAO.ChallengeRepository;
 import com.team33.FDMGamification.Model.Challenge;
 import com.team33.FDMGamification.Model.ChallengeFeedback;
 import com.team33.FDMGamification.Model.Question;
+import com.team33.FDMGamification.Model.Rating;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import javax.management.InstanceAlreadyExistsException;
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @Service
 public class ChallengeService {
@@ -42,16 +44,12 @@ public class ChallengeService {
         return challengeRepo.findAll();
     }
 
-    public Challenge update(Integer challengeId, String title, String introduction, Integer completion, Map<Integer, Question> questions) {
-        Challenge oldChallenge = findById(challengeId);
-        if(title != null) oldChallenge.setChallengeTitle(title);
-        if(introduction != null) oldChallenge.setIntroduction(introduction);
-        if(completion != null) oldChallenge.setCompletion(completion);
-        oldChallenge = challengeRepo.saveAndFlush(oldChallenge);
-        if(questions != null && !questions.isEmpty()){
-            questions.forEach((k, v) -> questionService.update(k, v));
-        }
-        return oldChallenge;
+    public Challenge update(Integer challengeId, String title, String introduction, Integer completion, Map<Integer, Question> questions, Map<Boolean, ChallengeFeedback> feedbacks, Set<Rating> ratings){
+        Challenge tempNew = new Challenge(title, introduction, completion);
+        tempNew.setQuestion(questions);
+        tempNew.setChallengeFeedback(feedbacks);
+        tempNew.setRatings(ratings);
+        return update(challengeId, tempNew);
     }
 
     public Challenge update(Integer challengeId, Challenge newChallenge) {
@@ -87,19 +85,33 @@ public class ChallengeService {
         return challengeRepo.findById(challengeId).orElseThrow(() -> new EntityNotFoundException("Challenge not found!"));
     }
 
-    public void addQuestion(Integer challengeId, Question question) throws InstanceAlreadyExistsException {
-        Challenge challenge = findById(challengeId);
+    public void addQuestion(Challenge challenge, Question question) throws InstanceAlreadyExistsException {
         if(challenge.getQuestion().put(question.getQuestionId(), question) != null){
-            throw new InstanceAlreadyExistsException("The question " + question.getQuestionId() + " already exists in challenge " + challengeId + '!');
+            throw new InstanceAlreadyExistsException("The question " + question.getQuestionId() + " already exists in challenge " + challenge.getId() + '!');
         }
         challengeRepo.saveAndFlush(challenge);
     }
 
-    public void addChallengeFeedback(Integer challengeId, ChallengeFeedback challengeFeedback) throws InstanceAlreadyExistsException {
-        Challenge challenge = findById(challengeId);
+    public void addChallengeFeedback(Challenge challenge, ChallengeFeedback challengeFeedback) throws InstanceAlreadyExistsException {
         if(challenge.getChallengeFeedback().put(challengeFeedback.isPositive(), challengeFeedback) != null){
-            throw new InstanceAlreadyExistsException("The feedback " + challengeFeedback.getFeedback_id() + " already exists in challenge " + challengeId + '!');
+            throw new InstanceAlreadyExistsException("The feedback " + challengeFeedback.getFeedback_id() + " already exists in challenge " + challenge.getId() + '!');
         }
         challengeRepo.saveAndFlush(challenge);
+    }
+
+    public void addRating(Challenge challenge, Rating rating) throws InstanceAlreadyExistsException {
+        if(!challenge.getRatings().add(rating)){
+            throw new InstanceAlreadyExistsException("The rating " + rating.getRating_id() + " already exists in challenge " + challenge.getId() + '!');
+        }
+        challenge.setAvgRating(average(challenge.getRatings()));
+        challengeRepo.saveAndFlush(challenge);
+    }
+
+    private String average(Set<Rating> ratings) {
+        int avg = 0;
+        for (Rating cur : ratings) {
+            avg += cur.getRating_value();
+        }
+        return String.format("%.1f", ((avg*1.0)/(ratings.size()*1.0)));
     }
 }

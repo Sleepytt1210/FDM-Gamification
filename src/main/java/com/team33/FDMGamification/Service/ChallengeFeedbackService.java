@@ -19,24 +19,19 @@ public class ChallengeFeedbackService {
     private ChallengeFeedbackRepository challengeFeedbackRepo;
 
     @Autowired
-    private ChallengeService chs;
+    private ChallengeService cls;
 
     private static final Logger log = LoggerFactory.getLogger(ChallengeFeedbackService.class);
 
     public ChallengeFeedback create(Integer challengeId, String challengeFeedbackTitle, String challengeFeedbackText, boolean positive) throws InstanceAlreadyExistsException {
-        Challenge challenge = chs.findById(challengeId);
-        ChallengeFeedback challengeFeedback = new ChallengeFeedback(challengeFeedbackTitle, challengeFeedbackText, positive);
-        challengeFeedback.setChallenge(challenge);
-        challengeFeedback = challengeFeedbackRepo.saveAndFlush(challengeFeedback);
-        chs.addChallengeFeedback(challengeId, challengeFeedback);
-        return challengeFeedback;
+        return create(challengeId, new ChallengeFeedback(challengeFeedbackTitle, challengeFeedbackText, positive));
     }
 
     public ChallengeFeedback create(Integer challengeId, ChallengeFeedback challengeFeedback) throws InstanceAlreadyExistsException {
-        Challenge challenge = chs.findById(challengeId);
+        Challenge challenge = cls.findById(challengeId);
         challengeFeedback.setChallenge(challenge);
         challengeFeedback = challengeFeedbackRepo.saveAndFlush(challengeFeedback);
-        chs.addChallengeFeedback(challengeId, challengeFeedback);
+        cls.addChallengeFeedback(challenge, challengeFeedback);
         return challengeFeedback;
     }
 
@@ -53,10 +48,7 @@ public class ChallengeFeedbackService {
     }
 
     public void delete(Integer challengeFeedbackId) {
-        ChallengeFeedback challengeFeedback = findById(challengeFeedbackId);
-        Challenge challenge = challengeFeedback.getChallenge();
-        challenge.getChallengeFeedback().remove(challengeFeedback.isPositive());
-        challengeFeedbackRepo.deleteById(challengeFeedbackId);
+        delete(findById(challengeFeedbackId));
     }
 
     public void delete(ChallengeFeedback challengeFeedback) {
@@ -65,7 +57,7 @@ public class ChallengeFeedbackService {
         challengeFeedbackRepo.delete(challengeFeedback);
     }
 
-    public void batchDelete(List<ChallengeFeedback> challengeFeedbacks) {
+    public void batchDelete(Iterable<ChallengeFeedback> challengeFeedbacks) {
         for(ChallengeFeedback challengeFeedback : challengeFeedbacks) {
             Challenge challenge = challengeFeedback.getChallenge();
             challenge.getChallengeFeedback().remove(challengeFeedback.isPositive());
