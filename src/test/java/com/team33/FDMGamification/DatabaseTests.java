@@ -3,14 +3,9 @@ package com.team33.FDMGamification;
 import com.team33.FDMGamification.DAO.ChallengeRepository;
 import com.team33.FDMGamification.DAO.ChoiceRepository;
 import com.team33.FDMGamification.DAO.QuestionRepository;
-import com.team33.FDMGamification.Model.Challenge;
-import com.team33.FDMGamification.Model.ChallengeFeedback;
-import com.team33.FDMGamification.Model.Choice;
-import com.team33.FDMGamification.Model.Question;
-import com.team33.FDMGamification.Service.ChallengeFeedbackService;
-import com.team33.FDMGamification.Service.ChallengeService;
-import com.team33.FDMGamification.Service.ChoiceService;
-import com.team33.FDMGamification.Service.QuestionService;
+import com.team33.FDMGamification.DAO.RatingRepository;
+import com.team33.FDMGamification.Model.*;
+import com.team33.FDMGamification.Service.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -27,6 +22,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import javax.management.InstanceAlreadyExistsException;
 import javax.persistence.EntityNotFoundException;
 
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -70,6 +66,14 @@ public class DatabaseTests {
         }
     }
 
+    @TestConfiguration
+    static class RatingServiceTestConfiguration{
+        @Bean
+        protected RatingService ratingService() {
+            return new RatingService();
+        }
+    }
+
     @Autowired
     private ChallengeService challengeS;
 
@@ -83,6 +87,9 @@ public class DatabaseTests {
     private ChallengeFeedbackService challengeFbS;
 
     @Autowired
+    private RatingService ratingS;
+
+    @Autowired
     private ChallengeRepository challengeRepo;
 
     @Autowired
@@ -91,12 +98,18 @@ public class DatabaseTests {
     @Autowired
     private ChoiceRepository choiceRepo;
 
+    @Autowired
+    private RatingRepository ratingRepo;
+
     private Challenge challenge1;
     private Question question1;
     private ChallengeFeedback feedback1;
     private ChallengeFeedback feedback2;
     private Choice choice1;
     private Choice choice2;
+    private Rating rating1;
+    private Rating rating2;
+    private Rating rating3;
 
     @BeforeEach
     public void setup(){
@@ -113,6 +126,12 @@ public class DatabaseTests {
             choice2 = new Choice("Bye", 1);
             choiceS.create(question1.getQuestionId(), choice1);
             choiceS.create(question1.getQuestionId(), choice2);
+            rating1 = new Rating(5);
+            rating2 = new Rating(3);
+            rating3 = new Rating(1);
+            ratingS.create(challenge1.getId(), rating1);
+            ratingS.create(challenge1.getId(), rating2);
+            ratingS.create(challenge1.getId(), rating3);
         } catch(Exception e) {
             System.err.println(e.getMessage());
         }
@@ -151,7 +170,7 @@ public class DatabaseTests {
 
         assertEquals("Challenge one", challengeS.findById(1).getChallengeTitle());
         assertEquals("This is challenge one.", challengeS.findById(1).getIntroduction());
-        challengeS.update(1, newTitle, newIntro, newCompletion, null);
+        challengeS.update(1, newTitle, newIntro, newCompletion, null, null, null);
 
         Challenge updatedChallenge = challengeS.findById(1);
         assertEquals(newTitle, updatedChallenge.getChallengeTitle());
@@ -228,7 +247,7 @@ public class DatabaseTests {
         assertEquals(challenge, question.getChallenge());
 
         // Ensure the same question cannot be added to the same challenge
-        assertThrows(InstanceAlreadyExistsException.class, () -> challengeS.addQuestion(1, question1));
+        assertThrows(InstanceAlreadyExistsException.class, () -> challengeS.addQuestion(challenge, question1));
     }
 
     @Test
@@ -535,6 +554,76 @@ public class DatabaseTests {
         assertEquals(0, challengeFbS.getAll().size());
         assertNull(challengeS.findById(1).getChallengeFeedback().get(true));
         assertNull(challengeS.findById(1).getChallengeFeedback().get(false));
+    }
+
+    @Test
+    public void testRatingCreateWithProperties(){
+        assertDoesNotThrow(() -> ratingS.create(challenge1.getId(), 4));
+        assertEquals(4, challengeS.findById(challenge1.getId()).getRatings().size());
+    }
+
+    @Test
+    public void testRatingFindById(){
+        assertDoesNotThrow(() -> ratingS.findById(rating1.getRating_id()));
+        assertDoesNotThrow(() -> ratingS.findById(rating2.getRating_id()));
+        assertDoesNotThrow(() -> ratingS.findById(rating3.getRating_id()));
+        assertEquals(5, ratingS.findById(rating1.getRating_id()).getRating_value());
+        assertEquals(3, ratingS.findById(rating2.getRating_id()).getRating_value());
+        assertEquals(1, ratingS.findById(rating3.getRating_id()).getRating_value());
+
+        assertThrows(EntityNotFoundException.class, () -> ratingS.findById(4));
+    }
+
+    @Test
+    public void testRatingGetAll(){
+        List<Rating> feedbacks = ratingS.getAll();
+        assertEquals(3, feedbacks.size());
+    }
+
+    @Test
+    public void testRatingUpdateOne(){
+        Integer newRate = 2;
+        ratingS.update(rating1.getRating_id(), newRate);
+
+        Rating updated = ratingS.findById(rating1.getRating_id());
+        assertEquals(newRate, updated.getRating_value());
+    }
+
+    @Test
+    public void testRatingDeleteOneById(){
+        ratingS.delete(rating1.getRating_id());
+        assertEquals(2, ratingS.getAll().size());
+        assertFalse(challengeS.findById(1).getRatings().contains(rating1));
+    }
+
+    @Test
+    public void testRatingDeleteOneByEntity(){
+        ratingS.delete(rating1);
+        assertEquals(2, ratingS.getAll().size());
+        assertFalse(challengeS.findById(1).getRatings().contains(rating1));
+    }
+
+    @Test
+    public void testRatingBatchDelete(){
+        List<Rating> ratings = List.of(rating1, rating2);
+        ratingS.batchDelete(ratings);
+        assertEquals(1, ratingS.getAll().size());
+        assertFalse(challengeS.findById(1).getRatings().contains(rating1));
+        assertFalse(challengeS.findById(1).getRatings().contains(rating2));
+    }
+
+    @Test
+    public void testAverageRatingOnChallenge(){
+        String res = "3.0";
+        assertEquals(res, challenge1.getAvgRating());
+    }
+
+    @Test
+    public void testAverageRatingOnChallenge_WithUpdate(){
+        Integer newRating = 2;
+        assertDoesNotThrow(() -> ratingS.create(challenge1.getId(), newRating));
+        String res = "2.8";
+        assertEquals(res, challenge1.getAvgRating());
     }
 
     // Child entity retrieved from database check
