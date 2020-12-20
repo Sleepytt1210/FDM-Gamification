@@ -1,8 +1,7 @@
 package com.team33.FDMGamification.Model;
 
 import javax.persistence.*;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Entity(name="Challenge")
 public class Challenge {
@@ -21,9 +20,19 @@ public class Challenge {
     @Column(name = "challenge_completion")
     private Integer completion;
 
+    @Column(name = "avg_rating")
+    private String avgRating;
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "challenge", cascade = CascadeType.ALL, orphanRemoval = true)
     @MapKeyColumn(name = "question_id")
     private Map<Integer, Question> question = new HashMap<>();
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "challenge", cascade = CascadeType.ALL, orphanRemoval = true)
+    @MapKeyColumn(name = "positive")
+    private Map<Boolean, ChallengeFeedback> challengeFeedback = new HashMap<>();
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "challenge", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Rating> ratings = new HashSet<>();
 
     public Challenge(){}
 
@@ -31,6 +40,7 @@ public class Challenge {
         this.challengeTitle = challengeTitle;
         this.introduction = introduction;
         this.completion = completion;
+        this.avgRating = "No rating";
     }
 
     public Integer getId() {
@@ -65,12 +75,36 @@ public class Challenge {
         this.completion = completion;
     }
 
+    public String getAvgRating() {
+        return avgRating;
+    }
+
+    public void setAvgRating(String rating) {
+        this.avgRating = rating;
+    }
+
+    public Set<Rating> getRatings() {
+        return ratings;
+    }
+
+    public void setRatings(Set<Rating> ratings) {
+        this.ratings = ratings;
+    }
+
     public Map<Integer, Question> getQuestion() {
         return question;
     }
 
     public void setQuestion(Map<Integer, Question> question) {
         this.question = question;
+    }
+
+    public Map<Boolean, ChallengeFeedback> getChallengeFeedback() {
+        return challengeFeedback;
+    }
+
+    public void setChallengeFeedback(Map<Boolean, ChallengeFeedback> challengeFeedback) {
+        this.challengeFeedback = challengeFeedback;
     }
 
     @Override
@@ -80,7 +114,9 @@ public class Challenge {
                 ", title='" + challengeTitle + '\'' +
                 ", introduction='" + introduction + '\'' +
                 ", completion=" + completion +
+                ", avgRating=" + avgRating +
                 ", question=" + question +
+                ", feedback=" + challengeFeedback +
                 '}';
     }
 

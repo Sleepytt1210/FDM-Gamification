@@ -29,19 +29,15 @@ public class QuestionService {
     private static final Logger log = LoggerFactory.getLogger(QuestionService.class);
 
     public Question create(Integer challengeId, String questionTitle, String questionText, Integer completion) throws InstanceAlreadyExistsException{
-        Challenge challenge = cls.findById(challengeId);
         Question question = new Question(questionTitle, questionText, completion);
-        question.setChallenge(challenge);
-        question = questionRepo.saveAndFlush(question);
-        cls.addQuestion(challengeId, question);
-        return question;
+        return create(challengeId, question);
     }
 
     public Question create(Integer challengeId, Question question) throws InstanceAlreadyExistsException{
         Challenge challenge = cls.findById(challengeId);
         question.setChallenge(challenge);
         question = questionRepo.saveAndFlush(question);
-        cls.addQuestion(challengeId, question);
+        cls.addQuestion(challenge, question);
         return question;
     }
 
@@ -50,11 +46,8 @@ public class QuestionService {
     }
 
     public Question update(Integer questionId, String questionTitle, String questionText, Integer completion) {
-        Question question = findById(questionId);
-        if(questionTitle != null) question.setQuestionTitle(questionTitle);
-        if(questionText != null) question.setQuestionText(questionText);
-        if(completion != null) question.setQuestionCompletion(completion);
-        return questionRepo.saveAndFlush(question);
+        Question tempNew = new Question(questionTitle, questionText, completion);
+        return update(questionId, tempNew);
     }
 
     public Question update(Integer questionId, Question newQuestion) {
@@ -71,10 +64,7 @@ public class QuestionService {
     }
 
     public void delete(Integer questionId) {
-        Question question = findById(questionId);
-        Challenge challenge = question.getChallenge();
-        challenge.getQuestion().remove(questionId);
-        questionRepo.deleteById(questionId);
+        delete(findById(questionId));
     }
 
     public void delete(Question question) {
@@ -83,7 +73,7 @@ public class QuestionService {
         questionRepo.delete(question);
     }
 
-    public void batchDelete(List<Question> questions) {
+    public void batchDelete(Iterable<Question> questions) {
         for (Question q : questions) {
             Challenge challenge = q.getChallenge();
             challenge.getQuestion().remove(q.getQuestionId());
