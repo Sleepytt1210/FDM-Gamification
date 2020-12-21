@@ -22,7 +22,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import javax.management.InstanceAlreadyExistsException;
 import javax.persistence.EntityNotFoundException;
 
-import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
