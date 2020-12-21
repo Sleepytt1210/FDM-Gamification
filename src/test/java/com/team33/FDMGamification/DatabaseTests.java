@@ -139,7 +139,7 @@ public class DatabaseTests {
 
     @Test
     public void testChallengeCreateWithProperties() {
-        challengeS.create("Challenge two", "This is challenge two.", 1);
+        challengeS.create("Challenge two", "This is challenge two.", "Thumbnail url", 1);
         assertEquals(2, challengeRepo.findAll().size());
         assertEquals("This is challenge two.", challengeS.findById(2).getIntroduction());
     }
@@ -155,10 +155,10 @@ public class DatabaseTests {
 
     @Test
     public void testChallengeGetAll() {
-        challengeS.create("Challenge two", "This is challenge two.", 0);
+        challengeS.create("Challenge two", "This is challenge two.", "Thumbnail url", 0);
         assertEquals(2, challengeS.getAll().size());
 
-        challengeS.create("Challenge three", "This is challenge three.", 100);
+        challengeS.create("Challenge three", "This is challenge three.","Thumbnail url", 100);
         assertEquals(3, challengeS.getAll().size());
     }
 
@@ -198,7 +198,7 @@ public class DatabaseTests {
 
     @Test
     public void testChallengeDeleteOneByEntity() {
-        challengeS.create("Challenge two", "This is challenge two.", 0);
+        challengeS.create("Challenge two", "This is challenge two.","Thumbnail url2", 0);
         assertEquals(2, challengeS.getAll().size());
 
         Challenge challenge2 = challengeS.findById(2);
@@ -210,7 +210,7 @@ public class DatabaseTests {
 
     @Test
     public void testChallengeDeleteOneById() {
-        challengeS.create("Challenge two", "This is challenge two.", 0);
+        challengeS.create("Challenge two", "This is challenge two.","Thumbnail url2", 0);
         assertEquals(2, challengeS.getAll().size());
 
         challengeS.delete(2);
@@ -220,10 +220,10 @@ public class DatabaseTests {
 
     @Test
     public void testChallengeBatchDelete() {
-        challengeS.create("Challenge two", "This is challenge two.", 0);
+        challengeS.create("Challenge two", "This is challenge two.","Thumbnail url2", 0);
         assertEquals(2, challengeS.getAll().size());
 
-        challengeS.create("Challenge two", "This is challenge three.", 0);
+        challengeS.create("Challenge two", "This is challenge three.", "Thumbnail url3",0);
         assertEquals(3, challengeS.getAll().size());
 
         List<Challenge> challengeList = challengeRepo.findAllById(List.of(2,3));
@@ -356,8 +356,8 @@ public class DatabaseTests {
         assertEquals(question, choiceB.getQuestion());
 
         // Ensure the same choice cannot be added to the same question
-        assertThrows(InstanceAlreadyExistsException.class, () -> questionS.addChoice(1, choice1));
-        assertThrows(InstanceAlreadyExistsException.class, () -> questionS.addChoice(1, choice2));
+        assertThrows(InstanceAlreadyExistsException.class, () -> questionS.addChoice(question, choice1));
+        assertThrows(InstanceAlreadyExistsException.class, () -> questionS.addChoice(question, choice2));
     }
 
     @Test

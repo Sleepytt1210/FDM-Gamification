@@ -28,12 +28,28 @@ public class QuestionService {
 
     private static final Logger log = LoggerFactory.getLogger(QuestionService.class);
 
+    /**
+     * Insert and persist data into Question Table with properties and foreign key ID.
+     * @param challengeId Foreign key id of challenge to be added to.
+     * @param questionTitle Title of question.
+     * @param questionText Text of question.
+     * @param completion Number of completions of question.
+     * @return Question: Question object persisted in database.
+     * @throws InstanceAlreadyExistsException If question already exists in challenge.
+     */
     public Question create(Integer challengeId, String questionTitle, String questionText, Integer completion) throws InstanceAlreadyExistsException{
         Question question = new Question(questionTitle, questionText, completion);
         return create(challengeId, question);
     }
 
-    public Question create(Integer challengeId, Question question) throws InstanceAlreadyExistsException{
+    /**
+     * Insert and persist data into Question Table with Question object and foreign key ID.
+     * @param challengeId Foreign key id of challenge to be added to.
+     * @param question Question object with properties.
+     * @return Question: Question object persisted in database.
+     * @throws InstanceAlreadyExistsException If question already exists in challenge.
+     */
+    public Question create(Integer challengeId, Question question) throws InstanceAlreadyExistsException {
         Challenge challenge = cls.findById(challengeId);
         question.setChallenge(challenge);
         question = questionRepo.saveAndFlush(question);
@@ -41,15 +57,43 @@ public class QuestionService {
         return question;
     }
 
+    /**
+     * Find a question by its ID.
+     * @param questionId Id of question.
+     * @return Question: Question object if found.
+     * @throws EntityNotFoundException: If question is not found.
+     */
+    public Question findById(Integer questionId) {
+        return questionRepo.findById(questionId).orElseThrow(() -> new EntityNotFoundException("Challenge not found!"));
+    }
+
+    /**
+     * Get all questions in database.
+     * @return List<Question>: All the questions in database.
+     */
     public List<Question> getAll(){
         return questionRepo.findAll();
     }
 
+    /**
+     * Update existing question in database with properties.
+     * @param questionId Id of question to be updated.
+     * @param questionTitle New title of question.
+     * @param questionText New text of question.
+     * @param completion New completion count of question.
+     * @return Question: Updated question object.
+     */
     public Question update(Integer questionId, String questionTitle, String questionText, Integer completion) {
         Question tempNew = new Question(questionTitle, questionText, completion);
         return update(questionId, tempNew);
     }
 
+    /**
+     * Updated existing question in database with question object.
+     * @param questionId Id of question to be updated.
+     * @param newQuestion Question object with updated value.
+     * @return Question: Updated question object.
+     */
     public Question update(Integer questionId, Question newQuestion) {
         Question oldQuestion = findById(questionId);
         if(newQuestion.getQuestionTitle() != null) oldQuestion.setQuestionTitle(newQuestion.getQuestionTitle());
@@ -63,16 +107,28 @@ public class QuestionService {
         return oldQuestion;
     }
 
+    /**
+     * Delete a question by its ID.
+     * @param questionId Id of question to be deleted.
+     */
     public void delete(Integer questionId) {
         delete(findById(questionId));
     }
 
+    /**
+     * Delete a question by its entity.
+     * @param question Question object to be deleted.
+     */
     public void delete(Question question) {
         Challenge challenge = question.getChallenge();
         challenge.getQuestion().remove(question.getQuestionId());
         questionRepo.delete(question);
     }
 
+    /**
+     * Delete a collection of questions with entities.
+     * @param questions Collection of questions to be deleted.
+     */
     public void batchDelete(Iterable<Question> questions) {
         for (Question q : questions) {
             Challenge challenge = q.getChallenge();
@@ -81,15 +137,16 @@ public class QuestionService {
         questionRepo.deleteAll(questions);
     }
 
-    public Question findById(Integer questionId) {
-        return questionRepo.findById(questionId).orElseThrow(() -> new EntityNotFoundException("Challenge not found!"));
-    }
-
-    public void addChoice(Integer questionId, Choice choice) throws InstanceAlreadyExistsException{
-        Question question = findById(questionId);
+    /**
+     *
+     * @param question Question object to add.
+     * @param choice Choice object to be added.
+     * @throws InstanceAlreadyExistsException If choice already exists in the question.
+     */
+    public void addChoice(Question question, Choice choice) throws InstanceAlreadyExistsException{
         Map<Integer, Choice> choices = question.getChoices();
         if(choices.put(choice.getId(), choice) != null) {
-            throw new InstanceAlreadyExistsException("The choice " + choice.getChoiceText() +" already exists in question " + question.getQuestionText() + "!");
+            throw new InstanceAlreadyExistsException("The choice " + choice.getId() +" already exists in question " + question.getQuestionId() + "!");
         }
         questionRepo.saveAndFlush(question);
     }
