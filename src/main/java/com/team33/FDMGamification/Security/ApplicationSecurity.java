@@ -21,6 +21,11 @@ public class ApplicationSecurity extends WebSecurityConfigurerAdapter {
     @Autowired
     private Environment env;
 
+    /**
+     * Configure security level base on URL pattern. All existing url patterns except admin urls are accessible by public user.
+     * @param http HttpSecurity Bean to configure security access.
+     * @throws Exception Authorize Requests error.
+     */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
@@ -35,7 +40,11 @@ public class ApplicationSecurity extends WebSecurityConfigurerAdapter {
                 .logoutSuccessUrl("/home?logout");
     }
 
-
+    /**
+     * Configure Spring Boot Security to use custom admin details service and create a default admin user with details from application properties.
+     * @param builder An AuthenticationManagerBuilder bean.
+     * @throws Exception If an error occurs when adding the UserDetailsService based authentication
+     */
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder builder) throws Exception {
         builder.userDetailsService(adminDetailsService).passwordEncoder(passwordEncoder()).getUserDetailsService()
@@ -47,6 +56,10 @@ public class ApplicationSecurity extends WebSecurityConfigurerAdapter {
                         , env.getProperty("admin.phoneNo"));
     }
 
+    /**
+     * Configure a password encoder and hashing algorithm to be used by authentication service.
+     * @return A password encoder.
+     */
     @Bean
     public PasswordEncoder passwordEncoder(){
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();

@@ -1,6 +1,7 @@
 package com.team33.FDMGamification.Configuration;
 
 import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,8 +40,12 @@ public class SSHTunnel {
     private Session session;
     private final Logger log =LoggerFactory.getLogger(SSHTunnel.class);
 
+    /**
+     * Initialise the tunneling process once constructed.
+     * @throws JSchException If error occurs during tunneling process.
+     */
     @PostConstruct
-    public void init() throws Exception {
+    public void init() throws JSchException {
         JSch jsch = new JSch();
         // Get SSH session
         session = jsch.getSession(username, host, port);
@@ -61,8 +66,11 @@ public class SSHTunnel {
 
     }
 
+    /**
+     * Shut down and close tunnel.
+     */
     @PreDestroy
-    public void shutdown() throws Exception {
+    public void shutdown() {
         if (session != null && session.isConnected()) {
             log.info("Session closed!");
             session.disconnect();

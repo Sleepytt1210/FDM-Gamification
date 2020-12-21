@@ -23,22 +23,58 @@ public class ChoiceService {
 
     private static final Logger log = LoggerFactory.getLogger(ChoiceService.class);
 
+    /**
+     * Insert and persist data into Choice Table with properties and foreign key ID.
+     * @param questionId Foreign key id of question to be added to.
+     * @param choiceText Text of choice.
+     * @param weight Score weight of choice.
+     * @return Choice: Choice object persisted in database.
+     * @throws InstanceAlreadyExistsException If choice already exists in question.
+     */
     public Choice create(Integer questionId, String choiceText, Integer weight) throws InstanceAlreadyExistsException {
         return create(questionId, new Choice(choiceText, weight));
     }
 
+    /**
+     * Insert and persist data in Choice Table with Choice object and foreign key ID.
+     * @param questionId Foreign key id of question to be added to.
+     * @param choice Choice object with properties.
+     * @return Choice: Choice object persisted in database.
+     * @throws InstanceAlreadyExistsException If choice already exists in question.
+     */
     public Choice create(Integer questionId, Choice choice) throws InstanceAlreadyExistsException {
         Question question = qts.findById(questionId);
         choice.setQuestion(question);
         choice = choiceRepo.saveAndFlush(choice);
-        qts.addChoice(questionId, choice);
+        qts.addChoice(question, choice);
         return choice;
     }
 
+    /**
+     * Find a choice by its ID.
+     * @param choiceId Id of choice.
+     * @return Choice: Choice object if found.
+     * @throws EntityNotFoundException: If choice is not found.
+     */
+    public Choice findById(Integer choiceId) {
+        return choiceRepo.findById(choiceId).orElseThrow(() -> new EntityNotFoundException("Choice not found!"));
+    }
+
+    /**
+     * Get all choices in the database.
+     * @return List<Choice>: All choices in the database.
+     */
     public List<Choice> getAll(){
         return choiceRepo.findAll();
     }
 
+    /**
+     * Update existing choice in database with properties.
+     * @param choiceId Id of choice to be updated.
+     * @param choiceText New text of choice.
+     * @param weight New weight of choice.
+     * @return Choice: Updated choice object.
+     */
     public Choice update(Integer choiceId, String choiceText, Integer weight) {
         Choice choice = findById(choiceId);
         if(choiceText != null) choice.setChoiceText(choiceText);
@@ -46,26 +82,34 @@ public class ChoiceService {
         return choiceRepo.saveAndFlush(choice);
     }
 
+    /**
+     * Delete a choice by its id.
+     * @param choiceId Id of choice to be deleted.
+     */
     public void delete(Integer choiceId) {
         delete(findById(choiceId));
     }
 
+    /**
+     * Delete a choice by its entity.
+     * @param choice Choice object to be deleted.
+     */
     public void delete(Choice choice) {
         Question question = choice.getQuestion();
         question.getChoices().remove(choice.getId());
         choiceRepo.delete(choice);
     }
 
+    /**
+     * Delete a collection of choices with entities.
+     * @param choices Collection of choices to be deleted.
+     */
     public void batchDelete(Iterable<Choice> choices) {
         for(Choice choice : choices) {
             Question question = choice.getQuestion();
             question.getChoices().remove(choice.getId());
         }
         choiceRepo.deleteAll(choices);
-    }
-
-    public Choice findById(Integer choiceId) {
-        return choiceRepo.findById(choiceId).orElseThrow(() -> new EntityNotFoundException("Choice not found!"));
     }
 
 }
