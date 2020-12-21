@@ -14,6 +14,10 @@ public class JdbcConfig {
     @Autowired
     private SSHTunnel tunnel;
 
+    /**
+     * Configure datasource from application properties.
+     * @return Datasource: Datasource built with properties.
+     */
     @Bean
     @ConfigurationProperties(prefix = "spring.datasource")
     public DataSource dataSource(){
