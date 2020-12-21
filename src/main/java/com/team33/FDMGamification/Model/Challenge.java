@@ -17,6 +17,9 @@ public class Challenge {
     @Column(name = "challenge_introduction")
     private String introduction;
 
+    @Column(name = "challenge_thumbnail")
+    private String thumbnail;
+
     @Column(name = "challenge_completion")
     private Integer completion;
 
@@ -36,9 +39,10 @@ public class Challenge {
 
     public Challenge(){}
 
-    public Challenge(String challengeTitle, String introduction, Integer completion) {
+    public Challenge(String challengeTitle, String introduction, String thumbnail, Integer completion) {
         this.challengeTitle = challengeTitle;
         this.introduction = introduction;
+        this.thumbnail = thumbnail;
         this.completion = completion;
         this.avgRating = "No rating";
     }
@@ -65,6 +69,14 @@ public class Challenge {
 
     public void setIntroduction(String introduction) {
         this.introduction = introduction;
+    }
+
+    public String getThumbnail() {
+        return thumbnail;
+    }
+
+    public void setThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
     }
 
     public Integer getCompletion() {
@@ -113,6 +125,7 @@ public class Challenge {
                 "id=" + id +
                 ", title='" + challengeTitle + '\'' +
                 ", introduction='" + introduction + '\'' +
+                ", thumbnail='" + thumbnail + '\'' +
                 ", completion=" + completion +
                 ", avgRating=" + avgRating +
                 ", question=" + question +
