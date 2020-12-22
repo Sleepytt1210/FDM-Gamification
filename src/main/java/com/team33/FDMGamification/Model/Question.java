@@ -14,13 +14,13 @@ public class Question {
     private Integer questionId;
 
     @Column(name = "question_title")
-    private String questionTitle;
+    private String questionTitle = "";
 
     @Column(name = "question_text")
-    private String questionText;
+    private String questionText = "";
 
     @Column(name = "question_completion")
-    private Integer questionCompletion;
+    private Integer questionCompletion = 0;
 
     @ManyToOne
     @JoinColumn(name = "challenge_id")

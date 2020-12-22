@@ -11,10 +11,10 @@ public class ChallengeFeedback {
     private Integer feedback_id;
 
     @Column(name = "feedback_title")
-    private String feedback_title;
+    private String feedback_title = "";
 
     @Column(name = "feedback_text")
-    private String feedback_text;
+    private String feedback_text = "";
 
     @Column(name = "positive")
     private boolean positive;

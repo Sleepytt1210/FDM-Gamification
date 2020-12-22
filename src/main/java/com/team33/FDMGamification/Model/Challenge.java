@@ -12,19 +12,22 @@ public class Challenge {
     private Integer id;
 
     @Column(name = "challenge_title")
-    private String challengeTitle;
+    private String challengeTitle = "";
 
     @Column(name = "challenge_introduction")
-    private String introduction;
+    private String introduction = "";
+
+    @Column(name = "challenge_thumbnail")
+    private String thumbnail = "";
 
     @Column(name = "challenge_thumbnail")
     private String thumbnail;
 
     @Column(name = "challenge_completion")
-    private Integer completion;
+    private Integer completion = 0;
 
     @Column(name = "avg_rating")
-    private String avgRating;
+    private String avgRating = "No rating";
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "challenge", cascade = CascadeType.ALL, orphanRemoval = true)
     @MapKeyColumn(name = "question_id")
