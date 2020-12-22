@@ -3,6 +3,7 @@ package com.team33.FDMGamification.Service;
 import com.team33.FDMGamification.DAO.RatingRepository;
 import com.team33.FDMGamification.Model.Challenge;
 import com.team33.FDMGamification.Model.Rating;
+import org.springframework.beans.InvalidPropertyException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

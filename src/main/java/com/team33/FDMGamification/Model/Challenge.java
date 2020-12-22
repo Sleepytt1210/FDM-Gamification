@@ -20,6 +20,9 @@ public class Challenge {
     @Column(name = "challenge_thumbnail")
     private String thumbnail = "";
 
+    @Column(name = "challenge_thumbnail")
+    private String thumbnail;
+
     @Column(name = "challenge_completion")
     private Integer completion = 0;
 
