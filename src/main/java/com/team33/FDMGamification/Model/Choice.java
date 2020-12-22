@@ -11,7 +11,7 @@ public class Choice {
     private Integer id;
 
     @Column(name = "choice_text")
-    private String choice_text;
+    private String choice_text = "";
 
     @Column(name = "choice_weight")
     private int weight;

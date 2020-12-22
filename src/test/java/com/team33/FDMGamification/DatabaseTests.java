@@ -246,8 +246,6 @@ public class DatabaseTests {
         assertEquals(1, question.getQuestionId());
         assertEquals(challenge, question.getChallenge());
 
-        // Ensure the same question cannot be added to the same challenge
-        assertThrows(InstanceAlreadyExistsException.class, () -> challengeS.addQuestion(challenge, question1));
     }
 
     @Test
