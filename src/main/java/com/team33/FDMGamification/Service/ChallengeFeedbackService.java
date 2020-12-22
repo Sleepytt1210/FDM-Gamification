@@ -29,32 +29,40 @@ public class ChallengeFeedbackService {
      * @param challengeFeedbackTitle Title of challenge feedback.
      * @param challengeFeedbackText Text of challenge feedback.
      * @param positive Is the feedback positive?
-     * @return ChallengeFeedback: ChallengeFeedback object persisted in database.
-     * @throws InstanceAlreadyExistsException If challenge feedback already exists in challenge.
+     * @return ChallengeFeedback: ChallengeFeedback entity persisted in database.
      */
     public ChallengeFeedback create(Integer challengeId, String challengeFeedbackTitle, String challengeFeedbackText, boolean positive) throws InstanceAlreadyExistsException {
         return create(challengeId, new ChallengeFeedback(challengeFeedbackTitle, challengeFeedbackText, positive));
     }
 
     /**
-     * Insert and persist data in ChallengeFeedback Table with ChallengeFeedback object and foreign key ID.
+     * Insert and persist data in ChallengeFeedback Table with ChallengeFeedback entity and foreign key ID.
      * @param challengeId Foreign key id of challenge to be added to.
-     * @param challengeFeedback ChallengeFeedback object with properties.
-     * @return ChallengeFeedback: ChallengeFeedback object persisted in database.
-     * @throws InstanceAlreadyExistsException If challenge feedback already exists in challenge.
+     * @param challengeFeedback ChallengeFeedback entity with properties.
+     * @return ChallengeFeedback: ChallengeFeedback entity persisted in database.
      */
-    public ChallengeFeedback create(Integer challengeId, ChallengeFeedback challengeFeedback) throws InstanceAlreadyExistsException {
+    public ChallengeFeedback create(Integer challengeId, ChallengeFeedback challengeFeedback) {
         Challenge challenge = cls.findById(challengeId);
+        return create(challenge, challengeFeedback);
+    }
+
+    /**
+     * Insert and persist data in ChallengeFeedback Table with ChallengeFeedback entity and foreign entity.
+     * @param challenge Foreign entity challenge to be added to.
+     * @param challengeFeedback ChallengeFeedback entity with properties.
+     * @return ChallengeFeedback: ChallengeFeedback entity persisted in database.
+     */
+    public ChallengeFeedback create(Challenge challenge, ChallengeFeedback challengeFeedback) {
         challengeFeedback.setChallenge(challenge);
         challengeFeedback = challengeFeedbackRepo.saveAndFlush(challengeFeedback);
-        cls.addChallengeFeedback(challenge, challengeFeedback);
+        challenge.getChallengeFeedback().put(challengeFeedback.isPositive(), challengeFeedback);
         return challengeFeedback;
     }
 
     /**
      * Find a challenge feedback by its ID.
      * @param challengeFeedbackId Id of challenge feedback.
-     * @return ChallengeFeedback: Challenge feedback object if found.
+     * @return ChallengeFeedback: Challenge feedback entity if found.
      * @throws EntityNotFoundException: If challenge feedback is not found.
      */
     public ChallengeFeedback findById(Integer challengeFeedbackId) {
@@ -65,7 +73,7 @@ public class ChallengeFeedbackService {
      * Find a challenge feedback by its positivity and its foreign key id.
      * @param challengeId Foreign key id of challenge to be queried.
      * @param positive Positivity of the feedback.
-     * @return ChallengeFeedback: Challenge feedback object if found.
+     * @return ChallengeFeedback: Challenge feedback entity if found.
      * @throws EntityNotFoundException: If challenge feedback is not found.
      */
     public ChallengeFeedback findByPositive(Integer challengeId, boolean positive) {
@@ -106,7 +114,7 @@ public class ChallengeFeedbackService {
 
     /**
      * Delete challenge feedback by its entity.
-     * @param challengeFeedback Challenge feedback object to be deleted.
+     * @param challengeFeedback Challenge feedback entity to be deleted.
      */
     public void delete(ChallengeFeedback challengeFeedback) {
         Challenge challenge = challengeFeedback.getChallenge();

@@ -21,8 +21,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.management.InstanceAlreadyExistsException;
 import javax.persistence.EntityNotFoundException;
-
-import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -34,73 +32,24 @@ import static org.junit.jupiter.api.Assertions.*;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class DatabaseTests {
 
-    @TestConfiguration
-    static class QuestionServiceTestConfiguration{
-        @Bean
-        protected QuestionService questionService(){
-            return new QuestionService();
-        }
-    }
-
-    @TestConfiguration
-    static class ChoiceServiceTestConfiguration{
-        @Bean
-        protected ChoiceService choiceService(){
-            return new ChoiceService();
-        }
-    }
-
-    @TestConfiguration
-    static class ChallengeServiceTestConfiguration{
-        @Bean
-        protected ChallengeService challengeService(){
-            return new ChallengeService();
-        }
-    }
-
-    @TestConfiguration
-    static class ChallengeFeedbackServiceTestConfiguration{
-        @Bean
-        protected ChallengeFeedbackService challengeFeedbackService(){
-            return new ChallengeFeedbackService();
-        }
-    }
-
-    @TestConfiguration
-    static class RatingServiceTestConfiguration{
-        @Bean
-        protected RatingService ratingService() {
-            return new RatingService();
-        }
-    }
-
     @Autowired
     private ChallengeService challengeS;
-
     @Autowired
     private QuestionService questionS;
-
     @Autowired
     private ChoiceService choiceS;
-
     @Autowired
     private ChallengeFeedbackService challengeFbS;
-
     @Autowired
     private RatingService ratingS;
-
     @Autowired
     private ChallengeRepository challengeRepo;
-
     @Autowired
     private QuestionRepository questionRepo;
-
     @Autowired
     private ChoiceRepository choiceRepo;
-
     @Autowired
     private RatingRepository ratingRepo;
-
     private Challenge challenge1;
     private Question question1;
     private ChallengeFeedback feedback1;
@@ -112,11 +61,11 @@ public class DatabaseTests {
     private Rating rating3;
 
     @BeforeEach
-    public void setup(){
+    public void setup() {
         try {
             challenge1 = new Challenge("Challenge one", "This is challenge one.", "Thumbnail", 0);
             challengeS.create(challenge1);
-            question1 = new Question("Question one","This is question one.", 0);
+            question1 = new Question("Question one", "This is question one.", 0);
             questionS.create(challenge1.getId(), question1);
             feedback1 = new ChallengeFeedback("Congratulation!", "You scored well!", true);
             feedback2 = new ChallengeFeedback("Oh no!", "You need to work harder!", false);
@@ -132,7 +81,7 @@ public class DatabaseTests {
             ratingS.create(challenge1.getId(), rating1);
             ratingS.create(challenge1.getId(), rating2);
             ratingS.create(challenge1.getId(), rating3);
-        } catch(Exception e) {
+        } catch (Exception e) {
             System.err.println(e.getMessage());
         }
     }
@@ -158,7 +107,7 @@ public class DatabaseTests {
         challengeS.create("Challenge two", "This is challenge two.", "Thumbnail url", 0);
         assertEquals(2, challengeS.getAll().size());
 
-        challengeS.create("Challenge three", "This is challenge three.","Thumbnail url", 100);
+        challengeS.create("Challenge three", "This is challenge three.", "Thumbnail url", 100);
         assertEquals(3, challengeS.getAll().size());
     }
 
@@ -198,7 +147,7 @@ public class DatabaseTests {
 
     @Test
     public void testChallengeDeleteOneByEntity() {
-        challengeS.create("Challenge two", "This is challenge two.","Thumbnail url2", 0);
+        challengeS.create("Challenge two", "This is challenge two.", "Thumbnail url2", 0);
         assertEquals(2, challengeS.getAll().size());
 
         Challenge challenge2 = challengeS.findById(2);
@@ -210,7 +159,7 @@ public class DatabaseTests {
 
     @Test
     public void testChallengeDeleteOneById() {
-        challengeS.create("Challenge two", "This is challenge two.","Thumbnail url2", 0);
+        challengeS.create("Challenge two", "This is challenge two.", "Thumbnail url2", 0);
         assertEquals(2, challengeS.getAll().size());
 
         challengeS.delete(2);
@@ -220,13 +169,13 @@ public class DatabaseTests {
 
     @Test
     public void testChallengeBatchDelete() {
-        challengeS.create("Challenge two", "This is challenge two.","Thumbnail url2", 0);
+        challengeS.create("Challenge two", "This is challenge two.", "Thumbnail url2", 0);
         assertEquals(2, challengeS.getAll().size());
 
-        challengeS.create("Challenge two", "This is challenge three.", "Thumbnail url3",0);
+        challengeS.create("Challenge two", "This is challenge three.", "Thumbnail url3", 0);
         assertEquals(3, challengeS.getAll().size());
 
-        List<Challenge> challengeList = challengeRepo.findAllById(List.of(2,3));
+        List<Challenge> challengeList = challengeRepo.findAllById(List.of(2, 3));
         challengeS.batchDelete(challengeList);
         assertEquals(1, challengeS.getAll().size());
         assertThrows(EntityNotFoundException.class, () -> challengeS.findById(3), "Expected Entity Not Found to be thrown!");
@@ -325,7 +274,7 @@ public class DatabaseTests {
         assertDoesNotThrow(() -> questionS.create(1, "Question three", "This is question three.", 0));
         assertEquals(3, questionS.getAll().size());
 
-        List<Question> questionList = questionRepo.findAllById(List.of(2,3));
+        List<Question> questionList = questionRepo.findAllById(List.of(2, 3));
         questionS.batchDelete(questionList);
         assertEquals(1, questionS.getAll().size());
         assertThrows(EntityNotFoundException.class, () -> questionS.findById(3), "Expected Entity Not Found to be thrown!");
@@ -376,7 +325,7 @@ public class DatabaseTests {
     public void testChoiceGetAll() {
         assertEquals(2, choiceS.getAll().size());
 
-        assertDoesNotThrow(() -> choiceS.create(1, "Choice C",2));
+        assertDoesNotThrow(() -> choiceS.create(1, "Choice C", 2));
         assertEquals(3, choiceS.getAll().size());
     }
 
@@ -425,13 +374,13 @@ public class DatabaseTests {
 
     @Test
     public void testChoiceBatchDelete() {
-        assertDoesNotThrow(() -> choiceS.create(1, "Choice C",  2));
+        assertDoesNotThrow(() -> choiceS.create(1, "Choice C", 2));
         assertEquals(3, choiceS.getAll().size());
 
         assertDoesNotThrow(() -> choiceS.create(1, "Choice D", 1));
         assertEquals(4, choiceS.getAll().size());
 
-        List<Choice> choiceList = choiceRepo.findAllById(List.of(3,4));
+        List<Choice> choiceList = choiceRepo.findAllById(List.of(3, 4));
         choiceS.batchDelete(choiceList);
         assertEquals(2, choiceS.getAll().size());
         assertThrows(EntityNotFoundException.class, () -> choiceS.findById(3), "Expected Entity Not Found to be thrown!");
@@ -468,7 +417,7 @@ public class DatabaseTests {
     }
 
     @Test
-    public void testFeedbackCreateWithProperties_ThrowInstanceAlreadyExist(){
+    public void testFeedbackCreateWithProperties_ThrowInstanceAlreadyExist() {
         assertThrows(InstanceAlreadyExistsException.class,
                 () -> challengeFbS.create(1,
                         "Congratulation!",
@@ -482,13 +431,13 @@ public class DatabaseTests {
     }
 
     @Test
-    public void testFeedbackFindById(){
+    public void testFeedbackFindById() {
         assertDoesNotThrow(() -> challengeFbS.findById(feedback1.getFeedback_id()));
         assertDoesNotThrow(() -> challengeFbS.findById(feedback2.getFeedback_id()));
         ChallengeFeedback feedbackP = challengeFbS.findById(feedback1.getFeedback_id());
         ChallengeFeedback feedbackN = challengeFbS.findById(feedback2.getFeedback_id());
 
-        assertEquals("Congratulation!" ,feedbackP.getFeedback_title());
+        assertEquals("Congratulation!", feedbackP.getFeedback_title());
         assertTrue(feedbackP.isPositive());
 
         assertEquals("Oh no!", feedbackN.getFeedback_title());
@@ -498,13 +447,13 @@ public class DatabaseTests {
     }
 
     @Test
-    public void testFeedbackFindByChallengeIdAndPositive(){
+    public void testFeedbackFindByChallengeIdAndPositive() {
         assertDoesNotThrow(() -> challengeFbS.findByPositive(challenge1.getId(), true));
         assertDoesNotThrow(() -> challengeFbS.findByPositive(challenge1.getId(), false));
         ChallengeFeedback feedbackP = challengeFbS.findByPositive(challenge1.getId(), true);
         ChallengeFeedback feedbackN = challengeFbS.findByPositive(challenge1.getId(), false);
 
-        assertEquals("Congratulation!" ,feedbackP.getFeedback_title());
+        assertEquals("Congratulation!", feedbackP.getFeedback_title());
         assertTrue(feedbackP.isPositive());
 
         assertEquals("Oh no!", feedbackN.getFeedback_title());
@@ -514,13 +463,13 @@ public class DatabaseTests {
     }
 
     @Test
-    public void testFeedbackGetAll(){
+    public void testFeedbackGetAll() {
         List<ChallengeFeedback> feedbacks = challengeFbS.getAll();
         assertEquals(2, feedbacks.size());
     }
 
     @Test
-    public void testFeedbackUpdateOne(){
+    public void testFeedbackUpdateOne() {
         String newTitle = "Congratz!";
         String newText = "Updated!";
         challengeFbS.update(feedback1.getFeedback_id(), newTitle, newText);
@@ -532,21 +481,21 @@ public class DatabaseTests {
     }
 
     @Test
-    public void testFeedbackDeleteOneById(){
+    public void testFeedbackDeleteOneById() {
         challengeFbS.delete(feedback1.getFeedback_id());
         assertEquals(1, challengeFbS.getAll().size());
         assertNull(challengeS.findById(1).getChallengeFeedback().get(true));
     }
 
     @Test
-    public void testFeedbackDeleteOneByEntity(){
+    public void testFeedbackDeleteOneByEntity() {
         challengeFbS.delete(feedback1);
         assertEquals(1, challengeFbS.getAll().size());
         assertNull(challengeS.findById(1).getChallengeFeedback().get(true));
     }
 
     @Test
-    public void testFeedbackBatchDelete(){
+    public void testFeedbackBatchDelete() {
         List<ChallengeFeedback> feedbacks = List.of(feedback1, feedback2);
         challengeFbS.batchDelete(feedbacks);
         assertEquals(0, challengeFbS.getAll().size());
@@ -555,13 +504,13 @@ public class DatabaseTests {
     }
 
     @Test
-    public void testRatingCreateWithProperties(){
+    public void testRatingCreateWithProperties() {
         assertDoesNotThrow(() -> ratingS.create(challenge1.getId(), 4));
         assertEquals(4, challengeS.findById(challenge1.getId()).getRatings().size());
     }
 
     @Test
-    public void testRatingFindById(){
+    public void testRatingFindById() {
         assertDoesNotThrow(() -> ratingS.findById(rating1.getRating_id()));
         assertDoesNotThrow(() -> ratingS.findById(rating2.getRating_id()));
         assertDoesNotThrow(() -> ratingS.findById(rating3.getRating_id()));
@@ -573,13 +522,13 @@ public class DatabaseTests {
     }
 
     @Test
-    public void testRatingGetAll(){
+    public void testRatingGetAll() {
         List<Rating> feedbacks = ratingS.getAll();
         assertEquals(3, feedbacks.size());
     }
 
     @Test
-    public void testRatingUpdateOne(){
+    public void testRatingUpdateOne() {
         Integer newRate = 2;
         ratingS.update(rating1.getRating_id(), newRate);
 
@@ -588,21 +537,21 @@ public class DatabaseTests {
     }
 
     @Test
-    public void testRatingDeleteOneById(){
+    public void testRatingDeleteOneById() {
         ratingS.delete(rating1.getRating_id());
         assertEquals(2, ratingS.getAll().size());
         assertFalse(challengeS.findById(1).getRatings().contains(rating1));
     }
 
     @Test
-    public void testRatingDeleteOneByEntity(){
+    public void testRatingDeleteOneByEntity() {
         ratingS.delete(rating1);
         assertEquals(2, ratingS.getAll().size());
         assertFalse(challengeS.findById(1).getRatings().contains(rating1));
     }
 
     @Test
-    public void testRatingBatchDelete(){
+    public void testRatingBatchDelete() {
         List<Rating> ratings = List.of(rating1, rating2);
         ratingS.batchDelete(ratings);
         assertEquals(1, ratingS.getAll().size());
@@ -611,20 +560,18 @@ public class DatabaseTests {
     }
 
     @Test
-    public void testAverageRatingOnChallenge(){
+    public void testAverageRatingOnChallenge() {
         String res = "3.0";
         assertEquals(res, challenge1.getAvgRating());
     }
 
     @Test
-    public void testAverageRatingOnChallenge_WithUpdate(){
+    public void testAverageRatingOnChallenge_WithUpdate() {
         Integer newRating = 2;
         assertDoesNotThrow(() -> ratingS.create(challenge1.getId(), newRating));
         String res = "2.8";
         assertEquals(res, challenge1.getAvgRating());
     }
-
-    // Child entity retrieved from database check
 
     @Test
     public void testChallengeFromDatabaseHasQuestion() {
@@ -747,6 +694,48 @@ public class DatabaseTests {
         // Check choice update
         assertEquals(newChoiceText, updatedChoice.getChoiceText());
         assertEquals(newChoiceWeight, updatedChoice.getWeight());
+    }
+
+    // Child entity retrieved from database check
+
+    @TestConfiguration
+    static class QuestionServiceTestConfiguration {
+        @Bean
+        protected QuestionService questionService() {
+            return new QuestionService();
+        }
+    }
+
+    @TestConfiguration
+    static class ChoiceServiceTestConfiguration {
+        @Bean
+        protected ChoiceService choiceService() {
+            return new ChoiceService();
+        }
+    }
+
+    @TestConfiguration
+    static class ChallengeServiceTestConfiguration {
+        @Bean
+        protected ChallengeService challengeService() {
+            return new ChallengeService();
+        }
+    }
+
+    @TestConfiguration
+    static class ChallengeFeedbackServiceTestConfiguration {
+        @Bean
+        protected ChallengeFeedbackService challengeFeedbackService() {
+            return new ChallengeFeedbackService();
+        }
+    }
+
+    @TestConfiguration
+    static class RatingServiceTestConfiguration {
+        @Bean
+        protected RatingService ratingService() {
+            return new RatingService();
+        }
     }
 
 }
