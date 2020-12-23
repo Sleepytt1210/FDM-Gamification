@@ -301,10 +301,6 @@ public class DatabaseTests {
 
         assertEquals(2, choiceB.getId());
         assertEquals(question, choiceB.getQuestion());
-
-        // Ensure the same choice cannot be added to the same question
-        assertThrows(InstanceAlreadyExistsException.class, () -> questionS.addChoice(question, choice1));
-        assertThrows(InstanceAlreadyExistsException.class, () -> questionS.addChoice(question, choice2));
     }
 
     @Test
