@@ -567,8 +567,6 @@ public class DatabaseTests {
         assertEquals(res, challenge1.getAvgRating());
     }
 
-    // Child entity retrieved from database check
-
     @Test
     public void testChallengeFromDatabaseHasQuestion() {
         Challenge challenge = challengeS.findById(1);
@@ -690,6 +688,48 @@ public class DatabaseTests {
         // Check choice update
         assertEquals(newChoiceText, updatedChoice.getChoiceText());
         assertEquals(newChoiceWeight, updatedChoice.getWeight());
+    }
+
+    // Child entity retrieved from database check
+
+    @TestConfiguration
+    static class QuestionServiceTestConfiguration {
+        @Bean
+        protected QuestionService questionService() {
+            return new QuestionService();
+        }
+    }
+
+    @TestConfiguration
+    static class ChoiceServiceTestConfiguration {
+        @Bean
+        protected ChoiceService choiceService() {
+            return new ChoiceService();
+        }
+    }
+
+    @TestConfiguration
+    static class ChallengeServiceTestConfiguration {
+        @Bean
+        protected ChallengeService challengeService() {
+            return new ChallengeService();
+        }
+    }
+
+    @TestConfiguration
+    static class ChallengeFeedbackServiceTestConfiguration {
+        @Bean
+        protected ChallengeFeedbackService challengeFeedbackService() {
+            return new ChallengeFeedbackService();
+        }
+    }
+
+    @TestConfiguration
+    static class RatingServiceTestConfiguration {
+        @Bean
+        protected RatingService ratingService() {
+            return new RatingService();
+        }
     }
 
 }
