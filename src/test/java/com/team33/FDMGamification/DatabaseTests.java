@@ -69,8 +69,8 @@ public class DatabaseTests {
             feedback2 = new ChallengeFeedback("Oh no!", "You need to work harder!", false);
             challengeFbS.create(challenge1.getId(), feedback1);
             challengeFbS.create(challenge1.getId(), feedback2);
-            choice1 = new Choice("World", 2);
-            choice2 = new Choice("Bye", 1);
+            choice1 = new Choice("World", 2, "Because Hello World");
+            choice2 = new Choice("Bye", 1, "Because not Hello Bye");
             choiceS.create(question1.getQuestionId(), choice1);
             choiceS.create(question1.getQuestionId(), choice2);
             rating1 = new Rating(5);
@@ -303,7 +303,7 @@ public class DatabaseTests {
 
     @Test
     public void testChoiceCreateWithProperties() {
-        assertDoesNotThrow(() -> choiceS.create(1, "Choice C", 2));
+        assertDoesNotThrow(() -> choiceS.create(1, "Choice C", 2, "Random weight"));
         assertEquals(3, choiceRepo.findAll().size());
         assertEquals("Choice C", choiceS.findById(3).getChoiceText());
     }
@@ -319,7 +319,7 @@ public class DatabaseTests {
     public void testChoiceGetAll() {
         assertEquals(2, choiceS.getAll().size());
 
-        assertDoesNotThrow(() -> choiceS.create(1, "Choice C", 2));
+        assertDoesNotThrow(() -> choiceS.create(1, "Choice C", 2, "Random choice."));
         assertEquals(3, choiceS.getAll().size());
     }
 
@@ -328,7 +328,7 @@ public class DatabaseTests {
         String newChoiceText = "Hello World!";
 
         assertEquals("World", choiceS.findById(1).getChoiceText());
-        choiceS.update(1, newChoiceText, null);
+        choiceS.update(1, newChoiceText, null, null);
 
         Choice updatedChoice = choiceS.findById(1);
         assertEquals(newChoiceText, updatedChoice.getChoiceText());
@@ -336,7 +336,7 @@ public class DatabaseTests {
 
     @Test
     public void testChoiceDeleteOneByEntity() {
-        assertDoesNotThrow(() -> choiceS.create(1, "Choice C", 2));
+        assertDoesNotThrow(() -> choiceS.create(1, "Choice C", 2, "Random choice."));
         assertEquals(3, choiceS.getAll().size());
 
         Choice choice3 = choiceS.findById(3);
@@ -353,7 +353,7 @@ public class DatabaseTests {
     @Test
     public void testChoiceDeleteOneById() {
         // Create a dummy choice for deletion
-        assertDoesNotThrow(() -> choiceS.create(1, "Choice C", 2));
+        assertDoesNotThrow(() -> choiceS.create(1, "Choice C", 2, "Random choice."));
         assertEquals(3, choiceS.getAll().size());
 
         choiceS.delete(3);
@@ -368,10 +368,10 @@ public class DatabaseTests {
 
     @Test
     public void testChoiceBatchDelete() {
-        assertDoesNotThrow(() -> choiceS.create(1, "Choice C", 2));
+        assertDoesNotThrow(() -> choiceS.create(1, "Choice C", 2, "Random choice."));
         assertEquals(3, choiceS.getAll().size());
 
-        assertDoesNotThrow(() -> choiceS.create(1, "Choice D", 1));
+        assertDoesNotThrow(() -> choiceS.create(1, "Choice D", 1, "Random choice 2."));
         assertEquals(4, choiceS.getAll().size());
 
         List<Choice> choiceList = choiceRepo.findAllById(List.of(3, 4));
@@ -657,12 +657,13 @@ public class DatabaseTests {
 
         String newChoiceText = "This is new choice";
         Integer newChoiceWeight = 0;
+        String newChoiceReason = "This choice is pointless.";
 
         // Create an updated dummy challenge (Not persisted)
         Challenge updatedChallenge = new Challenge(null, newChallengeIntro, null, newChallengeCompletion);
 
         // Create an update dummy question that is linked to dummy challenge (Not persisted)
-        Choice newChoice = new Choice(newChoiceText, newChoiceWeight);
+        Choice newChoice = new Choice(newChoiceText, newChoiceWeight, newChoiceReason);
         newChoice.setId(choice1.getId());
         newChoice.setQuestion(question1);
 
@@ -690,5 +691,6 @@ public class DatabaseTests {
         // Check choice update
         assertEquals(newChoiceText, updatedChoice.getChoiceText());
         assertEquals(newChoiceWeight, updatedChoice.getWeight());
+        assertEquals(newChoiceReason, updatedChoice.getChoiceReason());
     }
 }

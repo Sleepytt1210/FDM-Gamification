@@ -28,10 +28,11 @@ public class ChoiceService {
      * @param questionId Foreign key id of question to be added to.
      * @param choiceText Text of choice.
      * @param weight Score weight of choice.
+     * @param choiceReason Reason of the weight of this choice.
      * @return Choice: Choice entity persisted in database.
      */
-    public Choice create(Integer questionId, String choiceText, Integer weight) {
-        return create(questionId, new Choice(choiceText, weight));
+    public Choice create(Integer questionId, String choiceText, Integer weight, String choiceReason) {
+        return create(questionId, new Choice(choiceText, weight, choiceReason));
     }
 
     /**
@@ -83,10 +84,11 @@ public class ChoiceService {
      * @param weight New weight of choice.
      * @return Choice: Updated choice entity.
      */
-    public Choice update(Integer choiceId, String choiceText, Integer weight) {
+    public Choice update(Integer choiceId, String choiceText, Integer weight, String choiceReason) {
         Choice choice = findById(choiceId);
         if(choiceText != null) choice.setChoiceText(choiceText);
         if(weight != null) choice.setWeight(weight);
+        if(choiceReason != null) choice.setChoiceReason(choiceReason);
         return choiceRepo.saveAndFlush(choice);
     }
 
