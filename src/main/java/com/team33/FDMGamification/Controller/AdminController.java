@@ -2,8 +2,10 @@ package com.team33.FDMGamification.Controller;
 
 import com.team33.FDMGamification.Model.AdminDetails;
 import com.team33.FDMGamification.Model.Challenge;
+import com.team33.FDMGamification.Model.Choice;
 import com.team33.FDMGamification.Model.Question;
 import com.team33.FDMGamification.Service.ChallengeService;
+import com.team33.FDMGamification.Service.ChoiceService;
 import com.team33.FDMGamification.Service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,8 +18,8 @@ import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.management.InstanceAlreadyExistsException;
 import javax.persistence.EntityNotFoundException;
+import java.util.List;
 
 @Controller
 @RequestMapping("/admin")
@@ -28,6 +30,9 @@ public class AdminController {
 
     @Autowired
     private QuestionService questionService;
+
+    @Autowired
+    private ChoiceService choiceService;
 
     @RequestMapping({"/", ""})
     public ModelAndView renderAdminHome(@AuthenticationPrincipal AdminDetails activeUser) {
@@ -77,28 +82,55 @@ public class AdminController {
     }
 
     @PostMapping(value = "/challenge/{id}", params = {"addQuestion"})
-    public ModelAndView addQuestion(@ModelAttribute("challenge") Challenge challenge, @PathVariable("id") Integer id) {
+    public ModelAndView addQuestion(@ModelAttribute("challenge") Challenge challenge) {
         ModelAndView mav = new ModelAndView("admin/adminPanel");
         try {
             Question tempQ = new Question();
-            tempQ = questionService.create(id, tempQ);
-            challenge.getQuestion().put(tempQ.getQuestionId(), tempQ);
-        } catch (EntityNotFoundException | InstanceAlreadyExistsException ex) {
+            questionService.create(challenge, tempQ);
+        } catch (Exception ex) {
             throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND, ex.getMessage(), ex);
+                    HttpStatus.BAD_REQUEST, ex.getMessage(), ex);
         }
         return mav;
     }
 
     @PostMapping(value = "/challenge/{id}", params = {"removeQuestion"})
-    public String removeQuestion(@ModelAttribute("challenge") Challenge challenge, @PathVariable("id") Integer id, @RequestParam("removeQuestion") Integer rmId) {
+    public String removeQuestion(@ModelAttribute("challenge") Challenge challenge, @RequestParam("removeQuestion") Integer rmId) {
         try {
             challenge.getQuestion().remove(rmId);
             questionService.delete(rmId);
             return "admin/adminPanel";
-        } catch (EntityNotFoundException ex) {
+        } catch (Exception ex) {
             throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND, ex.getMessage(), ex);
+                    HttpStatus.BAD_REQUEST, ex.getMessage(), ex);
+        }
+    }
+
+    @PostMapping(value = "/challenge/{id}", params = {"addChoice"})
+    public ModelAndView addChoice(@ModelAttribute("challenge") Challenge challenge, @RequestParam("addChoice") Integer qid) {
+        ModelAndView mav = new ModelAndView("admin/adminPanel");
+        try {
+            Question question = challenge.getQuestion().get(qid);
+            Choice tempC = new Choice();
+            choiceService.create(question, tempC);
+        } catch (Exception ex) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, ex.getMessage(), ex);
+        }
+        return mav;
+    }
+
+    @PostMapping(value = "/challenge/{id}", params = {"removeChoice"})
+    public String removeChoice(@ModelAttribute("challenge") Challenge challenge, @RequestParam("removeChoice") List<Integer> ids) {
+        try {
+            Integer qid = ids.get(0);
+            Integer choiceId = ids.get(1);
+            challenge.getQuestion().get(qid).getChoices().remove(choiceId);
+            choiceService.delete(choiceId);
+            return "admin/adminPanel";
+        } catch (Exception ex) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, ex.getMessage(), ex);
         }
     }
 }
