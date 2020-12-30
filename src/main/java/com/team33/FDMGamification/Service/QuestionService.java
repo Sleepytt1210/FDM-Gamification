@@ -94,10 +94,12 @@ public class QuestionService {
      * @param questionTitle New title of question.
      * @param questionText  New text of question.
      * @param completion    New completion count of question.
+     * @param choices       New choices map of question.
      * @return Question: Updated question entity.
      */
-    public Question update(Integer questionId, String questionTitle, String questionText, Integer completion) {
+    public Question update(Integer questionId, String questionTitle, String questionText, Integer completion, Map<Integer, Choice> choices) {
         Question tempNew = new Question(questionTitle, questionText, completion);
+        tempNew.setChoices(choices);
         return update(questionId, tempNew);
     }
 
