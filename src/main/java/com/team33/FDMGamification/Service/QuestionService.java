@@ -119,7 +119,7 @@ public class QuestionService {
         oldQuestion = questionRepo.saveAndFlush(oldQuestion);
         Map<Integer, Choice> newChoices = newQuestion.getChoices();
         if (newChoices != null && !newChoices.isEmpty()) {
-            newChoices.forEach((k, v) -> chs.update(k, v.getChoiceText(), v.getWeight()));
+            newChoices.forEach((k, v) -> chs.update(k, v.getChoiceText(), v.getWeight(), v.getChoiceReason()));
         }
         return oldQuestion;
     }

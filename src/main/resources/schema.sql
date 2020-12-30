@@ -32,6 +32,7 @@ CREATE TABLE Choice(
 	choice_id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY ,
 	choice_weight INT(11) NOT NULL ,
 	choice_text TEXT NOT NULL ,
+	choice_reason TEXT NOT NULL,
 	question_id INT(11) NOT NULL ,
 	FOREIGN KEY (question_id) REFERENCES Question(question_id) ON DELETE CASCADE
 )AUTO_INCREMENT=1;
