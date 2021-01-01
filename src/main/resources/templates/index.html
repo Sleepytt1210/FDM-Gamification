@@ -3,14 +3,229 @@
 <head>
     <meta charset="UTF-8">
     <title>Home Page</title>
+    <link rel="stylesheet" href="stylesheets/home.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@600&display=swap" rel="stylesheet">
 </head>
+
 <body>
-    <h1>Welcome to FDM Games!</h1>
-    <div th:if="${param.logout}">
-        You are logged out!
+<header>
+    <img src="stylesheets/images/FDMlogo.png" alt="FDMlogo" class="logo">
+    <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="scenarios.html">Explore</a></li>
+        <li><a href="leaderboard.html">Leaderboard</a></li>
+    </ul>
+</header>
+
+    <div class="heading">
+        <h1>FDM Games</h1>
     </div>
+
+<section id="section1">
+    <section class="chooseStream">
+        <div class="title">
+            <h2>Choose a Stream</h2>
+        </div>
+        <ul>
+            <li><a onclick="displayGame()" href="#testinggames"><img src="stylesheets/images/softwaretesting2.png" alt="softwaretestingpic"></a></li>
+            <li><a onclick="displayGame2()" href="#businessgames"><img src="stylesheets/images/business2.png" alt="businesspic"></a></li>
+            <li><a onclick="displayGame3()" href="#techgames"><img src="stylesheets/images/technical2.png" alt="techpic"></a></li>
+        </ul>
+        <div class="progress-bars">
+            <progress class="bar1" value="20" max="100"></progress>
+            <div class="bar21">
+                <progress class="bar2" value="20" max="100"></progress>
+            </div>
+            <progress class="bar3" value="20" max="100"></progress>
+        </div>
+    </section>
+</section>
+
+<div class="scenarios" id="scenarios" style="display: none">
+    <section class="section2">
+        <section class="chooseScenario">
+            <div id="title2" class="title2">
+                <h2>Choose a Scenario</h2>
+            </div>
+            <div class="scene1" id="testinggames" style="display: none">
+                <table class="table1">
+                    <tr>
+                        <th>Software Testing Scenario 1</th>
+                    </tr>
+                    <tr>
+                        <th>Description</th>
+                    </tr>
+                    <tr>
+                        <th>Score:</th>
+                    </tr>
+                </table>
+                <table class="table1">
+                    <tr>
+                        <th>Software Testing Scenario 2</th>
+                    </tr>
+                    <tr>
+                        <th>Description</th>
+                    </tr>
+                    <tr>
+                        <th>Score:</th>
+                    </tr>
+                </table>
+                <table class="table1">
+                    <tr>
+                        <th>Software Testing Scenario 3</th>
+                    </tr>
+                    <tr>
+                        <th>Description</th>
+                    </tr>
+                    <tr>
+                        <th>Score:</th>
+                    </tr>
+                </table>
+                <table class="table1">
+                    <tr>
+                        <th>Software Testing Scenario 4</th>
+                    </tr>
+                    <tr>
+                        <th>Description</th>
+                    </tr>
+                    <tr>
+                        <th>Score:</th>
+                    </tr>
+                </table>
+            </div>
+            <div class="scene1" id="businessgames" style="display: none">
+                <table class="table1">
+                    <tr>
+                        <th>Business Intelligence Scenario 1</th>
+                    </tr>
+                    <tr>
+                        <th>Description</th>
+                    </tr>
+                    <tr>
+                        <th>Score:</th>
+                    </tr>
+                </table>
+                <table class="table1">
+                    <tr>
+                        <th>Business Intelligence Scenario 2</th>
+                    </tr>
+                    <tr>
+                        <th>Description</th>
+                    </tr>
+                    <tr>
+                        <th>Score:</th>
+                    </tr>
+                </table>
+                <table class="table1">
+                    <tr>
+                        <th>Business Intelligence Scenario 3</th>
+                    </tr>
+                    <tr>
+                        <th>Description</th>
+                    </tr>
+                    <tr>
+                        <th>Score:</th>
+                    </tr>
+                </table>
+                <table class="table1">
+                    <tr>
+                        <th>Business Intelligence Scenario 4</th>
+                    </tr>
+                    <tr>
+                        <th>Description</th>
+                    </tr>
+                    <tr>
+                        <th>Score:</th>
+                    </tr>
+                </table>
+            </div>
+            <div class="scene1" id="techgames" style="display: none">
+                <table class="table1">
+                    <tr>
+                        <th>Technical Operations Scenario 1</th>
+                    </tr>
+                    <tr>
+                        <th>Description</th>
+                    </tr>
+                    <tr>
+                        <th>Score:</th>
+                    </tr>
+                </table>
+                <table class="table1">
+                    <tr>
+                        <th>Technical Operations Scenario 2</th>
+                    </tr>
+                    <tr>
+                        <th>Description</th>
+                    </tr>
+                    <tr>
+                        <th>Score:</th>
+                    </tr>
+                </table>
+                <table class="table1">
+                    <tr>
+                        <th>Technical Operations Scenario 3</th>
+                    </tr>
+                    <tr>
+                        <th>Description</th>
+                    </tr>
+                    <tr>
+                        <th>Score:</th>
+                    </tr>
+                </table>
+                <table class="table1">
+                    <tr>
+                        <th>Technical Operations Scenario 4</th>
+                    </tr>
+                    <tr>
+                        <th>Description</th>
+                    </tr>
+                    <tr>
+                        <th>Score:</th>
+                    </tr>
+                </table>
+            </div>
+        </section>
+    </section>
+</div>
+
+<footer>
     <div>
-        Scenarios....
+        <p>Footer</p>
     </div>
+</footer>
 </body>
+
+<script>
+    var x = document.getElementById("testinggames");
+    var x2 = document.getElementById("businessgames");
+    var x3 = document.getElementById("techgames");
+
+    function showSection2() {
+        var check = document.getElementById("scenarios");
+        if (check.style.display !== "block"){
+            check.style.display = "block";
+        }
+    }
+
+    function displayGame() {
+        showSection2();
+        x.style.display = "block";
+        x2.style.display = "none";
+        x3.style.display = "none";
+    }
+    function displayGame2() {
+        showSection2();
+        x2.style.display = "block";
+        x.style.display = "none";
+        x3.style.display = "none";
+    }
+    function displayGame3() {
+        showSection2();
+        x3.style.display = "block";
+        x.style.display = "none";
+        x2.style.display = "none";
+    }
+</script>
 </html>
