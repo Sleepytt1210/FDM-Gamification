@@ -37,7 +37,7 @@ header a:hover {
 
 /*Top of Page*/
 .heading{
-    background-image: url("images/headingimage3.jpg");
+    background-image: url("../images/headingimage3.jpg");
     background-size: cover;
     width: 100%;
     height: 300px;

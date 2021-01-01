@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <title>Home Page</title>
-    <link rel="stylesheet" href="stylesheets/home.css">
+    <link rel="stylesheet" href="../static/css/home.css" th:href="@{/css/home.css}">
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@600&display=swap" rel="stylesheet">
 </head>
 
 <body>
 <header>
-    <img src="stylesheets/images/FDMlogo.png" alt="FDMlogo" class="logo">
+    <img src="../static/images/FDMlogo.png" th:src="@{/images/FDMlogo.png}" alt="FDMlogo" class="logo">
     <ul>
         <li><a href="index.html">Home</a></li>
         <li><a href="scenarios.html">Explore</a></li>
@@ -28,9 +28,9 @@
             <h2>Choose a Stream</h2>
         </div>
         <ul>
-            <li><a onclick="displayGame()" href="#testinggames"><img src="stylesheets/images/softwaretesting2.png" alt="softwaretestingpic"></a></li>
-            <li><a onclick="displayGame2()" href="#businessgames"><img src="stylesheets/images/business2.png" alt="businesspic"></a></li>
-            <li><a onclick="displayGame3()" href="#techgames"><img src="stylesheets/images/technical2.png" alt="techpic"></a></li>
+            <li><a onclick="displayGame()" href="#testinggames"><img src="../static/images/softwaretesting2.png" th:src="@{/images/softwaretesting2.png}" alt="softwaretestingpic"></a></li>
+            <li><a onclick="displayGame2()" href="#businessgames"><img src="../static/images/business2.png" th:src="@{/images/business2.png}" alt="businesspic"></a></li>
+            <li><a onclick="displayGame3()" href="#techgames"><img src="../static/images/technical2.png" th:src="@{/images/technical2.png}" alt="techpic"></a></li>
         </ul>
         <div class="progress-bars">
             <progress class="bar1" value="20" max="100"></progress>
