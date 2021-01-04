@@ -1,5 +1,7 @@
 package com.team33.FDMGamification.Model;
 
+import org.hibernate.Hibernate;
+
 import javax.persistence.*;
 import java.util.*;
 
@@ -20,6 +22,9 @@ public class Challenge {
     @Column(name = "challenge_thumbnail")
     private String thumbnail = "";
 
+    @Column(name = "challenge_stream")
+    private String stream = "";
+
     @Column(name = "challenge_completion")
     private Integer completion = 0;
 
@@ -30,7 +35,7 @@ public class Challenge {
     @MapKeyColumn(name = "question_id")
     private Map<Integer, Question> question = new HashMap<>();
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "challenge", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "challenge", cascade = CascadeType.ALL, orphanRemoval = true)
     @MapKeyColumn(name = "positive")
     private Map<Boolean, ChallengeFeedback> challengeFeedback = new HashMap<>();
 
@@ -39,10 +44,11 @@ public class Challenge {
 
     public Challenge(){}
 
-    public Challenge(String challengeTitle, String introduction, String thumbnail, Integer completion) {
+    public Challenge(String challengeTitle, String introduction, String thumbnail, String stream, Integer completion) {
         this.challengeTitle = challengeTitle;
         this.introduction = introduction;
         this.thumbnail = thumbnail;
+        this.stream = stream;
         this.completion = completion;
         this.avgRating = "No rating";
     }
@@ -77,6 +83,14 @@ public class Challenge {
 
     public void setThumbnail(String thumbnail) {
         this.thumbnail = thumbnail;
+    }
+
+    public String getStream() {
+        return stream;
+    }
+
+    public void setStream(String stream) {
+        this.stream = stream;
     }
 
     public Integer getCompletion() {
@@ -126,9 +140,9 @@ public class Challenge {
                 ", title='" + challengeTitle + '\'' +
                 ", introduction='" + introduction + '\'' +
                 ", thumbnail='" + thumbnail + '\'' +
+                ", stream='" + stream + '\'' +
                 ", completion=" + completion +
                 ", avgRating=" + avgRating +
-                ", question=" + question +
                 ", feedback=" + challengeFeedback +
                 '}';
     }
