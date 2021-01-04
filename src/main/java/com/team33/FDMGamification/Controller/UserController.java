@@ -1,16 +1,10 @@
 package com.team33.FDMGamification.Controller;
 
-import com.team33.FDMGamification.Model.AdminDetails;
-import com.team33.FDMGamification.Model.Challenge;
 import com.team33.FDMGamification.Service.ChallengeService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 
@@ -25,11 +19,16 @@ public class UserController {
         return "index";
     }
 
-    @RequestMapping("/scenario")
-    public String scenarioPage(Model model){
+    @RequestMapping("/scenarios")
+    public String scenariosPage(Model model){
         model.addAttribute("ST", challengeService.findByStream("ST"));
         model.addAttribute("BI", challengeService.findByStream("BI"));
         model.addAttribute("TO", challengeService.findByStream("TO"));
         return "scenarios";
+    }
+
+    @RequestMapping("/leaderboard")
+    public String leaderboard(Model model){
+        return "leaderboard";
     }
 }
