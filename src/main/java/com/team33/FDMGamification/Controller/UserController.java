@@ -27,7 +27,9 @@ public class UserController {
 
     @RequestMapping("/scenario")
     public String scenarioPage(Model model){
-        model.addAttribute("scenarios", challengeService.getAll());
+        model.addAttribute("ST", challengeService.findByStream("ST"));
+        model.addAttribute("BI", challengeService.findByStream("BI"));
+        model.addAttribute("TO", challengeService.findByStream("TO"));
         return "scenarios";
     }
 }
