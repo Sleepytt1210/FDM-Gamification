@@ -67,7 +67,7 @@ public class AdminController {
     public String updateChallenge(@ModelAttribute("challenge") Challenge challenge, @PathVariable("id") Integer id, final BindingResult bindingResult, ModelMap model, SessionStatus status) {
         try {
             if (bindingResult.hasErrors()) {
-                return "admin/adminPanel";
+                return "admin/form";
             }
             challengeService.update(id, challenge);
             status.setComplete();
@@ -83,7 +83,7 @@ public class AdminController {
 
     @PostMapping(value = "/challenge/{id}", params = {"addQuestion"})
     public ModelAndView addQuestion(@ModelAttribute("challenge") Challenge challenge) {
-        ModelAndView mav = new ModelAndView("admin/adminPanel");
+        ModelAndView mav = new ModelAndView("admin/form");
         try {
             Question tempQ = new Question();
             questionService.create(challenge, tempQ);
@@ -99,7 +99,7 @@ public class AdminController {
         try {
             challenge.getQuestion().remove(rmId);
             questionService.delete(rmId);
-            return "admin/adminPanel";
+            return "admin/form";
         } catch (Exception ex) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, ex.getMessage(), ex);
@@ -108,7 +108,7 @@ public class AdminController {
 
     @PostMapping(value = "/challenge/{id}", params = {"addChoice"})
     public ModelAndView addChoice(@ModelAttribute("challenge") Challenge challenge, @RequestParam("addChoice") Integer qid) {
-        ModelAndView mav = new ModelAndView("admin/adminPanel");
+        ModelAndView mav = new ModelAndView("admin/form");
         try {
             Question question = challenge.getQuestion().get(qid);
             Choice tempC = new Choice();
@@ -127,7 +127,7 @@ public class AdminController {
             Integer choiceId = ids.get(1);
             challenge.getQuestion().get(qid).getChoices().remove(choiceId);
             choiceService.delete(choiceId);
-            return "admin/adminPanel";
+            return "admin/form";
         } catch (Exception ex) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, ex.getMessage(), ex);
