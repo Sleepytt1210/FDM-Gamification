@@ -125,6 +125,17 @@ public class QuestionService {
     }
 
     /**
+     * Adds one to question's completion
+     *
+     * @param question Question entity to be updated.
+     * @return Question: Updated challenge entity.
+     */
+    public Question completionIncrement(Question question){
+        question.setQuestionCompletion(question.getQuestionCompletion() + 1);
+        return questionRepo.saveAndFlush(question);
+    }
+
+    /**
      * Delete a question by its ID.
      *
      * @param questionId Id of question to be deleted.

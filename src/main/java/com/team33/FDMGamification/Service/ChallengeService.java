@@ -117,6 +117,17 @@ public class ChallengeService {
     }
 
     /**
+     * Adds one to challenge's completion
+     *
+     * @param challenge Challenge entity to be updated.
+     * @return Challenge: Updated challenge entity.
+     */
+    public Challenge completionIncrement(Challenge challenge){
+        challenge.setCompletion(challenge.getCompletion() + 1);
+        return challengeRepo.saveAndFlush(challenge);
+    }
+
+    /**
      * Delete a challenge by its ID.
      *
      * @param challengeId Id of challenge to be deleted.
