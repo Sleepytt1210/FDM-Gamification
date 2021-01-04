@@ -67,6 +67,16 @@ public class ChallengeService {
      * @return List<Challenge>: List of challenges of given stream.
      */
     public List<Challenge> findByStream(String stream) {
+        return findByStream(Stream.valueOf(stream));
+    }
+
+    /**
+     * Find a list of challenges by its stream.
+     *
+     * @param stream Stream of challenge (i.e Stream.BI, Stream.ST, Stream.TO)
+     * @return List<Challenge>: List of challenges of given stream.
+     */
+    public List<Challenge> findByStream(Stream stream) {
         return challengeRepo.findChallengesByStreamEquals(stream);
     }
 
