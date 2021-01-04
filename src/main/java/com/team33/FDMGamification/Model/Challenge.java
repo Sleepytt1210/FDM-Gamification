@@ -23,7 +23,8 @@ public class Challenge {
     private String thumbnail = "";
 
     @Column(name = "challenge_stream")
-    private String stream = "";
+    @Enumerated(EnumType.STRING)
+    private Stream stream = Stream.NONE;
 
     @Column(name = "challenge_completion")
     private Integer completion = 0;
@@ -44,7 +45,7 @@ public class Challenge {
 
     public Challenge(){}
 
-    public Challenge(String challengeTitle, String introduction, String thumbnail, String stream, Integer completion) {
+    public Challenge(String challengeTitle, String introduction, String thumbnail, Stream stream, Integer completion) {
         this.challengeTitle = challengeTitle;
         this.introduction = introduction;
         this.thumbnail = thumbnail;
@@ -85,11 +86,11 @@ public class Challenge {
         this.thumbnail = thumbnail;
     }
 
-    public String getStream() {
+    public Stream getStream() {
         return stream;
     }
 
-    public void setStream(String stream) {
+    public void setStream(Stream stream) {
         this.stream = stream;
     }
 

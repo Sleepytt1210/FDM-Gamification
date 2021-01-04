@@ -10,9 +10,9 @@
 <header>
     <img src="../static/images/FDMlogo.png" th:src="@{/images/FDMlogo.png}" alt="FDMlogo" class="logo">
     <ul>
-        <li><a href="index.html">Home</a></li>
-        <li><a href="scenarios.html">Explore</a></li>
-        <li><a href="leaderboard.html">Leaderboard</a></li>
+        <li><a href="/home" th:href="@{/home}">Home</a></li>
+        <li><a href="/scenarios" th:href="@{/scenarios}">Explore</a></li>
+        <li><a href="/leaderboard" th:href="@{/leaderboard}">Leaderboard</a></li>
     </ul>
 </header>
 
@@ -37,7 +37,7 @@
         <h2>Choose a Scenario</h2>
     </div>
     <div class="scene1" id="testinggames" style="display: none">
-        <th:block class="table1" th:each="scenario : ${scenarios}">
+        <th:block class="table1" th:each="scenario : ${ST}">
             <table>
                 <tr>
                     <th th:text="${scenario.challengeTitle}">Software Testing Scenario 1</th>

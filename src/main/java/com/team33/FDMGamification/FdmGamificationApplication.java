@@ -3,6 +3,7 @@ package com.team33.FDMGamification;
 import com.team33.FDMGamification.Model.Challenge;
 import com.team33.FDMGamification.Model.Choice;
 import com.team33.FDMGamification.Model.Question;
+import com.team33.FDMGamification.Model.Stream;
 import com.team33.FDMGamification.Service.ChallengeService;
 import com.team33.FDMGamification.Service.ChoiceService;
 import com.team33.FDMGamification.Service.QuestionService;
@@ -55,7 +56,7 @@ public class FdmGamificationApplication {
 			for (int i = 0; i < n; i++) {
 				String[] line = br.readLine().split(",");
 				int comp = Integer.parseInt(line[2]);
-				Challenge challenge = challengeService.create(new Challenge(line[0], line[1], line[3], line[4], comp));
+				Challenge challenge = challengeService.create(new Challenge(line[0], line[1], line[3], Stream.valueOf(line[4]), comp));
 				// Get number of questions
 				int m = (br.readLine().charAt(0) - '0');
 				for (int j = 0; j < m; j++) {

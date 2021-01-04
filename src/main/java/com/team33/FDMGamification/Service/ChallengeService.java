@@ -1,10 +1,7 @@
 package com.team33.FDMGamification.Service;
 
 import com.team33.FDMGamification.DAO.ChallengeRepository;
-import com.team33.FDMGamification.Model.Challenge;
-import com.team33.FDMGamification.Model.ChallengeFeedback;
-import com.team33.FDMGamification.Model.Question;
-import com.team33.FDMGamification.Model.Rating;
+import com.team33.FDMGamification.Model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +34,7 @@ public class ChallengeService {
      * @param completion   Number of completion.
      * @return Challenge: Challenge entity persisted in database.
      */
-    public Challenge create(String title, String introduction, String thumbnail, String stream, Integer completion) {
+    public Challenge create(String title, String introduction, String thumbnail, Stream stream, Integer completion) {
         Challenge challenge = new Challenge(title, introduction, thumbnail, stream, completion);
         return create(challenge);
     }
@@ -70,6 +67,16 @@ public class ChallengeService {
      * @return List<Challenge>: List of challenges of given stream.
      */
     public List<Challenge> findByStream(String stream) {
+        return findByStream(Stream.valueOf(stream));
+    }
+
+    /**
+     * Find a list of challenges by its stream.
+     *
+     * @param stream Stream of challenge (i.e Stream.BI, Stream.ST, Stream.TO)
+     * @return List<Challenge>: List of challenges of given stream.
+     */
+    public List<Challenge> findByStream(Stream stream) {
         return challengeRepo.findChallengesByStreamEquals(stream);
     }
 
@@ -97,7 +104,7 @@ public class ChallengeService {
      * @return Challenge: Updated challenge entity.
      */
     public Challenge update(Integer challengeId, String title, String introduction, String thumbnail,
-                            String stream, Integer completion, Map<Integer, Question> questions,
+                            Stream stream, Integer completion, Map<Integer, Question> questions,
                             Map<Boolean, ChallengeFeedback> feedbacks, Set<Rating> ratings) {
         Challenge tempNew = new Challenge(title, introduction, thumbnail, stream, completion);
         tempNew.setQuestion(questions);

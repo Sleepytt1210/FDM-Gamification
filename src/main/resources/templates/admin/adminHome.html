@@ -10,7 +10,7 @@
     <table>
         <tbody>
         <tr th:each="challenge : ${challenges}">
-            <td><a th:href="@{'/admin/' + ${challenge.getId()}}" th:text="${'Challenge ' + challenge.getId()}"></a></td>
+            <td><a th:href="@{'/admin/challenge/' + ${challenge.getId()}}" th:text="${'Challenge ' + challenge.getId()}"></a></td>
         </tr>
         </tbody>
     </table>
