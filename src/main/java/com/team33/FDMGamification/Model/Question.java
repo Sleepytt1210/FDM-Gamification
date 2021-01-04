@@ -94,7 +94,6 @@ public class Question {
                 ", questionText='" + questionText + '\'' +
                 ", questionCompletion=" + questionCompletion +
                 ", challengeId=" + challenge.getId() +
-                ", choices=" + choices +
                 '}';
     }
 }
