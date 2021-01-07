@@ -5,7 +5,7 @@ body{
 
 /*Top of page navigation bar*/
 header{
-    background-color: #242424;
+    background-color: #202025;
     padding: 20px;
     position: fixed;
     width: 100%;
@@ -97,6 +97,9 @@ header a:hover {
 .chooseScenario .testinggames{
     width: auto;
     height: auto;
+}
+.chooseScenario .testinggames:target{
+    display: block;
 }
 .chooseScenario .businessgames{
     width: auto;

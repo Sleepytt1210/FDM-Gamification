@@ -37,7 +37,7 @@
         <h2>Choose a Scenario</h2>
     </div>
     <div class="scene1" id="testinggames" style="display: none">
-        <th:block class="table1" th:each="scenario : ${ST}">
+        <th:block th:each="scenario : ${ST}">
             <table>
                 <tr>
                     <th th:text="${scenario.challengeTitle}">Software Testing Scenario 1</th>
@@ -50,6 +50,7 @@
                 </tr>
             </table>
         </th:block>
+    </div>
 <!--        <table class="table1">-->
 <!--            <tr>-->
 <!--                <th>Software Testing Scenario 2</th>-->
@@ -84,18 +85,21 @@
 <!--            </tr>-->
 <!--        </table>-->
 <!--    </div>-->
-<!--    <div class="scene1" id="businessgames" style="display: none">-->
-<!--        <table class="table1">-->
-<!--            <tr>-->
-<!--                <th>Business Intelligence Scenario 1</th>-->
-<!--            </tr>-->
-<!--            <tr>-->
-<!--                <th>Description</th>-->
-<!--            </tr>-->
-<!--            <tr>-->
-<!--                <th>Score:</th>-->
-<!--            </tr>-->
-<!--        </table>-->
+    <div class="scene1" id="businessgames" style="display: none">
+        <th:block th:each="scenario : ${BI}">
+            <table>
+                <tr>
+                    <th th:text="${scenario.challengeTitle}">Business Intelligence Scenario 1</th>
+                </tr>
+                <tr>
+                    <th th:text="${scenario.introduction}">Description</th>
+                </tr>
+                <tr>
+                    <th>Score:</th>
+                </tr>
+            </table>
+        </th:block>
+    </div>
 <!--        <table class="table1">-->
 <!--            <tr>-->
 <!--                <th>Business Intelligence Scenario 2</th>-->
@@ -130,18 +134,21 @@
 <!--            </tr>-->
 <!--        </table>-->
 <!--    </div>-->
-<!--    <div class="scene1" id="techgames" style="display: none">-->
-<!--        <table class="table1">-->
-<!--            <tr>-->
-<!--                <th>Technical Operations Scenario 1</th>-->
-<!--            </tr>-->
-<!--            <tr>-->
-<!--                <th>Description</th>-->
-<!--            </tr>-->
-<!--            <tr>-->
-<!--                <th>Score:</th>-->
-<!--            </tr>-->
-<!--        </table>-->
+    <div class="scene1" id="techgames" style="display: none">
+        <th:block th:each="scenario : ${TO}">
+            <table>
+                <tr>
+                    <th th:text="${scenario.challengeTitle}">Technical Operations Scenario 1</th>
+                </tr>
+                <tr>
+                    <th th:text="${scenario.introduction}">Description</th>
+                </tr>
+                <tr>
+                    <th>Score:</th>
+                </tr>
+            </table>
+        </th:block>
+    </div>
 <!--        <table class="table1">-->
 <!--            <tr>-->
 <!--                <th>Technical Operations Scenario 2</th>-->
@@ -175,7 +182,7 @@
 <!--                <th>Score:</th>-->
 <!--            </tr>-->
 <!--        </table>-->
-    </div>
+<!--    </div>-->
 
 </section>
 
@@ -237,6 +244,14 @@
             xALL[1].style.paddingLeft = "70px";
             xALL[1].style.paddingRight = "70px";
         }
+    }
+
+    if (sessionStorage.getItem("option") === "ST"){
+        displayGame();
+    } else if (sessionStorage.getItem("option") === "BI"){
+        displayGame2();
+    } else if (sessionStorage.getItem("option") === "TO"){
+        displayGame3();
     }
 </script>
 </html>
