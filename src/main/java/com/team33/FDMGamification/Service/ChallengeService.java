@@ -1,16 +1,14 @@
 package com.team33.FDMGamification.Service;
 
 import com.team33.FDMGamification.DAO.ChallengeRepository;
-import com.team33.FDMGamification.Model.Challenge;
-import com.team33.FDMGamification.Model.ChallengeFeedback;
-import com.team33.FDMGamification.Model.Question;
-import com.team33.FDMGamification.Model.Rating;
+import com.team33.FDMGamification.Model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -32,11 +30,12 @@ public class ChallengeService {
      * @param title        Title of challenge.
      * @param introduction Introduction text of challenge.
      * @param thumbnail    URL of thumbnail for the challenge.
+     * @param stream       Stream of the challenge.
      * @param completion   Number of completion.
      * @return Challenge: Challenge entity persisted in database.
      */
-    public Challenge create(String title, String introduction, String thumbnail, Integer completion) {
-        Challenge challenge = new Challenge(title, introduction, thumbnail, completion);
+    public Challenge create(String title, String introduction, String thumbnail, Stream stream, Integer completion) {
+        Challenge challenge = new Challenge(title, introduction, thumbnail, stream, completion);
         return create(challenge);
     }
 
@@ -62,6 +61,26 @@ public class ChallengeService {
     }
 
     /**
+     * Find a list of challenges by its stream.
+     *
+     * @param stream Stream of challenge (i.e "BI", "ST", "TO")
+     * @return List<Challenge>: List of challenges of given stream.
+     */
+    public List<Challenge> findByStream(String stream) {
+        return findByStream(Stream.valueOf(stream));
+    }
+
+    /**
+     * Find a list of challenges by its stream.
+     *
+     * @param stream Stream of challenge (i.e Stream.BI, Stream.ST, Stream.TO)
+     * @return List<Challenge>: List of challenges of given stream.
+     */
+    public List<Challenge> findByStream(Stream stream) {
+        return challengeRepo.findChallengesByStreamEquals(stream);
+    }
+
+    /**
      * Get all challenges in the database.
      *
      * @return List<Challenge>: All the challenge in the database.
@@ -77,14 +96,17 @@ public class ChallengeService {
      * @param title        New title of challenge.
      * @param introduction New introduction of challenge.
      * @param thumbnail    New thumbnail url of challenge.
+     * @param stream       New stream of challenge.
      * @param completion   New completion count of challenge.
      * @param questions    New questions map of challenge.
      * @param feedbacks    New feedback map of challenge.
      * @param ratings      New ratings set of challenge.
      * @return Challenge: Updated challenge entity.
      */
-    public Challenge update(Integer challengeId, String title, String introduction, String thumbnail, Integer completion, Map<Integer, Question> questions, Map<Boolean, ChallengeFeedback> feedbacks, Set<Rating> ratings) {
-        Challenge tempNew = new Challenge(title, introduction, thumbnail, completion);
+    public Challenge update(Integer challengeId, String title, String introduction, String thumbnail,
+                            Stream stream, Integer completion, Map<Integer, Question> questions,
+                            Map<Boolean, ChallengeFeedback> feedbacks, Set<Rating> ratings) {
+        Challenge tempNew = new Challenge(title, introduction, thumbnail, stream, completion);
         tempNew.setQuestion(questions);
         tempNew.setChallengeFeedback(feedbacks);
         tempNew.setRatings(ratings);
@@ -103,6 +125,7 @@ public class ChallengeService {
         if (newChallenge.getChallengeTitle() != null) oldChallenge.setChallengeTitle(newChallenge.getChallengeTitle());
         if (newChallenge.getIntroduction() != null) oldChallenge.setIntroduction(newChallenge.getIntroduction());
         if (newChallenge.getThumbnail() != null) oldChallenge.setThumbnail(newChallenge.getThumbnail());
+        if (newChallenge.getStream() != null) oldChallenge.setStream(newChallenge.getStream());
         if (newChallenge.getCompletion() != null) oldChallenge.setCompletion(newChallenge.getCompletion());
         oldChallenge = challengeRepo.saveAndFlush(oldChallenge);
         Map<Integer, Question> newQuestions = newChallenge.getQuestion();

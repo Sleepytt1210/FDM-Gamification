@@ -10,9 +10,9 @@
 <header>
     <img src="../static/images/FDMlogo.png" th:src="@{/images/FDMlogo.png}" alt="FDMlogo" class="logo">
     <ul>
-        <li><a href="index.html">Home</a></li>
-        <li><a href="scenarios.html">Explore</a></li>
-        <li><a href="leaderboard.html">Leaderboard</a></li>
+        <li><a href="/home" th:href="@{/home}">Home</a></li>
+        <li><a href="/scenarios" th:href="@{/scenarios}">Explore</a></li>
+        <li><a href="/leaderboard" th:href="@{/leaderboard}">Leaderboard</a></li>
     </ul>
 </header>
 
@@ -37,143 +37,152 @@
         <h2>Choose a Scenario</h2>
     </div>
     <div class="scene1" id="testinggames" style="display: none">
-        <table class="table1">
-            <tr>
-                <th>Software Testing Scenario 1</th>
-            </tr>
-            <tr>
-                <th>Description</th>
-            </tr>
-            <tr>
-                <th>Score:</th>
-            </tr>
-        </table>
-        <table class="table1">
-            <tr>
-                <th>Software Testing Scenario 2</th>
-            </tr>
-            <tr>
-                <th>Description</th>
-            </tr>
-            <tr>
-                <th>Score:</th>
-            </tr>
-        </table>
-        <table class="table1">
-            <tr>
-                <th>Software Testing Scenario 3</th>
-            </tr>
-            <tr>
-                <th>Description</th>
-            </tr>
-            <tr>
-                <th>Score:</th>
-            </tr>
-        </table>
-        <table class="table1">
-            <tr>
-                <th>Software Testing Scenario 4</th>
-            </tr>
-            <tr>
-                <th>Description</th>
-            </tr>
-            <tr>
-                <th>Score:</th>
-            </tr>
-        </table>
+        <th:block th:each="scenario : ${ST}">
+            <table>
+                <tr>
+                    <th th:text="${scenario.challengeTitle}">Software Testing Scenario 1</th>
+                </tr>
+                <tr>
+                    <th th:text="${scenario.introduction}">Description</th>
+                </tr>
+                <tr>
+                    <th>Score:</th>
+                </tr>
+            </table>
+        </th:block>
     </div>
+<!--        <table class="table1">-->
+<!--            <tr>-->
+<!--                <th>Software Testing Scenario 2</th>-->
+<!--            </tr>-->
+<!--            <tr>-->
+<!--                <th>Description</th>-->
+<!--            </tr>-->
+<!--            <tr>-->
+<!--                <th>Score:</th>-->
+<!--            </tr>-->
+<!--        </table>-->
+<!--        <table class="table1">-->
+<!--            <tr>-->
+<!--                <th>Software Testing Scenario 3</th>-->
+<!--            </tr>-->
+<!--            <tr>-->
+<!--                <th>Description</th>-->
+<!--            </tr>-->
+<!--            <tr>-->
+<!--                <th>Score:</th>-->
+<!--            </tr>-->
+<!--        </table>-->
+<!--        <table class="table1">-->
+<!--            <tr>-->
+<!--                <th>Software Testing Scenario 4</th>-->
+<!--            </tr>-->
+<!--            <tr>-->
+<!--                <th>Description</th>-->
+<!--            </tr>-->
+<!--            <tr>-->
+<!--                <th>Score:</th>-->
+<!--            </tr>-->
+<!--        </table>-->
+<!--    </div>-->
     <div class="scene1" id="businessgames" style="display: none">
-        <table class="table1">
-            <tr>
-                <th>Business Intelligence Scenario 1</th>
-            </tr>
-            <tr>
-                <th>Description</th>
-            </tr>
-            <tr>
-                <th>Score:</th>
-            </tr>
-        </table>
-        <table class="table1">
-            <tr>
-                <th>Business Intelligence Scenario 2</th>
-            </tr>
-            <tr>
-                <th>Description</th>
-            </tr>
-            <tr>
-                <th>Score:</th>
-            </tr>
-        </table>
-        <table class="table1">
-            <tr>
-                <th>Business Intelligence Scenario 3</th>
-            </tr>
-            <tr>
-                <th>Description</th>
-            </tr>
-            <tr>
-                <th>Score:</th>
-            </tr>
-        </table>
-        <table class="table1">
-            <tr>
-                <th>Business Intelligence Scenario 4</th>
-            </tr>
-            <tr>
-                <th>Description</th>
-            </tr>
-            <tr>
-                <th>Score:</th>
-            </tr>
-        </table>
+        <th:block th:each="scenario : ${BI}">
+            <table>
+                <tr>
+                    <th th:text="${scenario.challengeTitle}">Business Intelligence Scenario 1</th>
+                </tr>
+                <tr>
+                    <th th:text="${scenario.introduction}">Description</th>
+                </tr>
+                <tr>
+                    <th>Score:</th>
+                </tr>
+            </table>
+        </th:block>
     </div>
+<!--        <table class="table1">-->
+<!--            <tr>-->
+<!--                <th>Business Intelligence Scenario 2</th>-->
+<!--            </tr>-->
+<!--            <tr>-->
+<!--                <th>Description</th>-->
+<!--            </tr>-->
+<!--            <tr>-->
+<!--                <th>Score:</th>-->
+<!--            </tr>-->
+<!--        </table>-->
+<!--        <table class="table1">-->
+<!--            <tr>-->
+<!--                <th>Business Intelligence Scenario 3</th>-->
+<!--            </tr>-->
+<!--            <tr>-->
+<!--                <th>Description</th>-->
+<!--            </tr>-->
+<!--            <tr>-->
+<!--                <th>Score:</th>-->
+<!--            </tr>-->
+<!--        </table>-->
+<!--        <table class="table1">-->
+<!--            <tr>-->
+<!--                <th>Business Intelligence Scenario 4</th>-->
+<!--            </tr>-->
+<!--            <tr>-->
+<!--                <th>Description</th>-->
+<!--            </tr>-->
+<!--            <tr>-->
+<!--                <th>Score:</th>-->
+<!--            </tr>-->
+<!--        </table>-->
+<!--    </div>-->
     <div class="scene1" id="techgames" style="display: none">
-        <table class="table1">
-            <tr>
-                <th>Technical Operations Scenario 1</th>
-            </tr>
-            <tr>
-                <th>Description</th>
-            </tr>
-            <tr>
-                <th>Score:</th>
-            </tr>
-        </table>
-        <table class="table1">
-            <tr>
-                <th>Technical Operations Scenario 2</th>
-            </tr>
-            <tr>
-                <th>Description</th>
-            </tr>
-            <tr>
-                <th>Score:</th>
-            </tr>
-        </table>
-        <table class="table1">
-            <tr>
-                <th>Technical Operations Scenario 3</th>
-            </tr>
-            <tr>
-                <th>Description</th>
-            </tr>
-            <tr>
-                <th>Score:</th>
-            </tr>
-        </table>
-        <table class="table1">
-            <tr>
-                <th>Technical Operations Scenario 4</th>
-            </tr>
-            <tr>
-                <th>Description</th>
-            </tr>
-            <tr>
-                <th>Score:</th>
-            </tr>
-        </table>
+        <th:block th:each="scenario : ${TO}">
+            <table>
+                <tr>
+                    <th th:text="${scenario.challengeTitle}">Technical Operations Scenario 1</th>
+                </tr>
+                <tr>
+                    <th th:text="${scenario.introduction}">Description</th>
+                </tr>
+                <tr>
+                    <th>Score:</th>
+                </tr>
+            </table>
+        </th:block>
     </div>
+<!--        <table class="table1">-->
+<!--            <tr>-->
+<!--                <th>Technical Operations Scenario 2</th>-->
+<!--            </tr>-->
+<!--            <tr>-->
+<!--                <th>Description</th>-->
+<!--            </tr>-->
+<!--            <tr>-->
+<!--                <th>Score:</th>-->
+<!--            </tr>-->
+<!--        </table>-->
+<!--        <table class="table1">-->
+<!--            <tr>-->
+<!--                <th>Technical Operations Scenario 3</th>-->
+<!--            </tr>-->
+<!--            <tr>-->
+<!--                <th>Description</th>-->
+<!--            </tr>-->
+<!--            <tr>-->
+<!--                <th>Score:</th>-->
+<!--            </tr>-->
+<!--        </table>-->
+<!--        <table class="table1">-->
+<!--            <tr>-->
+<!--                <th>Technical Operations Scenario 4</th>-->
+<!--            </tr>-->
+<!--            <tr>-->
+<!--                <th>Description</th>-->
+<!--            </tr>-->
+<!--            <tr>-->
+<!--                <th>Score:</th>-->
+<!--            </tr>-->
+<!--        </table>-->
+<!--    </div>-->
 
 </section>
 
@@ -235,6 +244,14 @@
             xALL[1].style.paddingLeft = "70px";
             xALL[1].style.paddingRight = "70px";
         }
+    }
+
+    if (sessionStorage.getItem("option") === "ST"){
+        displayGame();
+    } else if (sessionStorage.getItem("option") === "BI"){
+        displayGame2();
+    } else if (sessionStorage.getItem("option") === "TO"){
+        displayGame3();
     }
 </script>
 </html>

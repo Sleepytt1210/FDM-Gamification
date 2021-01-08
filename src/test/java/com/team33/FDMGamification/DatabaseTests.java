@@ -61,7 +61,7 @@ public class DatabaseTests {
     @BeforeEach
     public void setup() {
         try {
-            challenge1 = new Challenge("Challenge one", "This is challenge one.", "Thumbnail", 0);
+            challenge1 = new Challenge("Challenge one", "This is challenge one.", "Thumbnail", Stream.ST, 0);
             challengeS.create(challenge1);
             question1 = new Question("Question one", "This is question one.", 0);
             questionS.create(challenge1.getId(), question1);
@@ -86,7 +86,7 @@ public class DatabaseTests {
 
     @Test
     public void testChallengeCreateWithProperties() {
-        challengeS.create("Challenge two", "This is challenge two.", "Thumbnail url", 1);
+        challengeS.create("Challenge two", "This is challenge two.", "Thumbnail url", Stream.ST, 1);
         assertEquals(2, challengeRepo.findAll().size());
         assertEquals("This is challenge two.", challengeS.findById(2).getIntroduction());
     }
@@ -102,10 +102,10 @@ public class DatabaseTests {
 
     @Test
     public void testChallengeGetAll() {
-        challengeS.create("Challenge two", "This is challenge two.", "Thumbnail url", 0);
+        challengeS.create("Challenge two", "This is challenge two.", "Thumbnail url", Stream.ST, 0);
         assertEquals(2, challengeS.getAll().size());
 
-        challengeS.create("Challenge three", "This is challenge three.", "Thumbnail url", 100);
+        challengeS.create("Challenge three", "This is challenge three.", "Thumbnail url", Stream.BI, 100);
         assertEquals(3, challengeS.getAll().size());
     }
 
@@ -114,10 +114,11 @@ public class DatabaseTests {
         String newTitle = "Challenge 1";
         String newIntro = "This is challenge 1.";
         Integer newCompletion = 10;
+        Stream newStream = Stream.BI;
 
         assertEquals("Challenge one", challengeS.findById(1).getChallengeTitle());
         assertEquals("This is challenge one.", challengeS.findById(1).getIntroduction());
-        challengeS.update(1, newTitle, newIntro, null, newCompletion, null, null, null);
+        challengeS.update(1, newTitle, newIntro, null, newStream, newCompletion, null, null, null);
 
         Challenge updatedChallenge = challengeS.findById(1);
         assertEquals(newTitle, updatedChallenge.getChallengeTitle());
@@ -130,8 +131,9 @@ public class DatabaseTests {
         String newTitle = "Challenge 1";
         String newIntro = "This is challenge 1.";
         Integer newCompletion = 10;
+        Stream newStream = Stream.BI;
 
-        Challenge newChallenge = new Challenge(newTitle, newIntro, "Thumbnail2", newCompletion);
+        Challenge newChallenge = new Challenge(newTitle, newIntro, "Thumbnail2", newStream, newCompletion);
 
         assertEquals("Challenge one", challengeS.findById(1).getChallengeTitle());
         assertEquals("This is challenge one.", challengeS.findById(1).getIntroduction());
@@ -145,7 +147,7 @@ public class DatabaseTests {
 
     @Test
     public void testChallengeDeleteOneByEntity() {
-        challengeS.create("Challenge two", "This is challenge two.", "Thumbnail url2", 0);
+        challengeS.create("Challenge two", "This is challenge two.", "Thumbnail url2", Stream.ST,0);
         assertEquals(2, challengeS.getAll().size());
 
         Challenge challenge2 = challengeS.findById(2);
@@ -157,7 +159,7 @@ public class DatabaseTests {
 
     @Test
     public void testChallengeDeleteOneById() {
-        challengeS.create("Challenge two", "This is challenge two.", "Thumbnail url2", 0);
+        challengeS.create("Challenge two", "This is challenge two.", "Thumbnail url2", Stream.ST,0);
         assertEquals(2, challengeS.getAll().size());
 
         challengeS.delete(2);
@@ -167,10 +169,10 @@ public class DatabaseTests {
 
     @Test
     public void testChallengeBatchDelete() {
-        challengeS.create("Challenge two", "This is challenge two.", "Thumbnail url2", 0);
+        challengeS.create("Challenge two", "This is challenge two.", "Thumbnail url2", Stream.ST,0);
         assertEquals(2, challengeS.getAll().size());
 
-        challengeS.create("Challenge two", "This is challenge three.", "Thumbnail url3", 0);
+        challengeS.create("Challenge two", "This is challenge three.", "Thumbnail url3", Stream.BI, 0);
         assertEquals(3, challengeS.getAll().size());
 
         List<Challenge> challengeList = challengeRepo.findAllById(List.of(2, 3));
@@ -619,7 +621,7 @@ public class DatabaseTests {
         Integer newQuestionCompletion = 10;
 
         // Create an updated dummy challenge (Not persisted)
-        Challenge updatedChallenge = new Challenge(null, newChallengeIntro, null, newChallengeCompletion);
+        Challenge updatedChallenge = new Challenge(null, newChallengeIntro, null, null, newChallengeCompletion);
 
         // Create an update dummy question that is linked to dummy challenge (Not persisted)
         Question newQuestion = new Question(newQuestionTitle, newQuestionText, newQuestionCompletion);
@@ -660,7 +662,7 @@ public class DatabaseTests {
         String newChoiceReason = "This choice is pointless.";
 
         // Create an updated dummy challenge (Not persisted)
-        Challenge updatedChallenge = new Challenge(null, newChallengeIntro, null, newChallengeCompletion);
+        Challenge updatedChallenge = new Challenge(null, newChallengeIntro, null, null, newChallengeCompletion);
 
         // Create an update dummy question that is linked to dummy challenge (Not persisted)
         Choice newChoice = new Choice(newChoiceText, newChoiceWeight, newChoiceReason);

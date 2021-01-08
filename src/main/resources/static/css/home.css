@@ -1,6 +1,7 @@
 body{
     margin: 0;
     font-family: 'Raleway', sans-serif;
+    width: 100%;
 }
 html{
     scroll-behavior: smooth;
@@ -8,7 +9,7 @@ html{
 
 /*Top of page navigation bar*/
 header{
-    background-color: #242424;
+    background-color: #202025;
     padding: 20px;
     position: fixed;
     width: 100%;
@@ -63,36 +64,26 @@ header a:hover {
     text-align: center;
     font-size: 20px;
 }
-.chooseStream ul{
-    display: flex;
-    list-style: none;
-    justify-content: center;
-}
-.chooseStream ul li img{
-    height: auto;
-    width: 500px;
+.chooseStream table tbody tr td{
     padding-left: 25px;
     padding-right: 25px;
+    text-align: center;
+}
+.chooseStream tr td img{
+    height: auto;
+    width: 90%;
     transition: 0.3s;
     filter: grayscale(50%);
 }
-.chooseStream ul li img:hover{
+.chooseStream tr td img:hover{
     height: auto;
-    width: 480px;
+    width: 85%;
     filter: grayscale(0%);
     transition: 0.3s;
 }
-.chooseStream .progress-bars{
-    display: flex;
-    justify-content: center;
-}
 .chooseStream .progress-bars progress{
     height: 50px;
-    width: 400px;
-}
-.chooseStream .progress-bars .bar21{
-    padding-left: 7%;
-    padding-right: 7%;
+    width: 90%;
 }
 
 
