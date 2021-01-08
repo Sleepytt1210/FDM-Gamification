@@ -35,162 +35,14 @@
                 <td><a onclick="displayGame3()" th:href="@{/scenarios}"><img src="../static/images/technical2.png" th:src="@{/images/technical2.png}" alt="techpic"></a></td>
             </tr>
             <tr class="progress-bars">
-                <td><progress class="bar1" value="20" max="100"></progress></td>
-                <td class="bar22"><progress class="bar2" value="20" max="100"></progress></td>
-                <td><progress class="bar3" value="20" max="100"></progress></td>
+                <td><progress id="bar1" value="20" max="100"></progress></td>
+                <td><progress id="bar2" value="20" max="100"></progress></td>
+                <td><progress id="bar3" value="20" max="100"></progress></td>
             </tr>
             </tbody>
         </table>
     </section>
 </section>
-
-<!--<div class="scenarios" id="scenarios" style="display: none">-->
-<!--    <section class="section2">-->
-<!--        <section class="chooseScenario">-->
-<!--            <div id="title2" class="title2">-->
-<!--                <h2>Choose a Scenario</h2>-->
-<!--            </div>-->
-<!--            <div class="scene1" id="testinggames" style="display: none">-->
-<!--                <table class="table1">-->
-<!--                    <tr>-->
-<!--                        <th>Software Testing Scenario 1</th>-->
-<!--                    </tr>-->
-<!--                    <tr>-->
-<!--                        <th>Description</th>-->
-<!--                    </tr>-->
-<!--                    <tr>-->
-<!--                        <th>Score:</th>-->
-<!--                    </tr>-->
-<!--                </table>-->
-<!--                <table class="table1">-->
-<!--                    <tr>-->
-<!--                        <th>Software Testing Scenario 2</th>-->
-<!--                    </tr>-->
-<!--                    <tr>-->
-<!--                        <th>Description</th>-->
-<!--                    </tr>-->
-<!--                    <tr>-->
-<!--                        <th>Score:</th>-->
-<!--                    </tr>-->
-<!--                </table>-->
-<!--                <table class="table1">-->
-<!--                    <tr>-->
-<!--                        <th>Software Testing Scenario 3</th>-->
-<!--                    </tr>-->
-<!--                    <tr>-->
-<!--                        <th>Description</th>-->
-<!--                    </tr>-->
-<!--                    <tr>-->
-<!--                        <th>Score:</th>-->
-<!--                    </tr>-->
-<!--                </table>-->
-<!--                <table class="table1">-->
-<!--                    <tr>-->
-<!--                        <th>Software Testing Scenario 4</th>-->
-<!--                    </tr>-->
-<!--                    <tr>-->
-<!--                        <th>Description</th>-->
-<!--                    </tr>-->
-<!--                    <tr>-->
-<!--                        <th>Score:</th>-->
-<!--                    </tr>-->
-<!--                </table>-->
-<!--            </div>-->
-<!--            <div class="scene1" id="businessgames" style="display: none">-->
-<!--                <table class="table1">-->
-<!--                    <tr>-->
-<!--                        <th>Business Intelligence Scenario 1</th>-->
-<!--                    </tr>-->
-<!--                    <tr>-->
-<!--                        <th>Description</th>-->
-<!--                    </tr>-->
-<!--                    <tr>-->
-<!--                        <th>Score:</th>-->
-<!--                    </tr>-->
-<!--                </table>-->
-<!--                <table class="table1">-->
-<!--                    <tr>-->
-<!--                        <th>Business Intelligence Scenario 2</th>-->
-<!--                    </tr>-->
-<!--                    <tr>-->
-<!--                        <th>Description</th>-->
-<!--                    </tr>-->
-<!--                    <tr>-->
-<!--                        <th>Score:</th>-->
-<!--                    </tr>-->
-<!--                </table>-->
-<!--                <table class="table1">-->
-<!--                    <tr>-->
-<!--                        <th>Business Intelligence Scenario 3</th>-->
-<!--                    </tr>-->
-<!--                    <tr>-->
-<!--                        <th>Description</th>-->
-<!--                    </tr>-->
-<!--                    <tr>-->
-<!--                        <th>Score:</th>-->
-<!--                    </tr>-->
-<!--                </table>-->
-<!--                <table class="table1">-->
-<!--                    <tr>-->
-<!--                        <th>Business Intelligence Scenario 4</th>-->
-<!--                    </tr>-->
-<!--                    <tr>-->
-<!--                        <th>Description</th>-->
-<!--                    </tr>-->
-<!--                    <tr>-->
-<!--                        <th>Score:</th>-->
-<!--                    </tr>-->
-<!--                </table>-->
-<!--            </div>-->
-<!--            <div class="scene1" id="techgames" style="display: none">-->
-<!--                <table class="table1">-->
-<!--                    <tr>-->
-<!--                        <th>Technical Operations Scenario 1</th>-->
-<!--                    </tr>-->
-<!--                    <tr>-->
-<!--                        <th>Description</th>-->
-<!--                    </tr>-->
-<!--                    <tr>-->
-<!--                        <th>Score:</th>-->
-<!--                    </tr>-->
-<!--                </table>-->
-<!--                <table class="table1">-->
-<!--                    <tr>-->
-<!--                        <th>Technical Operations Scenario 2</th>-->
-<!--                    </tr>-->
-<!--                    <tr>-->
-<!--                        <th>Description</th>-->
-<!--                    </tr>-->
-<!--                    <tr>-->
-<!--                        <th>Score:</th>-->
-<!--                    </tr>-->
-<!--                </table>-->
-<!--                <table class="table1">-->
-<!--                    <tr>-->
-<!--                        <th>Technical Operations Scenario 3</th>-->
-<!--                    </tr>-->
-<!--                    <tr>-->
-<!--                        <th>Description</th>-->
-<!--                    </tr>-->
-<!--                    <tr>-->
-<!--                        <th>Score:</th>-->
-<!--                    </tr>-->
-<!--                </table>-->
-<!--                <table class="table1">-->
-<!--                    <tr>-->
-<!--                        <th>Technical Operations Scenario 4</th>-->
-<!--                    </tr>-->
-<!--                    <tr>-->
-<!--                        <th>Description</th>-->
-<!--                    </tr>-->
-<!--                    <tr>-->
-<!--                        <th>Score:</th>-->
-<!--                    </tr>-->
-<!--                </table>-->
-<!--            </div>-->
-<!--        </section>-->
-<!--    </section>-->
-<!--</div>-->
 
 <footer>
     <div>
@@ -200,7 +52,7 @@
 </body>
 
 <script>
-    if (sessionStorage.getItem("option") != null){
+    if (sessionStorage.getItem("option") == null){
         sessionStorage.setItem("option", "none");
     }
     function displayGame() {
