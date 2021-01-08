@@ -71,6 +71,7 @@
     <div class="scene1" id="techgames" style="display: none">
         <th:block th:each="scenario : ${TO}">
             <table>
+                <a th:href="@{/scenario/__${scenario.id}__}"></a>
                 <tr>
                     <th th:text="${scenario.challengeTitle}">Technical Operations Scenario 1</th>
                 </tr>
@@ -83,6 +84,41 @@
             </table>
         </th:block>
     </div>
+<!--        <table class="table1">-->
+<!--            <tr>-->
+<!--                <th>Technical Operations Scenario 2</th>-->
+<!--            </tr>-->
+<!--            <tr>-->
+<!--                <th>Description</th>-->
+<!--            </tr>-->
+<!--            <tr>-->
+<!--                <th>Score:</th>-->
+<!--            </tr>-->
+<!--        </table>-->
+<!--        <table class="table1">-->
+<!--            <tr>-->
+<!--                <th>Technical Operations Scenario 3</th>-->
+<!--            </tr>-->
+<!--            <tr>-->
+<!--                <th>Description</th>-->
+<!--            </tr>-->
+<!--            <tr>-->
+<!--                <th>Score:</th>-->
+<!--            </tr>-->
+<!--        </table>-->
+<!--        <table class="table1">-->
+<!--            <tr>-->
+<!--                <th>Technical Operations Scenario 4</th>-->
+<!--            </tr>-->
+<!--            <tr>-->
+<!--                <th>Description</th>-->
+<!--            </tr>-->
+<!--            <tr>-->
+<!--                <th>Score:</th>-->
+<!--            </tr>-->
+<!--        </table>-->
+<!--    </div>-->
+
 </section>
 
 <footer>
