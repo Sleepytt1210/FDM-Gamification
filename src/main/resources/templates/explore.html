@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="~{headinglayout.html}">
+<head>
+    <meta charset="UTF-8">
+    <title>Scenarios</title>
+    <link rel="stylesheet" href="../static/css/scenarios.css" th:href="@{/css/scenarios.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@600&display=swap" rel="stylesheet">
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="title">
+        <h2>Scenarios</h2>
+    </div>
+
+    <section class="scenarioNavbar">
+        <ul>
+            <li>
+                <button onclick="displayGame()">Software Testing</button>
+            </li>
+            <li>
+                <button onclick="displayGame2()">Business Intelligence</button>
+            </li>
+            <li>
+                <button onclick="displayGame3()">Technical Operations</button>
+            </li>
+            <li>
+                <button onclick="displayGame4()">Show All</button>
+            </li>
+        </ul>
+    </section>
+    <section class="chooseScenario">
+        <div id="title2" class="title2">
+            <h2>Choose a Scenario</h2>
+        </div>
+        <div class="scene1" id="testinggames" style="display: none">
+            <th:block th:each="scenario : ${ST}">
+                <table>
+                    <tr>
+                        <th th:text="${scenario.challengeTitle}"></th>
+                    </tr>
+                    <tr>
+                        <th th:text="${scenario.introduction}"></th>
+                    </tr>
+                    <tr>
+                        <th>Score:</th>
+                    </tr>
+                </table>
+            </th:block>
+        </div>
+        <div class="scene1" id="businessgames" style="display: none">
+            <th:block th:each="scenario : ${BI}">
+                <table>
+                    <tr>
+                        <th th:text="${scenario.challengeTitle}">Business Intelligence Scenario 1</th>
+                    </tr>
+                    <tr>
+                        <th th:text="${scenario.introduction}">Description</th>
+                    </tr>
+                    <tr>
+                        <th>Score:</th>
+                    </tr>
+                </table>
+            </th:block>
+        </div>
+        <div class="scene1" id="techgames" style="display: none">
+            <th:block th:each="scenario : ${TO}">
+                <table>
+                    <a th:href="@{/scenario/__${scenario.id}__}"></a>
+                    <tr>
+                        <th th:text="${scenario.challengeTitle}">Technical Operations Scenario 1</th>
+                    </tr>
+                    <tr>
+                        <th th:text="${scenario.introduction}">Description</th>
+                    </tr>
+                    <tr>
+                        <th>Score:</th>
+                    </tr>
+                </table>
+            </th:block>
+        </div>
+    </section>
+
+
+    <script>
+        var x = document.getElementById("testinggames");
+        var x2 = document.getElementById("businessgames");
+        var x3 = document.getElementById("techgames");
+        var x4 = document.getElementById("title2");
+        var xALL = document.getElementsByClassName("scene1");
+
+        function displayGame() {
+            x.style.display = "block";
+            x2.style.display = "none";
+            x3.style.display = "none";
+            x4.style.display = "none";
+            var i;
+            for (i = 0; i < xALL.length; i++) {
+                xALL[0].style.width = "auto";
+            }
+        }
+
+        function displayGame2() {
+            x2.style.display = "block";
+            x.style.display = "none";
+            x3.style.display = "none";
+            x4.style.display = "none";
+            var i;
+            for (i = 0; i < xALL.length; i++) {
+                xALL[1].style.width = "auto";
+            }
+        }
+
+        function displayGame3() {
+            x3.style.display = "block";
+            x.style.display = "none";
+            x2.style.display = "none";
+            x4.style.display = "none";
+
+            var i;
+            for (i = 0; i < xALL.length; i++) {
+                xALL[2].style.width = "auto";
+            }
+        }
+
+        function displayGame4() {
+            x3.style.display = "block";
+            x.style.display = "block";
+            x2.style.display = "block";
+            x4.style.display = "none";
+
+            var i;
+            for (i = 0; i < xALL.length; i++) {
+                xALL[i].style.width = "321px";
+                xALL[1].style.paddingLeft = "70px";
+                xALL[1].style.paddingRight = "70px";
+            }
+        }
+
+        if (sessionStorage.getItem("option") === "ST") {
+            displayGame();
+        } else if (sessionStorage.getItem("option") === "BI") {
+            displayGame2();
+        } else if (sessionStorage.getItem("option") === "TO") {
+            displayGame3();
+        }
+    </script>
+</div>
+
+</body>
+</html>
