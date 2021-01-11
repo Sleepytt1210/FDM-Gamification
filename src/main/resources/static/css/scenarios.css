@@ -1,55 +1,5 @@
 body{
-    margin: 0;
-    font-family: 'Raleway', sans-serif;
 }
-
-/*Top of page navigation bar*/
-header{
-    background-color: #202025;
-    padding: 20px;
-    position: fixed;
-    width: 100%;
-    height: 50px;
-}
-header .logo{
-    width: auto;
-    height: 60px;
-    float: left;
-    padding-left: 30px;
-}
-header ul{
-    display: flex;
-    align-items: center;
-    float: right;
-    padding-right: 50px;
-    list-style: none;
-}
-header a{
-    color: white;
-    text-decoration: none;
-    padding: 8px 20px;
-    font-size: 20px;
-}
-header a:hover {
-    color: #398fff;
-}
-
-
-/*Top of Page*/
-.heading{
-    background-image: url("../images/headingimage3.jpg");
-    background-size: cover;
-    width: 100%;
-    height: 300px;
-    display: flex;
-    justify-content: center;
-}
-.heading h1{
-    color: white;
-    font-size: 80px;
-    margin-top: 150px;
-}
-
 
 /*Title of section*/
 .title{
@@ -128,11 +78,4 @@ header a:hover {
 .chooseScenario tr, th{
     border: 1px solid black;
     border-collapse: collapse;
-}
-
-/*Footer*/
-footer {
-    background-color: #565656;
-    display: flex;
-    padding-bottom: 30px;
 }

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.Arrays;
 
 @Controller
 @RequestMapping("/scenario/{sid}")
@@ -43,8 +44,12 @@ public class ScenarioPageController {
 
     @PostMapping("/{qid}")
     public String submitQuestion(Model model, @PathVariable("sid") Integer sid, @PathVariable("qid") Integer qid
-            , @RequestParam("cid") Integer cid) {
-        System.out.println(challengeService.findById(sid).getQuestion().get(qid).getChoices().get(cid));
+            , @RequestParam(value = "score0", required = false) Integer[] cids0,
+                                 @RequestParam(value = "score1", required = false) Integer[] cids1,
+                                 @RequestParam(value = "score2", required = false) Integer[] cids2) {
+        System.out.println(Arrays.toString(cids0));
+        System.out.println(Arrays.toString(cids1));
+        System.out.println(Arrays.toString(cids2));
         return "question";
     }
 }
