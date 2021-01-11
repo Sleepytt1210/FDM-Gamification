@@ -296,10 +296,10 @@ public class DatabaseTests {
         assertNotNull(choiceB);
 
         // Ensure bidirectional relationship from choices
-        assertEquals(1, choiceA.getId());
+        assertEquals(1, choiceA.getChoiceId());
         assertEquals(question, choiceA.getQuestion());
 
-        assertEquals(2, choiceB.getId());
+        assertEquals(2, choiceB.getChoiceId());
         assertEquals(question, choiceB.getQuestion());
     }
 
@@ -666,11 +666,11 @@ public class DatabaseTests {
 
         // Create an update dummy question that is linked to dummy challenge (Not persisted)
         Choice newChoice = new Choice(newChoiceText, newChoiceWeight, newChoiceReason);
-        newChoice.setId(choice1.getId());
+        newChoice.setChoiceId(choice1.getChoiceId());
         newChoice.setQuestion(question1);
 
         // Put the question into the challenge set.
-        question1.getChoices().put(newChoice.getId(), newChoice);
+        question1.getChoices().put(newChoice.getChoiceId(), newChoice);
         updatedChallenge.getQuestion().put(question1.getQuestionId(), question1);
 
         // Before updates
@@ -692,7 +692,7 @@ public class DatabaseTests {
 
         // Check choice update
         assertEquals(newChoiceText, updatedChoice.getChoiceText());
-        assertEquals(newChoiceWeight, updatedChoice.getWeight());
+        assertEquals(newChoiceWeight, updatedChoice.getChoiceWeight());
         assertEquals(newChoiceReason, updatedChoice.getChoiceReason());
     }
 }
