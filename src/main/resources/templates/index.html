@@ -1,5 +1,8 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="~{headinglayout.html}">
 <head>
     <meta charset="UTF-8">
     <title>Home Page</title>
@@ -9,46 +12,29 @@
 </head>
 
 <body>
-<header>
-    <img src="../static/images/FDMlogo.png" th:src="@{/images/FDMlogo.png}" alt="FDMlogo" class="logo">
-    <ul>
-        <li><a th:href="@{/home}">Home</a></li>
-        <li><a th:href="@{/scenarios}">Explore</a></li>
-        <li><a th:href="@{/leaderboard}">Leaderboard</a></li>
-    </ul>
-</header>
-
-    <div class="heading">
-        <h1>FDM Games</h1>
-    </div>
-
-<section id="section1">
-    <section class="chooseStream">
-        <div class="title">
-            <h2>Choose a Stream</h2>
-        </div>
-        <table>
-            <tbody>
-            <tr>
-                <td><a onclick="displayGame()" th:href="@{/scenarios}"><img src="../static/images/softwaretesting2.png" th:src="@{/images/softwaretesting2.png}" alt="softwaretestingpic"></a></td>
-                <td><a onclick="displayGame2()" th:href="@{/scenarios}"><img src="../static/images/business2.png" th:src="@{/images/business2.png}" alt="businesspic"></a></td>
-                <td><a onclick="displayGame3()" th:href="@{/scenarios}"><img src="../static/images/technical2.png" th:src="@{/images/technical2.png}" alt="techpic"></a></td>
-            </tr>
-            <tr class="progress-bars">
-                <td><progress id="bar1" value="20" max="100"></progress></td>
-                <td><progress id="bar2" value="20" max="100"></progress></td>
-                <td><progress id="bar3" value="20" max="100"></progress></td>
-            </tr>
-            </tbody>
-        </table>
+<div layout:fragment="content">
+    <section id="section1">
+        <section class="chooseStream">
+            <div class="title">
+                <h2>Choose a Stream</h2>
+            </div>
+            <table>
+                <tbody>
+                <tr>
+                    <td><a onclick="displayGame()" th:href="@{/scenarios}"><img src="../static/images/softwaretesting2.png" th:src="@{/images/softwaretesting2.png}" alt="softwaretestingpic"></a></td>
+                    <td><a onclick="displayGame2()" th:href="@{/scenarios}"><img src="../static/images/business2.png" th:src="@{/images/business2.png}" alt="businesspic"></a></td>
+                    <td><a onclick="displayGame3()" th:href="@{/scenarios}"><img src="../static/images/technical2.png" th:src="@{/images/technical2.png}" alt="techpic"></a></td>
+                </tr>
+                <tr class="progress-bars">
+                    <td><progress id="bar1" value="20" max="100"></progress></td>
+                    <td><progress id="bar2" value="20" max="100"></progress></td>
+                    <td><progress id="bar3" value="20" max="100"></progress></td>
+                </tr>
+                </tbody>
+            </table>
+        </section>
     </section>
-</section>
-
-<footer>
-    <div>
-        <p>Footer</p>
-    </div>
-</footer>
+</div>
 </body>
 
 <script>
