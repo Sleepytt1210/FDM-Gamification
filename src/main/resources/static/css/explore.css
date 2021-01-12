@@ -16,18 +16,15 @@ body{
     list-style: none;
     justify-content: center;
 }
+
 .scenarioNavbar ul li {
     padding-left: 10px;
     padding-right: 10px;
-}
-.scenarioNavbar button{
-    color: black;
-    background-color: transparent;
-    border: none;
-    font-family: 'Raleway', sans-serif;
     font-size: 20px;
+    color: black;
 }
-.scenarioNavbar button:hover{
+
+.scenarioNavbar ul li:hover{
     color: #398fff;
     cursor: pointer;
 }
@@ -41,37 +38,33 @@ body{
     display: flex;
     justify-content: center;
     height: 100%;
-    padding-top: 50px;
-    padding-bottom: 300px;
+    margin: 50px auto;
 }
-.chooseScenario .testinggames{
+
+.scene1{
     width: auto;
     height: auto;
 }
-.chooseScenario .testinggames:target{
-    display: block;
-}
-.chooseScenario .businessgames{
-    width: auto;
-    height: auto;
-}
-.chooseScenario .techgames{
-    width: auto;
-    height: auto;
-}
+
 .chooseScenario table{
-    padding-bottom: 30px;
+    margin: 15px;
     width: 320px;
     height: 240px;
     display: inline-table;
     transition: 0.5s;
 }
+
 .chooseScenario table:hover{
     width: 330px;
     height: 250px;
     cursor: pointer;
     transition: 0.5s;
 }
+
+.chooseScenario a{
+    text-decoration: none;
+}
+
 .chooseScenario tr{
     background-color: #999999;
 }
