@@ -17,8 +17,13 @@ public class UserController {
         return "index";
     }
 
-    @RequestMapping("/explore")
+    @RequestMapping("/scenario")
     public String scenariosPage(Model model){
+        return "redirect:/explore";
+    }
+
+    @RequestMapping("/explore")
+    public String explorePage(Model model){
         model.addAttribute("ST", challengeService.findByStream("ST"));
         model.addAttribute("BI", challengeService.findByStream("BI"));
         model.addAttribute("TO", challengeService.findByStream("TO"));

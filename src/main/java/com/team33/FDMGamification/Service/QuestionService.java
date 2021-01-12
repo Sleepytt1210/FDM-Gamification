@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.management.InstanceAlreadyExistsException;
 import javax.persistence.EntityNotFoundException;
@@ -85,6 +86,17 @@ public class QuestionService {
      */
     public List<Question> getAll() {
         return questionRepo.findAll();
+    }
+
+    /**
+     * Return choices map of a question.
+     *
+     * @param id Id of the question.
+     * @return Map<Integer, Choice> choices: Map of choices with their id as key.
+     */
+    @Transactional
+    public Map<Integer, Choice> getChoices(Integer id){
+        return findById(id).getChoices();
     }
 
     /**
