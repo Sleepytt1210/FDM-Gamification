@@ -2,7 +2,7 @@
 
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorator="~{headinglayout.html}">
+      layout:decorate="~{headinglayout.html}">
 <head>
     <meta charset="UTF-8">
     <title>Home Page</title>
@@ -21,9 +21,9 @@
             <table>
                 <tbody>
                 <tr>
-                    <td><a onclick="displayGame()" th:href="@{/scenarios}"><img src="../static/images/softwaretesting2.png" th:src="@{/images/softwaretesting2.png}" alt="softwaretestingpic"></a></td>
-                    <td><a onclick="displayGame2()" th:href="@{/scenarios}"><img src="../static/images/business2.png" th:src="@{/images/business2.png}" alt="businesspic"></a></td>
-                    <td><a onclick="displayGame3()" th:href="@{/scenarios}"><img src="../static/images/technical2.png" th:src="@{/images/technical2.png}" alt="techpic"></a></td>
+                    <td><a onclick="displayGame()" th:href="@{/explore}"><img src="../static/images/softwaretesting2.png" th:src="@{/images/softwaretesting2.png}" alt="softwaretestingpic"></a></td>
+                    <td><a onclick="displayGame2()" th:href="@{/explore}"><img src="../static/images/business2.png" th:src="@{/images/business2.png}" alt="businesspic"></a></td>
+                    <td><a onclick="displayGame3()" th:href="@{/explore}"><img src="../static/images/technical2.png" th:src="@{/images/technical2.png}" alt="techpic"></a></td>
                 </tr>
                 <tr class="progress-bars">
                     <td><progress id="bar1" value="20" max="100"></progress></td>
@@ -34,21 +34,20 @@
             </table>
         </section>
     </section>
+    <script>
+        if (sessionStorage.getItem("option") == null){
+            sessionStorage.setItem("option", "NONE");
+        }
+        function displayGame() {
+            sessionStorage.setItem("option", "ST");
+        }
+        function displayGame2() {
+            sessionStorage.setItem("option", "BI");
+        }
+        function displayGame3() {
+            sessionStorage.setItem("option", "TO");
+        }
+    </script>
 </div>
 </body>
-
-<script>
-    if (sessionStorage.getItem("option") == null){
-        sessionStorage.setItem("option", "none");
-    }
-    function displayGame() {
-        sessionStorage.setItem("option", "ST");
-    }
-    function displayGame2() {
-        sessionStorage.setItem("option", "BI");
-    }
-    function displayGame3() {
-        sessionStorage.setItem("option", "TO");
-    }
-</script>
 </html>

@@ -6,12 +6,22 @@ $(function() {
     var urlSplit = url.match(/scenario\/(\d+)\/(\d+)/);
     var qid = urlSplit[2];
     var btn = $("#submit");
-    btn.prop("disabled", true);
-    btn.css("cursor", "not-allowed");
-    btn.prop("title", "Please fill in the tables first");
+    btnEnable();
     
     btn.click(function() {
     });
+
+    function btnEnable() {
+        if ($('#choices li').length !== 0) {
+            btn.prop("disabled", true);
+            btn.css("cursor", "not-allowed");
+            btn.prop("title", "Please fill in the tables first");
+        }else {
+            btn.prop("disabled", false);
+            btn.removeAttr("title");
+            btn.css("cursor", "pointer");
+        }
+    }
 
     $("ul.droptrue").sortable({
         connectWith: ".droptrue",
@@ -27,15 +37,7 @@ $(function() {
             var cur = ui.item;
             // Set request parameter of input according to table column
             cur.find("input").attr("name", cur.parent()[0].id);
-            if ($('#choices li').length !== 0) {
-                btn.prop("disabled", true);
-                btn.css("cursor", "not-allowed");
-                btn.prop("title", "Please fill in the tables first");
-            }else {
-                btn.prop("disabled", false);
-                btn.removeAttr("title");
-                btn.css("cursor", "pointer");
-            }
+            btnEnable();
         }
     });
 });

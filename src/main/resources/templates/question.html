@@ -16,14 +16,13 @@
             <p th:text="${question.questionText}">
         </div>
 
-        <h3>Drag and drop</h3>
-        <div class="container2">
-            <form th:action="@{__${sid}__/__${qid}__}" method="post" th:object="${question}">
+        <div class="container2" layout:fragment="dragAndDrop">
+            <form th:action="@{/scenario/__${sid}__/__${qid}__}" method="post" th:object="${question}">
                 <div class="choiceContainer">
                     <ul id="choices" class="droptrue">
-                        <li th:each="choice : *{choices}">
-                            <span th:text="*{choices[__${choice.key}__].choiceText}"></span>
-                            <input type="hidden" th:value="*{choices[__${choice.key}__].choiceId}" name="choices"/>
+                        <li th:each="choice : ${choices}">
+                            <span th:text="${choices[__${choice.key}__].choiceText}"></span>
+                            <input type="hidden" th:value="${choices[__${choice.key}__].choiceId}" name="choices"/>
                         </li>
                     </ul>
                 </div>
@@ -54,6 +53,8 @@
                 </table>
                 <input id="submit" type="submit" value="Submit">
             </form>
+        </div>
+        <div layout:fragment="result">
         </div>
     </div>
 </body>
