@@ -72,7 +72,6 @@ public class ScenarioPageController {
 
     private int scoreCheck(Integer[] cids, int weight){
         int score = 0;
-        System.out.println(Arrays.toString(cids));
         if(cids != null) {
             for (Integer cid : cids) {
                 Choice choice = choiceService.findById(cid);
