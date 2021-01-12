@@ -41,7 +41,7 @@ public class ScenarioPageController {
         } catch (EntityNotFoundException ex){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, ex.toString(), ex);
         }
-        return "questions";
+        return "scenario";
     }
 
     @GetMapping("/{qid}")
