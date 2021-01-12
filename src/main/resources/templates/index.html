@@ -13,26 +13,24 @@
 
 <body>
 <div layout:fragment="content">
-    <section id="section1">
-        <section class="chooseStream">
-            <div class="title">
-                <h2>Choose a Stream</h2>
-            </div>
-            <table>
-                <tbody>
-                <tr>
-                    <td><a onclick="displayGame()" th:href="@{/explore}"><img src="../static/images/softwaretesting2.png" th:src="@{/images/softwaretesting2.png}" alt="softwaretestingpic"></a></td>
-                    <td><a onclick="displayGame2()" th:href="@{/explore}"><img src="../static/images/business2.png" th:src="@{/images/business2.png}" alt="businesspic"></a></td>
-                    <td><a onclick="displayGame3()" th:href="@{/explore}"><img src="../static/images/technical2.png" th:src="@{/images/technical2.png}" alt="techpic"></a></td>
-                </tr>
-                <tr class="progress-bars">
-                    <td><progress id="bar1" value="20" max="100"></progress></td>
-                    <td><progress id="bar2" value="20" max="100"></progress></td>
-                    <td><progress id="bar3" value="20" max="100"></progress></td>
-                </tr>
-                </tbody>
-            </table>
-        </section>
+    <section class="chooseStream">
+        <div class="title">
+            <h2>Choose a Stream</h2>
+        </div>
+        <table>
+            <tbody>
+            <tr>
+                <td><a onclick="displayGame()" th:href="@{/explore}"><img src="../static/images/softwaretesting2.png" th:src="@{/images/softwaretesting2.png}" alt="softwaretestingpic"></a></td>
+                <td><a onclick="displayGame2()" th:href="@{/explore}"><img src="../static/images/business2.png" th:src="@{/images/business2.png}" alt="businesspic"></a></td>
+                <td><a onclick="displayGame3()" th:href="@{/explore}"><img src="../static/images/technical2.png" th:src="@{/images/technical2.png}" alt="techpic"></a></td>
+            </tr>
+            <tr class="progress-bars">
+                <td><progress id="bar1" value="20" max="100"></progress></td>
+                <td><progress id="bar2" value="20" max="100"></progress></td>
+                <td><progress id="bar3" value="20" max="100"></progress></td>
+            </tr>
+            </tbody>
+        </table>
     </section>
     <script>
         if (sessionStorage.getItem("option") == null){

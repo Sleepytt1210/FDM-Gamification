@@ -66,17 +66,12 @@ public class ScenarioPageController {
 
         populateQuestionAndChoices(model, sid, qid);
 
-        // Save the result into corresponding table.
-        model.addAttribute("cids0", cids0);
-        model.addAttribute("cids1", cids1);
-        model.addAttribute("cids2", cids2);
         model.addAttribute("score", score);
-        return "questionResult";
+        return "question";
     }
 
     private int scoreCheck(Integer[] cids, int weight){
         int score = 0;
-        System.out.println(Arrays.toString(cids));
         if(cids != null) {
             for (Integer cid : cids) {
                 Choice choice = choiceService.findById(cid);
@@ -86,7 +81,7 @@ public class ScenarioPageController {
         return score;
     }
 
-    private void populateQuestionAndChoices(Model model, @PathVariable("sid") Integer sid, @PathVariable("qid") Integer qid) {
+    private void populateQuestionAndChoices(Model model, Integer sid, Integer qid) {
         try {
             Question question = challengeService.getQuestions(sid).get(qid);
             if(question == null) {
