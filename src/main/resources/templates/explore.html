@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Scenarios</title>
-    <link href="../static/css/scenarios.css" rel="stylesheet" th:href="@{/css/scenarios.css}">
+    <link href="../static/css/explore.css" rel="stylesheet" th:href="@{/css/scenarios.css}">
     <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@600&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -100,7 +100,9 @@
                 $(".scene1").hide();
                 if(id === "ALL"){
                     $(".scene1").fadeIn("slow");
+                    $(".scene1").find("table").css("display", "table");
                 }else {
+                    $(".scene1").find("table").css("display", "inline-table");
                     $("#" + id + "tab").fadeIn("slow");
                 }
                 sessionStorage.setItem("option", id);
