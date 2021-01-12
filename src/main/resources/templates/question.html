@@ -20,9 +20,9 @@
             <form th:action="@{/scenario/__${sid}__/__${qid}__}" method="post" th:object="${question}">
                 <div class="choiceContainer">
                     <ul id="choices" class="droptrue">
-                        <li th:each="choice : ${choices}">
+                        <li th:each="choice : ${choices}" th:id="'ch'+${choice.key}" class="choice">
                             <span th:text="${choices[__${choice.key}__].choiceText}"></span>
-                            <input type="hidden" th:value="${choices[__${choice.key}__].choiceId}" name="choices"/>
+                            <input type="hidden" th:value="${choice.key}" name="choices"/>
                         </li>
                     </ul>
                 </div>
@@ -54,7 +54,8 @@
                 <input id="submit" type="submit" value="Submit">
             </form>
         </div>
-        <div layout:fragment="result">
+        <div class="result" layout:fragment="result" th:style="'display:'+ ${score != null ? 'block' : 'none'}">
+            <p id="score" th:text="'Score: ' + ${score}" th:value="${score}"></p>
         </div>
     </div>
 </body>
