@@ -1,21 +1,20 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="~{sidenavlayout.html}">
 <head>
     <meta charset="UTF-8">
     <title>Admin</title>
 </head>
 <body>
-    <h1>Welcome to admin page!</h1>
-    <p><span th:text="${admin.getFirstname() + ' ' + admin.getLastname()}"></span></p>
-    <table>
-        <tbody>
-        <tr th:each="challenge : ${challenges}">
-            <td><a th:href="@{'/admin/challenge/' + ${challenge.getId()}}" th:text="${'Challenge ' + challenge.getId()}"></a></td>
-        </tr>
-        </tbody>
-    </table>
-    <form th:action="@{/logout}" method="post">
-        <input type="submit" value="Log Out"/>
-    </form>
+    <ul layout:fragment="sidenav">
+        <li class="sidebar-menu"><a>Challenges</a></li>
+        <li class="sidebar-menu"><a>Questions</a></li>
+        <li class="sidebar-menu"><a>Choices</a></li>
+    </ul>
+    <div layout:fragment="content2">
+        <p>Tables here</p>
+    </div>
 </body>
 </html>
