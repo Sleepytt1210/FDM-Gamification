@@ -6,15 +6,76 @@
 <head>
     <meta charset="UTF-8">
     <title>Admin</title>
+    <link rel="stylesheet" href="../../static/css/adminHome.css" th:href="@{/css/adminHome.css}">
 </head>
 <body>
     <ul layout:fragment="sidenav">
-        <li class="sidebar-menu"><a>Challenges</a></li>
-        <li class="sidebar-menu"><a>Questions</a></li>
-        <li class="sidebar-menu"><a>Choices</a></li>
+        <li class="sidebar-menu"><a th:href="@{/admin/challenges}">Challenges</a></li>
+        <li class="sidebar-menu"><a th:href="@{/admin/questions}">Questions</a></li>
+        <li class="sidebar-menu"><a th:href="@{/admin/choices}">Choices</a></li>
     </ul>
     <div layout:fragment="content2">
-        <p>Tables here</p>
+        <div class="content-head">
+            <a th:href="@{'?create'}" id="create-redir">
+                <button class="create-new-button" name="create" type="button" value="new">NEW</button>
+            </a>
+        </div>
+        <div th:if="${challenges}" class="table-content">
+            <table>
+                <thead>
+                <tr>
+                    <th class="column-select"><input type="checkbox" id="challenges-select-all" title="Select all"></th>
+                    <th>ID</th>
+                    <th>Challenge Title</th>
+                    <th>Challenge Stream</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="challenge : ${challenges}">
+                    <td><input type="checkbox" class="challenge-item-selection"></td>
+                    <td th:text="${challenge.id}"></td>
+                    <td><a th:href="@{'/admin/challenges/' + ${challenge.id}}" th:text="${challenge.challengeTitle}"></a></td>
+                    <td th:text="${challenge.stream}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div th:if="${questions}" class="table-content">
+            <table>
+                <thead>
+                <tr>
+                    <th class="column-select"><input type="checkbox" id="questions-select-all" title="Select all"></th>
+                    <th>ID</th>
+                    <th>Question</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="question : ${questions}">
+                    <td><input type="checkbox" class="question-item-selection"></td>
+                    <td th:text="${question.questionId}"></td>
+                    <td><a th:href="@{'/admin/questions/' + ${question.questionId}}" th:text="${question.questionTitle}"></a></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div th:if="${choices}" class="table-content">
+            <table>
+                <thead>
+                <tr>
+                    <th class="column-select"><input type="checkbox" id="choices-select-all" title="Select all"></th>
+                    <th>ID</th>
+                    <th>Choice</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="choice : ${choices}">
+                    <td><input type="checkbox" class="choice-item-selection"></td>
+                    <td th:text="${choice.choiceId}"></td>
+                    <td><a th:href="@{'/admin/choices/' + ${choice.choiceId}}" th:text="${choice.choiceText}"></a></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </body>
 </html>
