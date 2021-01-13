@@ -8,41 +8,78 @@ body{
 }
 
 /*Top of page navigation bar*/
-header{
+.header{
     background-color: #202025;
-    padding: 20px;
+    padding: 0 15px;
     position: fixed;
+    top: 0;
     width: 100%;
-    height: 50px;
-    box-sizing: unset;
+    box-shadow: 2px 0 5px 2px rgba(172, 172, 172, 0.5);
+    z-index: 10;
 }
 
-header .logo{
-    width: auto;
+.navbar-brand{
+    display: inline-block;
+    margin: 1.3rem 1rem 1.3rem 0;
+    padding-bottom: .3125rem;
+    font-size: 1.25rem;
+    line-height: inherit;
+    white-space: nowrap;
+}
+
+.header .logo{
+    width: 126px;
     height: 60px;
     float: left;
-    padding-left: 30px;
+    margin-left: 50px;
 }
 
-header ul{
+.header ul{
+    margin: 0 30px 0 0;
+    padding: 0;
     display: flex;
     align-items: center;
     float: right;
-    padding-right: 50px;
+    height: 110px;
     list-style: none;
 }
 
-header a{
-    color: white;
+.header ul li, #logout-button{
+    list-style: none;
+    outline: none;
+    border: 0;
+    border-top: 4px solid transparent;
+    background: none;
+    color: #fff;
+    font-family: "open sans", sans-serif;
+    font-weight: 300;
+    line-height: 110px;
+    font-size: 14px;
     text-decoration: none;
-    padding: 8px 20px;
-    font-size: 20px;
+    text-transform: uppercase;
+    margin-right: 15px;
+    float: right;
+    padding: 0 10px;
 }
 
-header a:hover {
-    color: #398fff;
+.header ul li a{
+    text-decoration: none;
+    color: white;
 }
 
+.header ul li:hover, #logout-button:hover{
+    border-color: #1daded !important;
+    cursor: pointer;
+}
+
+.header ul li:hover a, #logout-button:hover{
+    color: #009dff !important;
+}
+
+.container{
+    text-align: center;
+    margin: 20px auto 100px;
+}
 
 /*Top of Page*/
 .heading{
@@ -60,11 +97,6 @@ header a:hover {
     margin-top: 150px;
 }
 
-.container{
-    text-align: center;
-    margin: 20px auto 100px;
-}
-
 /*Footer*/
 .footer {
     background-color: #565656;
@@ -74,4 +106,5 @@ header a:hover {
     position: fixed;
     bottom: 0;
     width: 100%;
+    z-index: 10;
 }
