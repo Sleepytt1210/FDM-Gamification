@@ -4,10 +4,10 @@
       xmlns:th="http://www.thymeleaf.org"
       layout:decorate="~{sidenavlayout.html}">
 <head>
-    <meta charset="UTF-8">
     <title>Admin</title>
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="../../static/css/adminHome.css" th:href="@{/css/adminHome.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script th:src="@{/javascript/adminHome.js}"></script>
 </head>
 <body>
@@ -19,11 +19,11 @@
     <div layout:fragment="content2">
         <form th:action="@{''}" method="post" id="panel-form">
             <div class="content-head">
-                <button class="create-new-button" name="create" type="submit" value="new">NEW</button>
-                <button class="delete-button" name="delete" type="submit" value="delete" disabled="disabled">DELETE</button>
+                <input class="create-new-button" name="create" type="submit" value="NEW">
+                <input class="delete-button" name="delete" type="submit" value="DELETE" disabled="disabled">
             </div>
             <div id="dialog-confirm" title="Delete selected items">
-                <p><span class="ui-icon ui-icon-alert" style="float:left; margin:12px 12px 20px 0;"></span>These items will be permanently deleted and cannot be recovered. Are you sure?</p>
+                <p><i class="fa fa-exclamation-triangle" aria-hidden="true" style="font-size:24px;"></i>These items will be permanently deleted and cannot be recovered. Are you sure?</p>
             </div>
             <div th:if="${challenges}" class="table-content">
                 <table>

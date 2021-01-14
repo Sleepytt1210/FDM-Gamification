@@ -3,12 +3,7 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       xmlns:th="http://www.thymeleaf.org" layout:decorate="~{headinglayout.html}">
 <head>
-    <meta charset="UTF-8"/>
-    <title>Default title for my pages</title>
     <link href="../static/css/heading.css" rel="stylesheet" th:href="@{/css/sideNav.css}">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-</head>
 <body>
     <th:block layout:fragment="heading">
         <nav class="header" layout:fragment="navigation-bar">
