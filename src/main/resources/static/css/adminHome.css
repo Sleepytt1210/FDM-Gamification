@@ -2,9 +2,18 @@
     padding: 15px 0;
 }
 
-.create-new-button{
-    position: absolute;
-    right: 20px;
+.content-head {
+    height: 2.3rem;
+    border-bottom: 1px solid #c8c8c8;
+    width: auto;
+    text-align: right;
+}
+
+.content-head a{
+    text-decoration: none;
+}
+
+.create-new-button, .delete-button{
     padding: 7px 10px;
     border-radius: 2px;
     background: #909090;
@@ -18,17 +27,29 @@
 
 .create-new-button:hover{
     cursor: pointer;
-    background-color: #004cd4;
+    background-color: #2196F3;
+    opacity: 85%;
+}
+
+.delete-button{
+    margin: 0 15px 0 8px
+}
+
+.delete-button:disabled{
+    background: #909090;
+}
+
+.delete-button:enabled{
+    background: #ff2a36;
+}
+
+.delete-button:enabled:hover{
+    cursor: pointer;
     opacity: 85%;
 }
 
 .column-select{
     width: 16px;
-}
-
-.content-head{
-    height: 2.3rem;
-    border-bottom: 1px solid #c8c8c8;
 }
 
 div.table-content{
