@@ -1,0 +1,76 @@
+.container{
+    padding: 15px 0;
+}
+
+.create-new-button{
+    position: absolute;
+    right: 20px;
+    padding: 7px 10px;
+    border-radius: 2px;
+    background: #909090;
+    border: none;
+    font-weight: 510;
+    font-size: 12px;
+    font-family: sans-serif;
+    color: #fff;
+    outline: none;
+}
+
+.create-new-button:hover{
+    cursor: pointer;
+    background-color: #004cd4;
+    opacity: 85%;
+}
+
+.column-select{
+    width: 16px;
+}
+
+.content-head{
+    height: 2.3rem;
+    border-bottom: 1px solid #c8c8c8;
+}
+
+div.table-content{
+    margin: auto;
+    padding: 0;
+}
+
+div.table-content > table {
+    color: #606060;
+    border-collapse: collapse;
+    width: 100%;
+    text-align: left;
+}
+
+div.table-content > table > tbody > tr > td, div.table-content > table > thead > tr > th {
+    padding: 5px 10px;
+}
+
+div.table-content > table > tbody > tr, div.table-content > table > thead > tr {
+    border-bottom: 1px solid #c8c8c8;
+}
+
+div.table-content > table th {
+    padding: 7px 2px;
+    font-weight: normal;
+    font-size: 0.625rem;
+}
+
+div.table-content > table > tbody > tr {
+    background-color: #fcfffc;
+    font-size: 11px;
+}
+
+div.table-content > table > tbody > tr > td > a {
+    text-decoration: none;
+    color: inherit;
+}
+
+div.table-content > table > tbody > tr:hover {
+    background-color: #ececec;
+}
+
+.container2{
+    padding: 15px 0;
+}
