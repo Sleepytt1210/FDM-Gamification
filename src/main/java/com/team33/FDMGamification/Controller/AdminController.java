@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +21,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/admin")
@@ -34,12 +36,27 @@ public class AdminController {
     @Autowired
     private ChoiceService choiceService;
 
-    @RequestMapping({"/", ""})
-    public ModelAndView renderAdminHome(@AuthenticationPrincipal AdminDetails activeUser) {
-        ModelAndView mav = new ModelAndView("admin/adminHome");
-        mav.addObject("challenges", challengeService.getAll());
-        mav.addObject("admin", activeUser);
-        return mav;
+    @RequestMapping({"/", "", "{page:challenges|questions|choices}"})
+    public String renderAdminHome(@AuthenticationPrincipal AdminDetails activeUser, Model model, @PathVariable("page") Optional<String> tab) {
+        String tabRes = "";
+        if(tab.isPresent()){
+            tabRes = tab.get();
+        }else{
+            return "redirect:/admin/challenges";
+        }
+        switch (tabRes) {
+            case "challenges":
+                model.addAttribute("challenges", challengeService.getAll());
+                break;
+            case "questions":
+                model.addAttribute("questions", questionService.getAll());
+                break;
+            case "choices":
+                model.addAttribute("choices", choiceService.getAll());
+                break;
+        }
+        model.addAttribute("admin", activeUser);
+        return "admin/adminHome";
     }
 
     @GetMapping("/challenge/{id}")

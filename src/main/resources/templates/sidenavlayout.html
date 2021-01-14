@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org" layout:decorate="~{headinglayout.html}">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Default title for my pages</title>
+    <link href="../static/css/heading.css" rel="stylesheet" th:href="@{/css/sideNav.css}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+</head>
+<body>
+    <th:block layout:fragment="heading">
+        <nav class="header" layout:fragment="navigation-bar">
+            <a class="navbar-brand" th:href="'https://www.fdmgroup.com'">
+                <img alt="FDMlogo" class="logo" src="../static/images/FDMlogo.png" th:src="@{/images/FDMlogo.png}">
+            </a>
+            <ul layout:fragment="nav-menu-list">
+                <li class="navbar-menu">
+                    <form method="post" th:action="@{/logout}">
+                        <input type="submit" id="logout-button" value="Log Out"/>
+                    </form>
+                </li>
+            </ul>
+        </nav>
+    </th:block>
+    <div layout:fragment="content">
+        <div class="sidenav">
+            <div class="sidenav sidenav-column">
+                <ul class="sidebar-menu-list" layout:fragment="sidenav">
+                </ul>
+            </div>
+        </div>
+        <div class="container2" layout:fragment="content2">
+        </div>
+    </div>
+</body>
+</html>
