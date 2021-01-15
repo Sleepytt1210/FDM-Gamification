@@ -7,6 +7,7 @@
     <meta charset="UTF-8">
     <title th:text="'Challenge ' + ${challenge.id}"></title>
     <link rel="stylesheet" th:href="@{/css/challengeForm.css}" type="text/css">
+    <script th:src="@{/javascript/imageUpload.js}"></script>
 </head>
 <body>
     <ul layout:fragment="sidenav">
@@ -15,7 +16,7 @@
         <li class="sidebar-menu"><a th:href="@{/admin/choices}">Choices</a></li>
     </ul>
     <div layout:fragment="content2">
-        <form th:action="@{/admin/challenges/__${challenge.id}__}" method="post" th:object="${challenge}">
+        <form th:action="@{/admin/challenges/__${challenge.id}__}" method="post" th:object="${challenge}" enctype="multipart/form-data">
             <ul th:if="${#fields.hasErrors('*')}" class="errorlist">
                 <li th:each="err : ${#fields.errors('*')}" th:text="${err}">Input is incorrect</li>
             </ul>
@@ -36,9 +37,9 @@
             <div class="form-group">
                 <label for="thumbnail" th:text="${'Thumbnail'}"></label>
                 <input id="thumbnail" name="pic" accept="image/jpeg, image/png" class="hidden" type="file">
-                <div class="imageDisplay" th:with="completeUrl='data:image/'+*{thumbnail.fileType}+';base64, '+*{thumbnail.base64String},
+                <div class="image-display" id="image-upload-wrapper" th:with="completeUrl='data:'+*{thumbnail.fileType}+';base64, '+*{thumbnail.base64String},
                  hasUrl=${!challenge.thumbnail.base64String.isBlank() && !challenge.thumbnail.base64String.isEmpty()}">
-                    <img th:if="${hasUrl}" th:src="${completeUrl}" th:alt="*{thumbnail.fileName}">
+                    <img id="preview" th:src="${completeUrl}" th:alt="*{thumbnail.fileName}" th:style="${hasUrl ? 'display: block;' : 'display: none;'}">
                 </div>
             </div>
             <div class="form-group">

@@ -32,9 +32,6 @@ public class FdmGamificationApplication {
 	@Autowired
 	private ChallengeFeedbackService cfs;
 
-	@Autowired
-	private ThumbnailService thumbnailService;
-
 	private final Logger log = LoggerFactory.getLogger(FdmGamificationApplication.class);
 
 	public static void main(String[] args) {
@@ -56,7 +53,6 @@ public class FdmGamificationApplication {
 				String[] line = br.readLine().split(",");
 				int comp = Integer.parseInt(line[2]);
 				Challenge challenge = challengeService.create(new Challenge(line[0], line[1], Stream.valueOf(line[4]), comp));
-				thumbnailService.create(challenge, new Thumbnail());
 				// Get number of questions
 				int m = (br.readLine().charAt(0) - '0');
 				for (int j = 0; j < m; j++) {

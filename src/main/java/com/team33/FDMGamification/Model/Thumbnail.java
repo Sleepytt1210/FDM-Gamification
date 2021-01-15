@@ -26,6 +26,10 @@ public class Thumbnail {
 
     public Thumbnail(){}
 
+    public Thumbnail(Challenge challenge){
+        this.challenge = challenge;
+    }
+
     public Thumbnail(String base64String, String fileName, String fileType) {
         this.base64String = base64String;
         this.fileName = fileName;

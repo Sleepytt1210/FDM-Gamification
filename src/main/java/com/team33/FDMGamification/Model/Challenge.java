@@ -28,7 +28,7 @@ public class Challenge {
     private String avgRating = "No rating";
 
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "challenge")
-    private Thumbnail thumbnail;
+    private Thumbnail thumbnail = new Thumbnail(this);
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "challenge", cascade = CascadeType.ALL, orphanRemoval = true)
     @MapKeyColumn(name = "question_id")
