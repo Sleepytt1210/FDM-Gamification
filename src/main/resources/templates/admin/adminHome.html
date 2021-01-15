@@ -43,7 +43,7 @@
                     </thead>
                     <tbody>
                         <tr th:each="challenge : ${challenges}">
-                            <td><label class="checkbox-container"><input type="checkbox" class="challenge-item-selection item-selection" name="chlids" th:value="${challenge.id}"><span class="checkmark"></span></label></td>
+                            <td><label class="checkbox-container"><input type="checkbox" class="challenge-item-selection item-selection" name="ids" th:value="${challenge.id}"><span class="checkmark"></span></label></td>
                             <td th:text="${challenge.id}"></td>
                             <td><a th:href="@{'/admin/challenges/' + ${challenge.id}}" th:text="${challenge.challengeTitle}"></a></td>
                             <td th:text="${challenge.stream}"></td>
@@ -68,7 +68,7 @@
                     </thead>
                     <tbody>
                         <tr th:each="question : ${questions}">
-                            <td><label class="checkbox-container"><input type="checkbox" class="question-item-selection item-selection" name="qids" th:value="${question.questionId}"><span class="checkmark"></span></label></td>
+                            <td><label class="checkbox-container"><input type="checkbox" class="question-item-selection item-selection" name="ids" th:value="${question.questionId}"><span class="checkmark"></span></label></td>
                             <td th:text="${question.questionId}"></td>
                             <td><a th:href="@{'/admin/questions/' + ${question.questionId}}" th:text="${question.questionTitle}"></a></td>
                         </tr>
@@ -91,7 +91,7 @@
                     </thead>
                     <tbody>
                         <tr th:each="choice : ${choices}">
-                            <td><label class="checkbox-container"><input type="checkbox" class="choice-item-selection item-selection" name="choids" th:value="${choice.choiceId}"><span class="checkmark"></span></label></td>
+                            <td><label class="checkbox-container"><input type="checkbox" class="choice-item-selection item-selection" name="ids" th:value="${choice.choiceId}"><span class="checkmark"></span></label></td>
                             <td th:text="${choice.choiceId}"></td>
                             <td><a th:href="@{'/admin/choices/' + ${choice.choiceId}}" th:text="${choice.choiceText}"></a></td>
                         </tr>
