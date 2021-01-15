@@ -49,11 +49,8 @@ public class RatingService {
      * @param challenge Foreign entity challenge to be added to.
      * @param rating    Rating entity with properties.
      * @return Rating: Rating entity persisted in database.
-     * @throws IllegalArgumentException If rating value is not between 1 and 5.
      */
-    public Rating create(Challenge challenge, Rating rating) throws IllegalArgumentException {
-        if (rating.getRating_value() < 1 || rating.getRating_value() > 5)
-            throw new IllegalArgumentException("Rating value should be between 1 and 5!");
+    public Rating create(Challenge challenge, Rating rating) {
         rating.setChallenge(challenge);
         rating = ratingRepo.saveAndFlush(rating);
         cls.addRating(challenge, rating);
@@ -108,8 +105,6 @@ public class RatingService {
      * @param rating Rating entity to be deleted.
      */
     public void delete(Rating rating) {
-        Challenge challenge = rating.getChallenge();
-        challenge.getRatings().remove(rating);
         ratingRepo.delete(rating);
     }
 
@@ -119,10 +114,6 @@ public class RatingService {
      * @param ratings Collection of ratings to be deleted.
      */
     public void batchDelete(Iterable<Rating> ratings) {
-        for (Rating r : ratings) {
-            Challenge challenge = r.getChallenge();
-            challenge.getRatings().remove(r);
-        }
         ratingRepo.deleteAll(ratings);
     }
 }

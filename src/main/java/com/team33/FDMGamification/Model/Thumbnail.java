@@ -12,16 +12,13 @@ public class Thumbnail {
     private Integer id;
 
     @Column(name = "base64String")
-    private String base64String;
+    private String base64String="";
 
     @Column(name = "filename")
-    private String fileName;
-
-    @Column(name = "alt_text")
-    private String altText;
+    private String fileName="";
 
     @Column(name = "file_type")
-    private String fileType;
+    private String fileType="";
 
     @OneToOne
     @JoinColumn(name = "challenge_id", referencedColumnName = "challenge_id")
@@ -29,10 +26,9 @@ public class Thumbnail {
 
     public Thumbnail(){}
 
-    protected Thumbnail(String base64String, String fileName, String altText, String fileType) {
+    public Thumbnail(String base64String, String fileName, String fileType) {
         this.base64String = base64String;
         this.fileName = fileName;
-        this.altText = altText;
         this.fileType = fileType;
     }
 
@@ -60,19 +56,19 @@ public class Thumbnail {
         this.fileName = fileName;
     }
 
-    public String getAltText() {
-        return altText;
-    }
-
-    public void setAltText(String altText) {
-        this.altText = altText;
-    }
-
     public String getFileType() {
         return fileType;
     }
 
     public void setFileType(String fileType) {
         this.fileType = fileType;
+    }
+
+    public Challenge getChallenge() {
+        return challenge;
+    }
+
+    public void setChallenge(Challenge challenge) {
+        this.challenge = challenge;
     }
 }

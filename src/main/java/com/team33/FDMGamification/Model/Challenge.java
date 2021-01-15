@@ -43,10 +43,9 @@ public class Challenge {
 
     public Challenge(){}
 
-    public Challenge(String challengeTitle, String description, Thumbnail thumbnail, Stream stream, Integer completion) {
+    public Challenge(String challengeTitle, String description, Stream stream, Integer completion) {
         this.challengeTitle = challengeTitle;
         this.description = description;
-        this.thumbnail = thumbnail;
         this.stream = stream;
         this.completion = completion;
         this.avgRating = "No rating";
