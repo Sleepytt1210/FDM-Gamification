@@ -97,7 +97,7 @@ public class ChallengeService {
      */
     @Transactional
     public Map<Integer, Question> getQuestions(Integer id){
-        return findById(id).getQuestion();
+        return findById(id).getQuestions();
     }
 
     /**
@@ -118,7 +118,7 @@ public class ChallengeService {
                             Stream stream, Integer completion, Map<Integer, Question> questions,
                             Map<Boolean, ChallengeFeedback> feedbacks, Set<Rating> ratings) {
         Challenge tempNew = new Challenge(title, introduction, thumbnail, stream, completion);
-        tempNew.setQuestion(questions);
+        tempNew.setQuestions(questions);
         tempNew.setChallengeFeedback(feedbacks);
         tempNew.setRatings(ratings);
         return update(challengeId, tempNew);
@@ -134,12 +134,12 @@ public class ChallengeService {
     public Challenge update(Integer challengeId, Challenge newChallenge) {
         Challenge oldChallenge = findById(challengeId);
         if (newChallenge.getChallengeTitle() != null) oldChallenge.setChallengeTitle(newChallenge.getChallengeTitle());
-        if (newChallenge.getIntroduction() != null) oldChallenge.setIntroduction(newChallenge.getIntroduction());
+        if (newChallenge.getDescription() != null) oldChallenge.setDescription(newChallenge.getDescription());
         if (newChallenge.getThumbnail() != null) oldChallenge.setThumbnail(newChallenge.getThumbnail());
         if (newChallenge.getStream() != null) oldChallenge.setStream(newChallenge.getStream());
         if (newChallenge.getCompletion() != null) oldChallenge.setCompletion(newChallenge.getCompletion());
         oldChallenge = challengeRepo.saveAndFlush(oldChallenge);
-        Map<Integer, Question> newQuestions = newChallenge.getQuestion();
+        Map<Integer, Question> newQuestions = newChallenge.getQuestions();
         Map<Boolean, ChallengeFeedback> newFeedback = newChallenge.getChallengeFeedback();
         if (newQuestions != null && !newQuestions.isEmpty()) {
             newQuestions.forEach((k, v) -> questionService.update(k, v));

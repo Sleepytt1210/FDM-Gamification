@@ -9,11 +9,17 @@
     text-align: right;
 }
 
-.content-head a{
-    text-decoration: none;
+/*Modal Style*/
+
+.fa-exclamation-triangle{
+    float: left;
+    margin: 18px 12px 10px 0;
+    font-size: 30px;
+    color: #ff372d;
 }
 
-.create-new-button, .delete-button{
+/*Head Content Buttons Style*/
+.create-new-button, .delete-button, .ui-button, .ui-button .delete-button{
     padding: 7px 10px;
     border-radius: 2px;
     background: #909090;
@@ -25,7 +31,16 @@
     outline: none;
 }
 
-.create-new-button:hover{
+.ui-dialog .ui-dialog-titlebar-close {
+    background: none !important;
+    border: none !important;
+}
+
+.ui-dialog .ui-dialog-titlebar-close, .ui-dialog .ui-dialog-titlebar-close:hover {
+    padding: 0 !important;
+}
+
+.create-new-button:hover, .ui-button:hover{
     cursor: pointer;
     background-color: #2196F3;
     opacity: 85%;
@@ -43,11 +58,23 @@
     background: #ff2a36;
 }
 
-.delete-button:enabled:hover{
+.delete-button:enabled:hover, .ui-button:hover,
+.delete-button:enabled:active, .ui-button:active{
     cursor: pointer;
     opacity: 85%;
+    font-weight: 510;
+    border: none;
+    color: #fff;
 }
 
+.delete-button:enabled:focus, .ui-button:focus{
+    cursor: pointer;
+    font-weight: 510;
+    border: none;
+    color: #fff;
+}
+
+/*Table Style*/
 .column-select{
     width: 16px;
 }
