@@ -34,7 +34,7 @@ public class ChallengeService {
      * @param completion   Number of completion.
      * @return Challenge: Challenge entity persisted in database.
      */
-    public Challenge create(String title, String introduction, String thumbnail, Stream stream, Integer completion) {
+    public Challenge create(String title, String introduction, Thumbnail thumbnail, Stream stream, Integer completion) {
         Challenge challenge = new Challenge(title, introduction, thumbnail, stream, completion);
         return create(challenge);
     }
@@ -114,7 +114,7 @@ public class ChallengeService {
      * @param ratings      New ratings set of challenge.
      * @return Challenge: Updated challenge entity.
      */
-    public Challenge update(Integer challengeId, String title, String introduction, String thumbnail,
+    public Challenge update(Integer challengeId, String title, String introduction, Thumbnail thumbnail,
                             Stream stream, Integer completion, Map<Integer, Question> questions,
                             Map<Boolean, ChallengeFeedback> feedbacks, Set<Rating> ratings) {
         Challenge tempNew = new Challenge(title, introduction, thumbnail, stream, completion);

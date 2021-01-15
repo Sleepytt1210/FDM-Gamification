@@ -63,3 +63,14 @@ CREATE TABLE Rating(
     challenge_id INT(11) NOT NULL ,
     FOREIGN KEY (challenge_id) REFERENCES Challenge(challenge_id) ON DELETE CASCADE
 )AUTO_INCREMENT=1;
+
+CREATE TABLE Thumbnail(
+    thumbnail_id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+    base64String MEDIUMTEXT NOT NULL ,
+    filename VARCHAR(50) NOT NULL ,
+    alt_text VARCHAR(50) NOT NULL ,
+    file_type VARCHAR(50) NOT NULL ,
+    challenge_id INT(11) ,
+    question_id INT(11) ,
+    FOREIGN KEY (challenge_id) REFERENCES Challenge(challenge_id) ON DELETE CASCADE,
+)AUTO_INCREMENT=1;

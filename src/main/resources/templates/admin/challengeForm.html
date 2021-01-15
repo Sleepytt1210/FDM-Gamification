@@ -37,7 +37,7 @@
                 <label for="thumbnail" th:text="${'Thumbnail'}"></label>
                 <input id="thumbnail" name="pic" accept="image/jpeg, image/png" class="hidden" type="file">
                 <div class="imageDisplay">
-                    <img th:src="*{thumbnail}">
+                    <img th:src="'data:image/'+*{thumbnail.fileType}+';base64, ' + *{thumbnail.base64String}" th:alt="*{thumbnail.altText}">
                 </div>
             </div>
             <div class="form-group">
