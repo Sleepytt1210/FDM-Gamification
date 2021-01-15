@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="~{adminLayout.html}">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="Challenge + ${challenge.id}"></title>
+</head>
+<body>
+    <ul layout:fragment="sidenav">
+        <li class="sidebar-menu"><a th:href="@{/admin/challenges}">Challenges</a></li>
+        <li class="sidebar-menu"><a th:href="@{/admin/questions}">Questions</a></li>
+        <li class="sidebar-menu"><a th:href="@{/admin/choices}">Choices</a></li>
+    </ul>
+    <div layout:fragment="content2">
+        <form th:action="@{/admin/challenges/challenge.id}" method="post" th:object="${challenge}">
+            <ul th:if="${#fields.hasErrors('*')}" class="errorlist">
+                <li th:each="err : ${#fields.errors('*')}" th:text="${err}">Input is incorrect</li>
+            </ul>
+            <div class="form-group">
+                <label for="title" th:text="${'Title'}"></label>
+                <input type="text" id="title" th:field="*{challengeTitle}" th:value="*{challengeTitle}"/>
+            </div>
+            <div class="form-group">
+                <label for="description" th:text="${'Description'}"></label>
+                <input type="text" id="description" th:field="*{description}" th:value="*{description}" th:errorclass="fieldError"/>
+            </div>
+            <div class="form-group">
+                <label for="thumbnail" th:text="${'Thumbnail'}"></label>
+                <input type="file" id="thumbnail" name="pic" accept="image/jpeg, image/png"/>
+            </div>
+            <div class="form-group">
+                <label for="stream" th:text="${'Stream'}"></label>
+                <select id="stream" name="stream">
+                    <option th:each="stream : ${allStreams}" th:value="${stream}" th:text="${stream}" th:selected="${stream == challenge.stream}"></option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Rows</label>
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Row</th>
+                        <th>Question</th>
+                        <th>
+                            <button type="submit" name="addQuestion" class="add-icon">ADD</button>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <th:block th:each="ques : ${challenge.questions}" class="questions">
+                        <tr>
+                            <td th:text="${quesStat.index + 1}">1</td>
+                            <td>
+                                <input type="text" th:field="*{questions[__${ques.key}__].questionTitle}" />
+                            </td>
+                            <td>
+                                <button type="submit" name="removeQuestion"
+                                        th:value="${ques.key}" class="remove-icon">REMOVE</button>
+                            </td>
+                        </tr>
+                        <!-- Choice part -->
+                        <th:block class="choices">
+                            <tr>
+                                <th></th>
+                                <th>
+                                    Choice Text
+                                </th>
+                                <th>
+                                </th>
+                            </tr>
+                            <tr th:each="choice : ${ques.value.choices}" th:name="choice">
+                                <td th:text="${choiceStat.index + 1}">
+                                </td>
+                                <td>
+                                    <input type="text" th:field="*{questions[__${ques.key}__].choices[__${choice.key}__].choiceText}">
+                                </td>
+                                <td>
+                                    <button type="submit" name="removeChoice"
+                                            th:value="${ques.key + ',' + choice.key}" class="remove-icon">x</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td> <button type="submit" name="addChoice" th:value="${ques.key}" class="add-icon">+</button></td>
+                            </tr>
+                        </th:block>
+                    </th:block>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="submit">
+                <button type="submit" name="save">Add Challenge</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
