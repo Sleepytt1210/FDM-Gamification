@@ -1,9 +1,7 @@
 package com.team33.FDMGamification;
 
-import com.team33.FDMGamification.Model.Challenge;
-import com.team33.FDMGamification.Model.Choice;
-import com.team33.FDMGamification.Model.Question;
-import com.team33.FDMGamification.Model.Stream;
+import com.team33.FDMGamification.Model.*;
+import com.team33.FDMGamification.Service.ChallengeFeedbackService;
 import com.team33.FDMGamification.Service.ChallengeService;
 import com.team33.FDMGamification.Service.ChoiceService;
 import com.team33.FDMGamification.Service.QuestionService;
@@ -35,6 +33,9 @@ public class FdmGamificationApplication {
 
 	@Autowired
 	private ChoiceService choiceService;
+
+	@Autowired
+	private ChallengeFeedbackService cfs;
 
 	private final Logger log = LoggerFactory.getLogger(FdmGamificationApplication.class);
 
@@ -72,6 +73,8 @@ public class FdmGamificationApplication {
 						choiceService.create(question, choice);
 					}
 				}
+				ChallengeFeedback challengeFeedbackP = cfs.create(challenge, new ChallengeFeedback("Good Job", "You did so well, here's some links for reference", true));
+				ChallengeFeedback challengeFeedbackN = cfs.create(challenge, new ChallengeFeedback("Oh No", "You did so badly, here's some links to improve yourself", false));
 			}
 			log.info("Finished adding mock data.");
 		} catch (IOException e) {

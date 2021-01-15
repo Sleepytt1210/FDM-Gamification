@@ -1,0 +1,74 @@
+body{
+}
+
+/*Title of section*/
+.title{
+    font-size: 25px;
+    display: flex;
+    justify-content: center;
+}
+
+
+/*Navigation bar for choosing scenarios*/
+.scenarioNavbar ul{
+    text-decoration: none;
+    display: flex;
+    list-style: none;
+    justify-content: center;
+}
+
+.scenarioNavbar ul li {
+    padding-left: 10px;
+    padding-right: 10px;
+    font-size: 20px;
+    color: black;
+}
+
+.scenarioNavbar ul li:hover{
+    color: #398fff;
+    cursor: pointer;
+}
+
+
+/*Section containing scenarios*/
+.title2{
+    font-size: 20px;
+}
+.chooseScenario{
+    display: flex;
+    justify-content: center;
+    height: 100%;
+    margin: 50px auto;
+}
+
+.scene1{
+    width: auto;
+    height: auto;
+}
+
+.chooseScenario table{
+    margin: 15px;
+    width: 320px;
+    height: 240px;
+    display: inline-table;
+    transition: 0.5s;
+}
+
+.chooseScenario table:hover{
+    width: 330px;
+    height: 250px;
+    cursor: pointer;
+    transition: 0.5s;
+}
+
+.chooseScenario a{
+    text-decoration: none;
+}
+
+.chooseScenario tr{
+    background-color: #999999;
+}
+.chooseScenario tr, th{
+    border: 1px solid black;
+    border-collapse: collapse;
+}

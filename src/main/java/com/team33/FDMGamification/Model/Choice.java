@@ -8,16 +8,16 @@ public class Choice {
     @Id
     @Column(name = "choice_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Integer choiceId;
 
     @Column(name = "choice_text")
-    private String choice_text = "";
+    private String choiceText = "";
 
     @Column(name = "choice_weight")
-    private int weight;
+    private int choiceWeight;
 
     @Column(name = "choice_reason")
-    private String choice_reason = "";
+    private String choiceReason = "";
 
     @ManyToOne
     @JoinColumn(name = "question_id")
@@ -26,34 +26,34 @@ public class Choice {
     public Choice() {
     }
 
-    public Choice(String choice_text, int weight, String choice_reason) {
-        this.choice_text = choice_text;
-        this.weight = weight;
-        this.choice_reason = choice_reason;
+    public Choice(String choiceText, int choiceWeight, String choiceReason) {
+        this.choiceText = choiceText;
+        this.choiceWeight = choiceWeight;
+        this.choiceReason = choiceReason;
     }
 
     public String getChoiceText() {
-        return choice_text;
+        return choiceText;
     }
 
     public void setChoiceText(String choice_text) {
-        this.choice_text = choice_text;
+        this.choiceText = choice_text;
     }
 
-    public int getWeight() {
-        return weight;
+    public int getChoiceWeight() {
+        return choiceWeight;
     }
 
-    public void setWeight(int score) {
-        this.weight = score;
+    public void setChoiceWeight(int score) {
+        this.choiceWeight = score;
     }
 
     public String getChoiceReason() {
-        return choice_reason;
+        return choiceReason;
     }
 
     public void setChoiceReason(String choice_reason) {
-        this.choice_reason = choice_reason;
+        this.choiceReason = choice_reason;
     }
 
     public Question getQuestion() {
@@ -64,21 +64,21 @@ public class Choice {
         this.question = question;
     }
 
-    public Integer getId() {
-        return id;
+    public Integer getChoiceId() {
+        return choiceId;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setChoiceId(Integer id) {
+        this.choiceId = id;
     }
 
     @Override
     public String toString() {
         return "Choice{" +
-                "id=" + id +
-                ", choice_text='" + choice_text + '\'' +
-                ", weight=" + weight +
-                ", choice_reason'" + choice_reason + '\'' +
+                "id=" + choiceId +
+                ", choice_text='" + choiceText + '\'' +
+                ", weight=" + choiceWeight +
+                ", choice_reason'" + choiceReason + '\'' +
                 ", questionId=" + question.getQuestionId() +
                 '}';
     }

@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.management.InstanceAlreadyExistsException;
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
@@ -55,7 +54,7 @@ public class ChoiceService {
     public Choice create(Question question, Choice choice) {
         choice.setQuestion(question);
         choice = choiceRepo.saveAndFlush(choice);
-        question.getChoices().put(choice.getId(), choice);
+        question.getChoices().put(choice.getChoiceId(), choice);
         return choice;
     }
 
@@ -87,7 +86,7 @@ public class ChoiceService {
     public Choice update(Integer choiceId, String choiceText, Integer weight, String choiceReason) {
         Choice choice = findById(choiceId);
         if(choiceText != null) choice.setChoiceText(choiceText);
-        if(weight != null) choice.setWeight(weight);
+        if(weight != null) choice.setChoiceWeight(weight);
         if(choiceReason != null) choice.setChoiceReason(choiceReason);
         return choiceRepo.saveAndFlush(choice);
     }
@@ -106,7 +105,7 @@ public class ChoiceService {
      */
     public void delete(Choice choice) {
         Question question = choice.getQuestion();
-        question.getChoices().remove(choice.getId());
+        question.getChoices().remove(choice.getChoiceId());
         choiceRepo.delete(choice);
     }
 
@@ -117,7 +116,7 @@ public class ChoiceService {
     public void batchDelete(Iterable<Choice> choices) {
         for(Choice choice : choices) {
             Question question = choice.getQuestion();
-            question.getChoices().remove(choice.getId());
+            question.getChoices().remove(choice.getChoiceId());
         }
         choiceRepo.deleteAll(choices);
     }

@@ -1,5 +1,8 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{headinglayout.html}">
 <head>
     <meta charset="UTF-8">
     <title>Scenarios</title>
@@ -7,43 +10,23 @@
     <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@600&display=swap" rel="stylesheet">
 </head>
 <body>
-<header>
-    <img src="../static/images/FDMlogo.png" th:src="@{/images/FDMlogo.png}" alt="FDMlogo" class="logo">
-    <ul>
-        <li><a href="/home" th:href="@{/home}">Home</a></li>
-        <li><a href="/scenarios" th:href="@{/scenarios}">Explore</a></li>
-        <li><a href="/leaderboard" th:href="@{/leaderboard}">Leaderboard</a></li>
-    </ul>
-</header>
 
-<div class="heading">
-    <h1>FDM Games</h1>
+<div layout:fragment="content">
+    <section class="leaderboardSection">
+        <table>
+            <tr>
+                <th>Name</th>
+                <th>Stream</th>
+                <th>Scenario</th>
+                <th>Score</th>
+            </tr>
+            <tr>
+                <td>Kaenan</td>
+                <td>Software Testing</td>
+                <td>Scenario 1</td>
+                <td>100</td>
+            </tr>
+        </table>
+    </section>
 </div>
-
-<div class="sectionTitle">
-    <h2>Leaderboard</h2>
-</div>
-
-<section class="leaderboardSection">
-    <table>
-        <tr>
-            <th>Name</th>
-            <th>Stream</th>
-            <th>Scenario</th>
-            <th>Score</th>
-        </tr>
-        <tr>
-            <td>Kaenan</td>
-            <td>Software Testing</td>
-            <td>Scenario 1</td>
-            <td>100</td>
-        </tr>
-    </table>
-</section>
-
-<footer>
-    <div>
-        <p>Footer</p>
-    </div>
-</footer>
 </body>

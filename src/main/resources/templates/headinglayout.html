@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8"/>
+    <title>FDM Games</title>
+    <link rel="stylesheet" href="../static/css/heading.css" th:href="@{/css/heading.css}">
+    <link rel="stylesheet" href="../static/css/checkboxStyle.css" th:href="@{/css/checkboxStyle.css}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+</head>
+<body>
+    <th:block layout:fragment="heading">
+        <nav class="header" layout:fragment="navigation-bar">
+            <a class="navbar-brand" th:href="'https://www.fdmgroup.com'">
+                <img alt="FDMlogo" class="logo" src="../static/images/FDMlogo.png" th:src="@{/images/FDMlogo.png}">
+            </a>
+            <ul id="navbar-menu-list" layout:fragment="nav-menu-list">
+                <li><a href="/home" th:href="@{/home}">Home</a></li>
+                <li><a href="/explore" th:href="@{/explore}">Explore</a></li>
+                <li><a href="/leaderboard" th:href="@{/leaderboard}">Leaderboard</a></li>
+            </ul>
+        </nav>
+        <div class="heading">
+            <h1>FDM Games</h1>
+        </div>
+    </th:block>
+    <div class="container" layout:fragment="content">
+    </div>
+    <div class="footer" layout:fragment="footer">
+        <p>Footer</p>
+    </div>
+</body>
+</html>

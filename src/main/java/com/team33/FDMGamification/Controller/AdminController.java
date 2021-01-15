@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -19,10 +20,13 @@ import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/admin")
+@SessionAttributes("challenge")
 public class AdminController {
 
     @Autowired
@@ -34,15 +38,30 @@ public class AdminController {
     @Autowired
     private ChoiceService choiceService;
 
-    @RequestMapping({"/", ""})
-    public ModelAndView renderAdminHome(@AuthenticationPrincipal AdminDetails activeUser) {
-        ModelAndView mav = new ModelAndView("admin/adminHome");
-        mav.addObject("challenges", challengeService.getAll());
-        mav.addObject("admin", activeUser);
-        return mav;
+    @RequestMapping({"/", "", "{page:challenges|questions|choices}"})
+    public String renderAdminHome(@AuthenticationPrincipal AdminDetails activeUser, Model model, @PathVariable("page") Optional<String> tab) {
+        String tabRes = "";
+        if(tab.isPresent()){
+            tabRes = tab.get();
+        }else{
+            return "redirect:/admin/challenges";
+        }
+        switch (tabRes) {
+            case "challenges":
+                model.addAttribute("challenges", challengeService.getAll());
+                break;
+            case "questions":
+                model.addAttribute("questions", questionService.getAll());
+                break;
+            case "choices":
+                model.addAttribute("choices", choiceService.getAll());
+                break;
+        }
+        model.addAttribute("admin", activeUser);
+        return "admin/adminHome";
     }
 
-    @GetMapping("/challenge/{id}")
+    @GetMapping("/challenges/{id}")
     public ModelAndView getChallengeView(@PathVariable("id") Integer id) {
         ModelAndView mav = new ModelAndView("admin/form");
         try {
@@ -56,14 +75,24 @@ public class AdminController {
     }
 
 
-    @PostMapping(value = "/challenge/", params = {"create"})
-    public String updateChallenge(ModelMap model) {
+    @PostMapping(value = "/challenges", params = {"create"})
+    public String createChallenge(ModelMap model, @RequestParam("create") String create) {
         Challenge challenge = new Challenge();
         model.addAttribute("challenge", challenge);
         return "admin/form";
     }
 
-    @PostMapping(value = "/challenge/{id}", params = {"save"})
+    @PostMapping(value = "/challenges", params = {"delete", "chlids"})
+    public String deleteChallenge(ModelMap model, @RequestParam("chlids") Integer[] chlids) {
+        model.remove("challenge");
+        System.out.println(Arrays.toString(chlids));
+        for (Integer id : chlids) {
+            challengeService.delete(id);
+        }
+        return "redirect:/admin/challenges";
+    }
+
+    @PostMapping(value = "/challenges/{id}", params = {"save"})
     public String updateChallenge(@ModelAttribute("challenge") Challenge challenge, @PathVariable("id") Integer id, final BindingResult bindingResult, ModelMap model, SessionStatus status) {
         try {
             if (bindingResult.hasErrors()) {
@@ -81,7 +110,7 @@ public class AdminController {
         }
     }
 
-    @PostMapping(value = "/challenge/{id}", params = {"addQuestion"})
+    @PostMapping(value = "/challenges/{id}", params = {"addQuestion"})
     public ModelAndView addQuestion(@ModelAttribute("challenge") Challenge challenge) {
         ModelAndView mav = new ModelAndView("admin/form");
         try {
@@ -94,7 +123,7 @@ public class AdminController {
         return mav;
     }
 
-    @PostMapping(value = "/challenge/{id}", params = {"removeQuestion"})
+    @PostMapping(value = "/challenges/{id}", params = {"removeQuestion"})
     public String removeQuestion(@ModelAttribute("challenge") Challenge challenge, @RequestParam("removeQuestion") Integer rmId) {
         try {
             challenge.getQuestion().remove(rmId);
@@ -106,7 +135,7 @@ public class AdminController {
         }
     }
 
-    @PostMapping(value = "/challenge/{id}", params = {"addChoice"})
+    @PostMapping(value = "/challenges/{id}", params = {"addChoice"})
     public ModelAndView addChoice(@ModelAttribute("challenge") Challenge challenge, @RequestParam("addChoice") Integer qid) {
         ModelAndView mav = new ModelAndView("admin/form");
         try {
@@ -120,7 +149,7 @@ public class AdminController {
         return mav;
     }
 
-    @PostMapping(value = "/challenge/{id}", params = {"removeChoice"})
+    @PostMapping(value = "/challenges/{id}", params = {"removeChoice"})
     public String removeChoice(@ModelAttribute("challenge") Challenge challenge, @RequestParam("removeChoice") List<Integer> ids) {
         try {
             Integer qid = ids.get(0);

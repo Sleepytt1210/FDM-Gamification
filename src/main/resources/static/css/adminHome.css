@@ -1,7 +1,124 @@
-body{
-    margin: 0;
-    font-family: 'Raleway', sans-serif;
+.container{
+    padding: 15px 0;
 }
-html{
-    scroll-behavior: smooth;
+
+.content-head {
+    height: 2.3rem;
+    border-bottom: 1px solid #c8c8c8;
+    width: auto;
+    text-align: right;
+}
+
+/*Modal Style*/
+
+.fa-exclamation-triangle{
+    float: left;
+    margin: 18px 12px 10px 0;
+    font-size: 30px;
+    color: #ff372d;
+}
+
+/*Head Content Buttons Style*/
+.create-new-button, .delete-button, .ui-button, .ui-button .delete-button{
+    padding: 7px 10px;
+    border-radius: 2px;
+    background: #909090;
+    border: none;
+    font-weight: 510;
+    font-size: 12px;
+    font-family: sans-serif;
+    color: #fff;
+    outline: none;
+}
+
+.ui-dialog .ui-dialog-titlebar-close {
+    background: none !important;
+    border: none !important;
+}
+
+.ui-dialog .ui-dialog-titlebar-close, .ui-dialog .ui-dialog-titlebar-close:hover {
+    padding: 0 !important;
+}
+
+.create-new-button:hover, .ui-button:hover{
+    cursor: pointer;
+    background-color: #2196F3;
+    opacity: 85%;
+}
+
+.delete-button{
+    margin: 0 15px 0 8px
+}
+
+.delete-button:disabled{
+    background: #909090;
+}
+
+.delete-button:enabled{
+    background: #ff2a36;
+}
+
+.delete-button:enabled:hover, .ui-button:hover,
+.delete-button:enabled:active, .ui-button:active{
+    cursor: pointer;
+    opacity: 85%;
+    font-weight: 510;
+    border: none;
+    color: #fff;
+}
+
+.delete-button:enabled:focus, .ui-button:focus{
+    cursor: pointer;
+    font-weight: 510;
+    border: none;
+    color: #fff;
+}
+
+/*Table Style*/
+.column-select{
+    width: 16px;
+}
+
+div.table-content{
+    margin: auto;
+    padding: 0;
+}
+
+div.table-content > table {
+    color: #606060;
+    border-collapse: collapse;
+    width: 100%;
+    text-align: left;
+}
+
+div.table-content > table > tbody > tr > td, div.table-content > table > thead > tr > th {
+    padding: 5px 10px;
+}
+
+div.table-content > table > tbody > tr, div.table-content > table > thead > tr {
+    border-bottom: 1px solid #c8c8c8;
+}
+
+div.table-content > table th {
+    padding: 7px 2px;
+    font-weight: normal;
+    font-size: 0.625rem;
+}
+
+div.table-content > table > tbody > tr {
+    background-color: #fcfffc;
+    font-size: 11px;
+}
+
+div.table-content > table > tbody > tr > td > a {
+    text-decoration: none;
+    color: inherit;
+}
+
+div.table-content > table > tbody > tr:hover {
+    background-color: #ececec;
+}
+
+.container2{
+    padding: 15px 0;
 }

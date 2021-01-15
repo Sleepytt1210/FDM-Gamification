@@ -4,11 +4,7 @@ import com.team33.FDMGamification.Service.ChallengeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import java.util.List;
 
 @Controller
 public class UserController {
@@ -21,12 +17,17 @@ public class UserController {
         return "index";
     }
 
-    @RequestMapping("/scenarios")
+    @RequestMapping("/scenario")
     public String scenariosPage(Model model){
+        return "redirect:/explore";
+    }
+
+    @RequestMapping("/explore")
+    public String explorePage(Model model){
         model.addAttribute("ST", challengeService.findByStream("ST"));
         model.addAttribute("BI", challengeService.findByStream("BI"));
         model.addAttribute("TO", challengeService.findByStream("TO"));
-        return "scenarios";
+        return "explore";
     }
 
     @RequestMapping("/leaderboard")
@@ -34,9 +35,4 @@ public class UserController {
         return "leaderboard";
     }
 
-    @GetMapping("/scenario/{id}")
-    public String scenarioPage(Model model, @PathVariable("id") Integer id){
-        model.addAttribute("scenario", challengeService.findById(id));
-        return "questions";
-    }
 }
