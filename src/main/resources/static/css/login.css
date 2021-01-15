@@ -1,0 +1,40 @@
+body{
+    margin: 0;
+    font-family: 'Raleway', sans-serif;
+    height: 100%;
+}
+
+/*Top of page navigation bar*/
+header {
+    background-color: #202025;
+    padding: 20px;
+    position: fixed;
+    width: 100%;
+    height: 50px;
+}
+
+header .logo{
+    width: auto;
+    height: 60px;
+    float: left;
+    padding-left: 30px;
+}
+
+form.loginForm{
+
+    width: 30% ;
+    padding: 30%;
+    font-size: 160%;
+}
+input{
+    font-size: 100px;
+}
+
+button{
+    background-color: #ffffff;
+    color: #202025;
+}
+
+button:hover{
+    opacity: 0.8;
+}
