@@ -18,7 +18,7 @@ CREATE TABLE Challenge
     challenge_title       VARCHAR(50) NOT NULL,
     challenge_description TEXT        NOT NULL,
     challenge_completion  INT(11)     NOT NULL,
-    challenge_stream      varchar(3)  NOT NULL,
+    challenge_stream      varchar(10) NOT NULL,
     avg_rating            varchar(25) DEFAULT 0
 ) AUTO_INCREMENT = 1;
 
