@@ -117,8 +117,6 @@ public class ChallengeFeedbackService {
      * @param challengeFeedback Challenge feedback entity to be deleted.
      */
     public void delete(ChallengeFeedback challengeFeedback) {
-        Challenge challenge = challengeFeedback.getChallenge();
-        challenge.getChallengeFeedback().remove(challengeFeedback.isPositive());
         challengeFeedbackRepo.delete(challengeFeedback);
     }
 
@@ -127,10 +125,6 @@ public class ChallengeFeedbackService {
      * @param challengeFeedbacks Collection of challenge feedbacks to be deleted.
      */
     public void batchDelete(Iterable<ChallengeFeedback> challengeFeedbacks) {
-        for(ChallengeFeedback challengeFeedback : challengeFeedbacks) {
-            Challenge challenge = challengeFeedback.getChallenge();
-            challenge.getChallengeFeedback().remove(challengeFeedback.isPositive());
-        }
         challengeFeedbackRepo.deleteAll(challengeFeedbacks);
     }
 

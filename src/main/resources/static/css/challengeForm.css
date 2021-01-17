@@ -26,16 +26,25 @@
   font-weight: normal;
   color: #3b3a3a;
 }
-.form-group .imageDisplay {
+.form-group .image-display {
+  background-image: url("../images/uploadImageBg.svg");
+  background-size: cover;
   margin: 5px 0;
   padding: 0;
-  height: 108px;
-  width: 192px;
+  height: 240px;
+  width: 426px;
+  border-radius: 8px;
 }
-.form-group .imageDisplay img {
+.form-group .image-display img {
   height: inherit;
   width: inherit;
-  border: 1px solid #aaaccc;
+  box-shadow: 0 0.1em 4px #000;
+}
+.form-group .image-display:hover {
+  cursor: pointer;
+  background-image: url("../images/uploadImageHover.svg");
+  transition: 0.2s;
+  box-shadow: 0 0.1em 4px #000;
 }
 .form-group label {
   font-family: "Helvetica", sans-serif;
@@ -81,6 +90,12 @@
 }
 .form-group input[type=submit]:hover {
   background: blue;
+}
+.form-group label.error {
+  color: red;
+  font-size: 15px;
+  font-weight: normal;
+  margin: 0 5px;
 }
 
 /*# sourceMappingURL=challengeForm.css.map */

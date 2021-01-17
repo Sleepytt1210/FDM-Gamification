@@ -1,14 +1,10 @@
 package com.team33.FDMGamification;
 
 import com.team33.FDMGamification.Model.*;
-import com.team33.FDMGamification.Service.ChallengeFeedbackService;
-import com.team33.FDMGamification.Service.ChallengeService;
-import com.team33.FDMGamification.Service.ChoiceService;
-import com.team33.FDMGamification.Service.QuestionService;
+import com.team33.FDMGamification.Service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -18,7 +14,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 
@@ -57,13 +52,13 @@ public class FdmGamificationApplication {
 			for (int i = 0; i < n; i++) {
 				String[] line = br.readLine().split(",");
 				int comp = Integer.parseInt(line[2]);
-				Challenge challenge = challengeService.create(new Challenge(line[0], line[1], line[3], Stream.valueOf(line[4]), comp));
+				Challenge challenge = challengeService.create(new Challenge(line[0], line[1], Stream.valueOf(line[4]), comp));
 				// Get number of questions
 				int m = (br.readLine().charAt(0) - '0');
 				for (int j = 0; j < m; j++) {
 					String[] qLine = br.readLine().split(",");
 					int qComp = Integer.parseInt(qLine[2]);
-					Question question = questionService.create(challenge, new Question(qLine[0], qLine[1], qComp));
+					Question question = questionService.create(challenge, new Question(qLine[0], qLine[1], qComp, QuestionType.DRAG_DROP));
 					// Get number of choices
 					int c = (br.readLine().charAt(0) - '0');
 					for (int k = 0; k < c; k++) {

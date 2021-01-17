@@ -17,9 +17,6 @@ public class Challenge {
     @Column(name = "challenge_description")
     private String description = "";
 
-    @Column(name = "challenge_thumbnail")
-    private String thumbnail = "";
-
     @Column(name = "challenge_stream")
     @Enumerated(EnumType.STRING)
     private Stream stream = Stream.NONE;
@@ -29,6 +26,9 @@ public class Challenge {
 
     @Column(name = "avg_rating")
     private String avgRating = "No rating";
+
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "challenge")
+    private Thumbnail thumbnail = new Thumbnail(this);
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "challenge", cascade = CascadeType.ALL, orphanRemoval = true)
     @MapKeyColumn(name = "question_id")
@@ -43,10 +43,9 @@ public class Challenge {
 
     public Challenge(){}
 
-    public Challenge(String challengeTitle, String description, String thumbnail, Stream stream, Integer completion) {
+    public Challenge(String challengeTitle, String description, Stream stream, Integer completion) {
         this.challengeTitle = challengeTitle;
         this.description = description;
-        this.thumbnail = thumbnail;
         this.stream = stream;
         this.completion = completion;
         this.avgRating = "No rating";
@@ -76,11 +75,11 @@ public class Challenge {
         this.description = introduction;
     }
 
-    public String getThumbnail() {
+    public Thumbnail getThumbnail() {
         return thumbnail;
     }
 
-    public void setThumbnail(String thumbnail) {
+    public void setThumbnail(Thumbnail thumbnail) {
         this.thumbnail = thumbnail;
     }
 

@@ -8,20 +8,11 @@ import com.team33.FDMGamification.Service.ChallengeService;
 import com.team33.FDMGamification.Service.ChoiceService;
 import com.team33.FDMGamification.Service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.support.SessionStatus;
-import org.springframework.web.server.ResponseStatusException;
-import org.springframework.web.servlet.ModelAndView;
-
-import javax.persistence.EntityNotFoundException;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -60,19 +51,14 @@ public class AdminController {
         return "admin/adminHome";
     }
 
-    @PostMapping(value = "{page:challenges|questions|choices}", params = {"create"})
+    @PostMapping(value = "{page:questions|choices}", params = {"create"})
     public String createItem(ModelMap model, @PathVariable("page") String page) {
-        switch (page) {
-            case "questions":
-                model.addAttribute("question", new Question());
-                return "admin/questionForm";
-            case "choices":
-                model.addAttribute("choice", new Choice());
-                return "admin/choiceForm";
-            default:
-                model.addAttribute("challenge", new Challenge());
-                return "admin/challengeForm";
+        if ("choices".equals(page)) {
+            model.addAttribute("choice", new Choice());
+            return "admin/choiceForm";
         }
+        model.addAttribute("question", new Question());
+        return "admin/questionForm";
     }
 
     @PostMapping(value = "{page:challenges|questions|choices}", params = {"delete", "ids"})
