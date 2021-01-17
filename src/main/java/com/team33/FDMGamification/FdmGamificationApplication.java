@@ -58,7 +58,7 @@ public class FdmGamificationApplication {
 				for (int j = 0; j < m; j++) {
 					String[] qLine = br.readLine().split(",");
 					int qComp = Integer.parseInt(qLine[2]);
-					Question question = questionService.create(challenge, new Question(qLine[0], qLine[1], qComp));
+					Question question = questionService.create(challenge, new Question(qLine[0], qLine[1], qComp, QuestionType.DRAG_DROP));
 					// Get number of choices
 					int c = (br.readLine().charAt(0) - '0');
 					for (int k = 0; k < c; k++) {

@@ -28,6 +28,7 @@ CREATE TABLE Question
     question_title      VARCHAR(50) NOT NULL,
     question_text       TEXT        NOT NULL,
     question_completion INT(11)     NOT NULL,
+    question_type       VARCHAR(50) NOT NULL,
     challenge_id        INT(11)     NOT NULL,
     FOREIGN KEY (challenge_id) REFERENCES Challenge (challenge_id) ON DELETE CASCADE
 ) AUTO_INCREMENT = 1;

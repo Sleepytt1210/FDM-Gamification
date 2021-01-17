@@ -63,7 +63,7 @@ public class DatabaseTests {
         try {
             challenge1 = new Challenge("Challenge one", "This is challenge one.", Stream.ST, 0);
             challengeS.create(challenge1);
-            question1 = new Question("Question one", "This is question one.", 0);
+            question1 = new Question("Question one", "This is question one.", 0, QuestionType.DRAG_DROP);
             questionS.create(challenge1.getId(), question1);
             feedback1 = new ChallengeFeedback("Congratulation!", "You scored well!", true);
             feedback2 = new ChallengeFeedback("Oh no!", "You need to work harder!", false);
@@ -199,7 +199,7 @@ public class DatabaseTests {
 
     @Test
     public void testQuestionCreateWithProperties() {
-        assertDoesNotThrow(() -> questionS.create(1, "Question two", "This is question two.", 0));
+        assertDoesNotThrow(() -> questionS.create(1, "Question two", "This is question two.", 0, QuestionType.MULTIPLE_CHOICE));
         assertEquals(2, questionRepo.findAll().size());
         assertEquals("This is question two.", questionS.findById(2).getQuestionText());
     }
@@ -212,10 +212,10 @@ public class DatabaseTests {
 
     @Test
     public void testQuestionGetAll() {
-        assertDoesNotThrow(() -> questionS.create(1, "Question two", "This is question two.", 0));
+        assertDoesNotThrow(() -> questionS.create(1, "Question two", "This is question two.", 0, QuestionType.MULTIPLE_CHOICE));
         assertEquals(2, questionS.getAll().size());
 
-        assertDoesNotThrow(() -> questionS.create(1, "Question three", "This is question three.", 0));
+        assertDoesNotThrow(() -> questionS.create(1, "Question three", "This is question three.", 0, QuestionType.TEXTBOX));
         assertEquals(3, questionS.getAll().size());
     }
 
@@ -226,7 +226,7 @@ public class DatabaseTests {
         Integer newCompletion = 100;
 
         assertEquals("This is question one.", questionS.findById(1).getQuestionText());
-        questionS.update(1, newQuestionTitle, newQuestionText, newCompletion, null);
+        questionS.update(1, newQuestionTitle, newQuestionText, newCompletion, null, null);
 
         Question updatedQuestion = questionS.findById(1);
         assertEquals(newQuestionTitle, updatedQuestion.getQuestionTitle());
@@ -236,7 +236,7 @@ public class DatabaseTests {
 
     @Test
     public void testQuestionDeleteOneByEntity() {
-        assertDoesNotThrow(() -> questionS.create(1, "Question two", "This is question two.", 0));
+        assertDoesNotThrow(() -> questionS.create(1, "Question two", "This is question two.", 0, QuestionType.MULTIPLE_CHOICE));
         assertEquals(2, questionS.getAll().size());
 
         Question question2 = questionS.findById(2);
@@ -253,7 +253,7 @@ public class DatabaseTests {
     @Test
     public void testQuestionDeleteOneById() {
         // Create a dummy question for deletion
-        assertDoesNotThrow(() -> questionS.create(1, "Question two", "This is question two.", 0));
+        assertDoesNotThrow(() -> questionS.create(1, "Question two", "This is question two.", 0, QuestionType.MULTIPLE_CHOICE));
         assertEquals(2, questionS.getAll().size());
 
         questionS.delete(2);
@@ -268,10 +268,10 @@ public class DatabaseTests {
 
     @Test
     public void testQuestionBatchDelete() {
-        assertDoesNotThrow(() -> questionS.create(1, "Question two", "This is question two.", 0));
+        assertDoesNotThrow(() -> questionS.create(1, "Question two", "This is question two.", 0, QuestionType.MULTIPLE_CHOICE));
         assertEquals(2, questionS.getAll().size());
 
-        assertDoesNotThrow(() -> questionS.create(1, "Question three", "This is question three.", 0));
+        assertDoesNotThrow(() -> questionS.create(1, "Question three", "This is question three.", 0, QuestionType.TEXTBOX));
         assertEquals(3, questionS.getAll().size());
 
         List<Question> questionList = questionRepo.findAllById(List.of(2, 3));
@@ -598,7 +598,7 @@ public class DatabaseTests {
         Integer newCompletion = 100;
 
         assertEquals("This is question one.", questionS.findById(1).getQuestionText());
-        questionS.update(questionId, newQuestionTitle, newQuestionText, newCompletion, null);
+        questionS.update(questionId, newQuestionTitle, newQuestionText, newCompletion, null, null);
 
         Question updatedQuestion = questionS.findById(questionId);
         assertEquals(newQuestionTitle, updatedQuestion.getQuestionTitle());
@@ -624,7 +624,7 @@ public class DatabaseTests {
         Challenge updatedChallenge = new Challenge(null, newChallengeIntro, null, newChallengeCompletion);
 
         // Create an update dummy question that is linked to dummy challenge (Not persisted)
-        Question newQuestion = new Question(newQuestionTitle, newQuestionText, newQuestionCompletion);
+        Question newQuestion = new Question(newQuestionTitle, newQuestionText, newQuestionCompletion, QuestionType.TEXTBOX);
         newQuestion.setQuestionId(question1.getQuestionId());
         newQuestion.setChallenge(challenge1);
 
@@ -650,6 +650,7 @@ public class DatabaseTests {
         assertEquals(newQuestionTitle, updatedQuestion.getQuestionTitle());
         assertEquals(newQuestionText, updatedQuestion.getQuestionText());
         assertEquals(newQuestionCompletion, updatedQuestion.getQuestionCompletion());
+        assertEquals(QuestionType.MULTIPLE_CHOICE, updatedQuestion.getQuestionType());
     }
 
     @Test
