@@ -52,6 +52,12 @@ public class AdminChallengeFormController {
         return mav;
     }
 
+    @PostMapping(value = {"", "/"}, params = {"create"})
+    public String createChallenge(ModelMap model) {
+        model.addAttribute("challenge", challengeService.create(new Challenge()));
+        return "admin/challengeForm";
+    }
+
     @PostMapping(value = "/{id}", headers=("content-type=multipart/*"), params = {"save"})
     public String saveChallenge(@ModelAttribute("challenge") Challenge challenge, @PathVariable("id") Integer id,
                                 @RequestPart("pic") MultipartFile picData,

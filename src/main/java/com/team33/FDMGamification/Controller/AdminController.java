@@ -51,19 +51,14 @@ public class AdminController {
         return "admin/adminHome";
     }
 
-    @PostMapping(value = "{page:challenges|questions|choices}", params = {"create"})
+    @PostMapping(value = "{page:questions|choices}", params = {"create"})
     public String createItem(ModelMap model, @PathVariable("page") String page) {
-        switch (page) {
-            case "questions":
-                model.addAttribute("question", new Question());
-                return "admin/questionForm";
-            case "choices":
-                model.addAttribute("choice", new Choice());
-                return "admin/choiceForm";
-            default:
-                model.addAttribute("challenge", new Challenge());
-                return "admin/challengeForm";
+        if ("choices".equals(page)) {
+            model.addAttribute("choice", new Choice());
+            return "admin/choiceForm";
         }
+        model.addAttribute("question", new Question());
+        return "admin/questionForm";
     }
 
     @PostMapping(value = "{page:challenges|questions|choices}", params = {"delete", "ids"})
