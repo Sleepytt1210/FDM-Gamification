@@ -91,5 +91,11 @@
 .form-group input[type=submit]:hover {
   background: blue;
 }
+.form-group label.error {
+  color: red;
+  font-size: 15px;
+  font-weight: normal;
+  margin: 0 5px;
+}
 
 /*# sourceMappingURL=challengeForm.css.map */
