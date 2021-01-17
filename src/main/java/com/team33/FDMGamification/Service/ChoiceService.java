@@ -104,8 +104,6 @@ public class ChoiceService {
      * @param choice Choice entity to be deleted.
      */
     public void delete(Choice choice) {
-        Question question = choice.getQuestion();
-        question.getChoices().remove(choice.getChoiceId());
         choiceRepo.delete(choice);
     }
 
@@ -114,10 +112,6 @@ public class ChoiceService {
      * @param choices Collection of choices to be deleted.
      */
     public void batchDelete(Iterable<Choice> choices) {
-        for(Choice choice : choices) {
-            Question question = choice.getQuestion();
-            question.getChoices().remove(choice.getChoiceId());
-        }
         choiceRepo.deleteAll(choices);
     }
 

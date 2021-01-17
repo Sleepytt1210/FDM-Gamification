@@ -88,14 +88,14 @@ public class DatabaseTests {
     public void testChallengeCreateWithProperties() {
         challengeS.create("Challenge two", "This is challenge two.", "Thumbnail url", Stream.ST, 1);
         assertEquals(2, challengeRepo.findAll().size());
-        assertEquals("This is challenge two.", challengeS.findById(2).getIntroduction());
+        assertEquals("This is challenge two.", challengeS.findById(2).getDescription());
     }
 
     @Test
     public void testChallengeFindById() {
         Challenge challenge = challengeS.findById(1);
         assertNotNull(challenge);
-        assertEquals("This is challenge one.", challenge.getIntroduction());
+        assertEquals("This is challenge one.", challenge.getDescription());
         assertEquals(0, challengeS.findById(1).getCompletion());
         assertThrows(EntityNotFoundException.class, () -> challengeS.findById(2), "Expected Entity Not Found to be thrown!");
     }
@@ -117,12 +117,12 @@ public class DatabaseTests {
         Stream newStream = Stream.BI;
 
         assertEquals("Challenge one", challengeS.findById(1).getChallengeTitle());
-        assertEquals("This is challenge one.", challengeS.findById(1).getIntroduction());
+        assertEquals("This is challenge one.", challengeS.findById(1).getDescription());
         challengeS.update(1, newTitle, newIntro, null, newStream, newCompletion, null, null, null);
 
         Challenge updatedChallenge = challengeS.findById(1);
         assertEquals(newTitle, updatedChallenge.getChallengeTitle());
-        assertEquals(newIntro, updatedChallenge.getIntroduction());
+        assertEquals(newIntro, updatedChallenge.getDescription());
         assertEquals(newCompletion, updatedChallenge.getCompletion());
     }
 
@@ -136,12 +136,12 @@ public class DatabaseTests {
         Challenge newChallenge = new Challenge(newTitle, newIntro, "Thumbnail2", newStream, newCompletion);
 
         assertEquals("Challenge one", challengeS.findById(1).getChallengeTitle());
-        assertEquals("This is challenge one.", challengeS.findById(1).getIntroduction());
+        assertEquals("This is challenge one.", challengeS.findById(1).getDescription());
         challengeS.update(1, newChallenge);
 
         Challenge updatedChallenge = challengeS.findById(1);
         assertEquals(newTitle, updatedChallenge.getChallengeTitle());
-        assertEquals(newIntro, updatedChallenge.getIntroduction());
+        assertEquals(newIntro, updatedChallenge.getDescription());
         assertEquals(newCompletion, updatedChallenge.getCompletion());
     }
 
@@ -188,7 +188,7 @@ public class DatabaseTests {
         Challenge challenge = challengeS.findById(1);
 
         // Ensure the question is added
-        Question question = challenge.getQuestion().get(1);
+        Question question = challenge.getQuestions().get(1);
         assertNotNull(question);
 
         // Ensure bidirectional relationship from question
@@ -247,7 +247,7 @@ public class DatabaseTests {
         assertThrows(EntityNotFoundException.class, () -> questionS.findById(2), "Expected Entity Not Found to be thrown!");
 
         // Ensure question is removed from associated challenge
-        assertNull(challenge1.getQuestion().get(2));
+        assertNull(challenge1.getQuestions().get(2));
     }
 
     @Test
@@ -263,7 +263,7 @@ public class DatabaseTests {
         assertThrows(EntityNotFoundException.class, () -> questionS.findById(2), "Expected Entity Not Found to be thrown!");
 
         // Ensure question is removed from associated challenge
-        assertNull(challenge1.getQuestion().get(2));
+        assertNull(challenge1.getQuestions().get(2));
     }
 
     @Test
@@ -404,7 +404,7 @@ public class DatabaseTests {
         // Ensure question is deleted
         assertThrows(EntityNotFoundException.class, () -> questionS.findById(1));
         assertEquals(0, questionS.getAll().size());
-        assertEquals(0, challenge1.getQuestion().size());
+        assertEquals(0, challenge1.getQuestions().size());
 
         // Ensure choices are deleted
         assertThrows(EntityNotFoundException.class, () -> choiceS.findById(1));
@@ -576,8 +576,8 @@ public class DatabaseTests {
         Challenge challenge = challengeS.findById(1);
         System.out.println(challenge);
         assertNotNull(challenge);
-        assertEquals(1, challenge.getQuestion().size());
-        assertNotNull(challenge.getQuestion().get(1));
+        assertEquals(1, challenge.getQuestions().size());
+        assertNotNull(challenge.getQuestions().get(1));
     }
 
     @Test
@@ -606,9 +606,9 @@ public class DatabaseTests {
         assertEquals(newCompletion, updatedQuestion.getQuestionCompletion());
 
         Challenge challenge = challengeS.findById(updatedQuestion.getChallenge().getId());
-        assertEquals(newQuestionTitle, challenge.getQuestion().get(questionId).getQuestionTitle());
-        assertEquals(newQuestionText, challenge.getQuestion().get(questionId).getQuestionText());
-        assertEquals(newCompletion, challenge.getQuestion().get(questionId).getQuestionCompletion());
+        assertEquals(newQuestionTitle, challenge.getQuestions().get(questionId).getQuestionTitle());
+        assertEquals(newQuestionText, challenge.getQuestions().get(questionId).getQuestionText());
+        assertEquals(newCompletion, challenge.getQuestions().get(questionId).getQuestionCompletion());
     }
 
     @Test
@@ -629,11 +629,11 @@ public class DatabaseTests {
         newQuestion.setChallenge(challenge1);
 
         // Put the question into the challenge set.
-        updatedChallenge.getQuestion().put(newQuestion.getQuestionId(), newQuestion);
+        updatedChallenge.getQuestions().put(newQuestion.getQuestionId(), newQuestion);
 
         // Before updates
         assertEquals(challenge1.getChallengeTitle(), challengeS.findById(1).getChallengeTitle());
-        assertEquals(challenge1.getIntroduction(), challengeS.findById(1).getIntroduction());
+        assertEquals(challenge1.getDescription(), challengeS.findById(1).getDescription());
 
         challengeS.update(newQuestion.getChallenge().getId(), updatedChallenge);
 
@@ -643,7 +643,7 @@ public class DatabaseTests {
 
         // Check Challenge update
         assertEquals(challenge1.getChallengeTitle(), updatedChallenge.getChallengeTitle());
-        assertEquals(newChallengeIntro, updatedChallenge.getIntroduction());
+        assertEquals(newChallengeIntro, updatedChallenge.getDescription());
         assertEquals(newChallengeCompletion, updatedChallenge.getCompletion());
 
         // Check question update
@@ -671,11 +671,11 @@ public class DatabaseTests {
 
         // Put the question into the challenge set.
         question1.getChoices().put(newChoice.getChoiceId(), newChoice);
-        updatedChallenge.getQuestion().put(question1.getQuestionId(), question1);
+        updatedChallenge.getQuestions().put(question1.getQuestionId(), question1);
 
         // Before updates
         assertEquals(challenge1.getChallengeTitle(), challengeS.findById(1).getChallengeTitle());
-        assertEquals(challenge1.getIntroduction(), challengeS.findById(1).getIntroduction());
+        assertEquals(challenge1.getDescription(), challengeS.findById(1).getDescription());
 
         challengeS.update(newChoice.getQuestion().getChallenge().getId(), updatedChallenge);
 
@@ -685,7 +685,7 @@ public class DatabaseTests {
 
         // Check Challenge update
         assertEquals(challenge1.getChallengeTitle(), updatedChallenge.getChallengeTitle());
-        assertEquals(newChallengeIntro, updatedChallenge.getIntroduction());
+        assertEquals(newChallengeIntro, updatedChallenge.getDescription());
         assertEquals(newChallengeCompletion, updatedChallenge.getCompletion());
 
         System.out.println(updatedChallenge);

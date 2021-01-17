@@ -64,7 +64,7 @@ public class QuestionService {
     public Question create(Challenge challenge, Question question) {
         question.setChallenge(challenge);
         question = questionRepo.saveAndFlush(question);
-        challenge.getQuestion().put(question.getQuestionId(), question);
+        challenge.getQuestions().put(question.getQuestionId(), question);
         return question;
     }
 
@@ -162,8 +162,6 @@ public class QuestionService {
      * @param question Question entity to be deleted.
      */
     public void delete(Question question) {
-        Challenge challenge = question.getChallenge();
-        challenge.getQuestion().remove(question.getQuestionId());
         questionRepo.delete(question);
     }
 
@@ -173,10 +171,6 @@ public class QuestionService {
      * @param questions Collection of questions to be deleted.
      */
     public void batchDelete(Iterable<Question> questions) {
-        for (Question q : questions) {
-            Challenge challenge = q.getChallenge();
-            challenge.getQuestion().remove(q.getQuestionId());
-        }
         questionRepo.deleteAll(questions);
     }
 }

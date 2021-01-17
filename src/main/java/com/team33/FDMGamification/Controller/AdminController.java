@@ -26,7 +26,6 @@ import java.util.Optional;
 
 @Controller
 @RequestMapping("/admin")
-@SessionAttributes("challenge")
 public class AdminController {
 
     @Autowired
@@ -61,105 +60,40 @@ public class AdminController {
         return "admin/adminHome";
     }
 
-    @GetMapping("/challenges/{id}")
-    public ModelAndView getChallengeView(@PathVariable("id") Integer id) {
-        ModelAndView mav = new ModelAndView("admin/form");
-        try {
-            Challenge challenge = challengeService.findById(id);
-            mav.addObject("challenge", challenge);
-        } catch (EntityNotFoundException ex) {
-            throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND, ex.getMessage(), ex);
-        }
-        return mav;
-    }
-
-
-    @PostMapping(value = "/challenges", params = {"create"})
-    public String createChallenge(ModelMap model, @RequestParam("create") String create) {
-        Challenge challenge = new Challenge();
-        model.addAttribute("challenge", challenge);
-        return "admin/form";
-    }
-
-    @PostMapping(value = "/challenges", params = {"delete", "chlids"})
-    public String deleteChallenge(ModelMap model, @RequestParam("chlids") Integer[] chlids) {
-        model.remove("challenge");
-        System.out.println(Arrays.toString(chlids));
-        for (Integer id : chlids) {
-            challengeService.delete(id);
-        }
-        return "redirect:/admin/challenges";
-    }
-
-    @PostMapping(value = "/challenges/{id}", params = {"save"})
-    public String updateChallenge(@ModelAttribute("challenge") Challenge challenge, @PathVariable("id") Integer id, final BindingResult bindingResult, ModelMap model, SessionStatus status) {
-        try {
-            if (bindingResult.hasErrors()) {
-                return "admin/form";
-            }
-            challengeService.update(id, challenge);
-            status.setComplete();
-            model.clear();
-            return "redirect:/admin";
-        } catch (EntityNotFoundException ex) {
-            throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND, ex.getMessage(), ex);
-        } catch (NullPointerException ne) {
-            throw new ResponseStatusException(HttpStatus.NO_CONTENT, ne.getMessage(), ne);
+    @PostMapping(value = "{page:challenges|questions|choices}", params = {"create"})
+    public String createItem(ModelMap model, @PathVariable("page") String page) {
+        switch (page) {
+            case "questions":
+                model.addAttribute("question", new Question());
+                return "admin/questionForm";
+            case "choices":
+                model.addAttribute("choice", new Choice());
+                return "admin/choiceForm";
+            default:
+                model.addAttribute("challenge", new Challenge());
+                return "admin/challengeForm";
         }
     }
 
-    @PostMapping(value = "/challenges/{id}", params = {"addQuestion"})
-    public ModelAndView addQuestion(@ModelAttribute("challenge") Challenge challenge) {
-        ModelAndView mav = new ModelAndView("admin/form");
-        try {
-            Question tempQ = new Question();
-            questionService.create(challenge, tempQ);
-        } catch (Exception ex) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, ex.getMessage(), ex);
-        }
-        return mav;
-    }
-
-    @PostMapping(value = "/challenges/{id}", params = {"removeQuestion"})
-    public String removeQuestion(@ModelAttribute("challenge") Challenge challenge, @RequestParam("removeQuestion") Integer rmId) {
-        try {
-            challenge.getQuestion().remove(rmId);
-            questionService.delete(rmId);
-            return "admin/form";
-        } catch (Exception ex) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, ex.getMessage(), ex);
-        }
-    }
-
-    @PostMapping(value = "/challenges/{id}", params = {"addChoice"})
-    public ModelAndView addChoice(@ModelAttribute("challenge") Challenge challenge, @RequestParam("addChoice") Integer qid) {
-        ModelAndView mav = new ModelAndView("admin/form");
-        try {
-            Question question = challenge.getQuestion().get(qid);
-            Choice tempC = new Choice();
-            choiceService.create(question, tempC);
-        } catch (Exception ex) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, ex.getMessage(), ex);
-        }
-        return mav;
-    }
-
-    @PostMapping(value = "/challenges/{id}", params = {"removeChoice"})
-    public String removeChoice(@ModelAttribute("challenge") Challenge challenge, @RequestParam("removeChoice") List<Integer> ids) {
-        try {
-            Integer qid = ids.get(0);
-            Integer choiceId = ids.get(1);
-            challenge.getQuestion().get(qid).getChoices().remove(choiceId);
-            choiceService.delete(choiceId);
-            return "admin/form";
-        } catch (Exception ex) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, ex.getMessage(), ex);
+    @PostMapping(value = "{page:challenges|questions|choices}", params = {"delete", "ids"})
+    public String deleteItem(ModelMap model, @RequestParam("ids") Integer[] ids, @PathVariable("page") String page) {
+        model.remove(page.substring(0, page.length()-1));
+        switch (page) {
+            case "questions":
+                for (Integer id : ids) {
+                    questionService.delete(id);
+                }
+                return "redirect:/admin/questions";
+            case "choices":
+                for (Integer id : ids) {
+                    choiceService.delete(id);
+                }
+                return  "redirect:/admin/choices";
+            default:
+                for (Integer id : ids) {
+                    challengeService.delete(id);
+                }
+                return  "redirect:/admin/challenges";
         }
     }
 }

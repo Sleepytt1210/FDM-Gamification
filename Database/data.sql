@@ -13,7 +13,7 @@ DROP TABLE IF EXISTS Admin;
 CREATE TABLE Challenge(
 	challenge_id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
     challenge_title VARCHAR(50) NOT NULL ,
-	challenge_introduction TEXT NOT NULL ,
+	challenge_description TEXT NOT NULL ,
 	challenge_completion INT(11) NOT NULL ,
 	challenge_thumbnail TEXT NOT NULL ,
     challenge_stream varchar(3) NOT NULL,
