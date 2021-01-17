@@ -35,4 +35,6 @@ public class UserController {
         return "leaderboard";
     }
 
+    @RequestMapping("/radio")
+    public String testRadio(Model model){return "radioStyle";}
 }
