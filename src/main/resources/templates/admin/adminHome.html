@@ -2,11 +2,13 @@
 <html lang="en"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       xmlns:th="http://www.thymeleaf.org"
-      layout:decorate="~{sidenavlayout.html}">
+      layout:decorate="~{adminLayout.html}">
 <head>
-    <meta charset="UTF-8">
     <title>Admin</title>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="../../static/css/adminHome.css" th:href="@{/css/adminHome.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script th:src="@{/javascript/adminHome.js}"></script>
 </head>
 <body>
     <ul layout:fragment="sidenav">
@@ -15,67 +17,88 @@
         <li class="sidebar-menu"><a th:href="@{/admin/choices}">Choices</a></li>
     </ul>
     <div layout:fragment="content2">
-        <div class="content-head">
-            <a th:href="@{'?create'}" id="create-redir">
-                <button class="create-new-button" name="create" type="button" value="new">NEW</button>
-            </a>
-        </div>
-        <div th:if="${challenges}" class="table-content">
-            <table>
-                <thead>
-                <tr>
-                    <th class="column-select"><input type="checkbox" id="challenges-select-all" title="Select all"></th>
-                    <th>ID</th>
-                    <th>Challenge Title</th>
-                    <th>Challenge Stream</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="challenge : ${challenges}">
-                    <td><input type="checkbox" class="challenge-item-selection"></td>
-                    <td th:text="${challenge.id}"></td>
-                    <td><a th:href="@{'/admin/challenges/' + ${challenge.id}}" th:text="${challenge.challengeTitle}"></a></td>
-                    <td th:text="${challenge.stream}"></td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-        <div th:if="${questions}" class="table-content">
-            <table>
-                <thead>
-                <tr>
-                    <th class="column-select"><input type="checkbox" id="questions-select-all" title="Select all"></th>
-                    <th>ID</th>
-                    <th>Question</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="question : ${questions}">
-                    <td><input type="checkbox" class="question-item-selection"></td>
-                    <td th:text="${question.questionId}"></td>
-                    <td><a th:href="@{'/admin/questions/' + ${question.questionId}}" th:text="${question.questionTitle}"></a></td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-        <div th:if="${choices}" class="table-content">
-            <table>
-                <thead>
-                <tr>
-                    <th class="column-select"><input type="checkbox" id="choices-select-all" title="Select all"></th>
-                    <th>ID</th>
-                    <th>Choice</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="choice : ${choices}">
-                    <td><input type="checkbox" class="choice-item-selection"></td>
-                    <td th:text="${choice.choiceId}"></td>
-                    <td><a th:href="@{'/admin/choices/' + ${choice.choiceId}}" th:text="${choice.choiceText}"></a></td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
+        <form th:action="@{''}" method="post" id="panel-form">
+            <div class="content-head">
+                <input class="create-new-button" name="create" type="submit" value="NEW">
+                <input class="delete-button" name="delete" type="submit" value="DELETE" disabled="disabled">
+            </div>
+            <div id="dialog-confirm" title="Delete selected items">
+                <p><i class="fa fa-exclamation-triangle" aria-hidden="true" style="font-size:24px;"></i>These items will be permanently deleted and cannot be recovered. Are you sure?</p>
+            </div>
+            <div th:if="${challenges}" class="table-content">
+                <table>
+                    <thead>
+                        <tr>
+                            <th class="column-select">
+                                <label class="checkbox-container">
+                                    <input type="checkbox" id="challenge-select-all" class="select-all" title="Select all">
+                                    <span class="checkmark"></span>
+                                </label>
+                            </th>
+                            <th>ID</th>
+                            <th>Challenge Title</th>
+                            <th>Challenge Stream</th>
+                            <th>Completion</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="challenge : ${challenges}">
+                            <td><label class="checkbox-container"><input type="checkbox" class="challenge-item-selection item-selection" name="ids" th:value="${challenge.id}"><span class="checkmark"></span></label></td>
+                            <td th:text="${challenge.id}"></td>
+                            <td><a th:href="@{'/admin/challenges/' + ${challenge.id}}" th:text="${challenge.challengeTitle}"></a></td>
+                            <td th:text="${challenge.stream}"></td>
+                            <td th:text="${challenge.completion}"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div th:if="${questions}" class="table-content">
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="column-select">
+                            <label class="checkbox-container">
+                                <input type="checkbox" id="question-select-all" class="select-all" title="Select all">
+                                <span class="checkmark"></span>
+                            </label>
+                        </th>
+                        <th>ID</th>
+                        <th>Question</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="question : ${questions}">
+                            <td><label class="checkbox-container"><input type="checkbox" class="question-item-selection item-selection" name="ids" th:value="${question.questionId}"><span class="checkmark"></span></label></td>
+                            <td th:text="${question.questionId}"></td>
+                            <td><a th:href="@{'/admin/questions/' + ${question.questionId}}" th:text="${question.questionTitle}"></a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div th:if="${choices}" class="table-content">
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="column-select">
+                            <label class="checkbox-container">
+                                <input type="checkbox" id="choice-select-all" class="select-all" title="Select all">
+                                <span class="checkmark"></span>
+                            </label>
+                        </th>
+                        <th>ID</th>
+                        <th>Choice</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="choice : ${choices}">
+                            <td><label class="checkbox-container"><input type="checkbox" class="choice-item-selection item-selection" name="ids" th:value="${choice.choiceId}"><span class="checkmark"></span></label></td>
+                            <td th:text="${choice.choiceId}"></td>
+                            <td><a th:href="@{'/admin/choices/' + ${choice.choiceId}}" th:text="${choice.choiceText}"></a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </form>
     </div>
 </body>
 </html>

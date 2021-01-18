@@ -1,7 +1,5 @@
 package com.team33.FDMGamification.Model;
 
-import org.hibernate.Hibernate;
-
 import javax.persistence.*;
 import java.util.*;
 
@@ -16,11 +14,8 @@ public class Challenge {
     @Column(name = "challenge_title")
     private String challengeTitle = "";
 
-    @Column(name = "challenge_introduction")
-    private String introduction = "";
-
-    @Column(name = "challenge_thumbnail")
-    private String thumbnail = "";
+    @Column(name = "challenge_description")
+    private String description = "";
 
     @Column(name = "challenge_stream")
     @Enumerated(EnumType.STRING)
@@ -32,9 +27,12 @@ public class Challenge {
     @Column(name = "avg_rating")
     private String avgRating = "No rating";
 
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "challenge")
+    private Thumbnail thumbnail = new Thumbnail(this);
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "challenge", cascade = CascadeType.ALL, orphanRemoval = true)
     @MapKeyColumn(name = "question_id")
-    private Map<Integer, Question> question = new HashMap<>();
+    private Map<Integer, Question> questions = new HashMap<>();
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "challenge", cascade = CascadeType.ALL, orphanRemoval = true)
     @MapKeyColumn(name = "positive")
@@ -45,10 +43,9 @@ public class Challenge {
 
     public Challenge(){}
 
-    public Challenge(String challengeTitle, String introduction, String thumbnail, Stream stream, Integer completion) {
+    public Challenge(String challengeTitle, String description, Stream stream, Integer completion) {
         this.challengeTitle = challengeTitle;
-        this.introduction = introduction;
-        this.thumbnail = thumbnail;
+        this.description = description;
         this.stream = stream;
         this.completion = completion;
         this.avgRating = "No rating";
@@ -70,19 +67,19 @@ public class Challenge {
         this.challengeTitle = title;
     }
 
-    public String getIntroduction() {
-        return introduction;
+    public String getDescription() {
+        return description;
     }
 
-    public void setIntroduction(String introduction) {
-        this.introduction = introduction;
+    public void setDescription(String introduction) {
+        this.description = introduction;
     }
 
-    public String getThumbnail() {
+    public Thumbnail getThumbnail() {
         return thumbnail;
     }
 
-    public void setThumbnail(String thumbnail) {
+    public void setThumbnail(Thumbnail thumbnail) {
         this.thumbnail = thumbnail;
     }
 
@@ -118,12 +115,12 @@ public class Challenge {
         this.ratings = ratings;
     }
 
-    public Map<Integer, Question> getQuestion() {
-        return question;
+    public Map<Integer, Question> getQuestions() {
+        return questions;
     }
 
-    public void setQuestion(Map<Integer, Question> question) {
-        this.question = question;
+    public void setQuestions(Map<Integer, Question> question) {
+        this.questions = question;
     }
 
     public Map<Boolean, ChallengeFeedback> getChallengeFeedback() {
@@ -139,7 +136,7 @@ public class Challenge {
         return "Challenge{" +
                 "id=" + id +
                 ", title='" + challengeTitle + '\'' +
-                ", introduction='" + introduction + '\'' +
+                ", introduction='" + description + '\'' +
                 ", thumbnail='" + thumbnail + '\'' +
                 ", stream='" + stream + '\'' +
                 ", completion=" + completion +

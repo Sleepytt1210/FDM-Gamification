@@ -29,13 +29,12 @@ public class ChallengeService {
      *
      * @param title        Title of challenge.
      * @param introduction Introduction text of challenge.
-     * @param thumbnail    URL of thumbnail for the challenge.
      * @param stream       Stream of the challenge.
      * @param completion   Number of completion.
      * @return Challenge: Challenge entity persisted in database.
      */
-    public Challenge create(String title, String introduction, String thumbnail, Stream stream, Integer completion) {
-        Challenge challenge = new Challenge(title, introduction, thumbnail, stream, completion);
+    public Challenge create(String title, String introduction, Stream stream, Integer completion) {
+        Challenge challenge = new Challenge(title, introduction, stream, completion);
         return create(challenge);
     }
 
@@ -97,7 +96,7 @@ public class ChallengeService {
      */
     @Transactional
     public Map<Integer, Question> getQuestions(Integer id){
-        return findById(id).getQuestion();
+        return findById(id).getQuestions();
     }
 
     /**
@@ -114,11 +113,11 @@ public class ChallengeService {
      * @param ratings      New ratings set of challenge.
      * @return Challenge: Updated challenge entity.
      */
-    public Challenge update(Integer challengeId, String title, String introduction, String thumbnail,
+    public Challenge update(Integer challengeId, String title, String introduction, Thumbnail thumbnail,
                             Stream stream, Integer completion, Map<Integer, Question> questions,
                             Map<Boolean, ChallengeFeedback> feedbacks, Set<Rating> ratings) {
-        Challenge tempNew = new Challenge(title, introduction, thumbnail, stream, completion);
-        tempNew.setQuestion(questions);
+        Challenge tempNew = new Challenge(title, introduction, stream, completion);
+        tempNew.setQuestions(questions);
         tempNew.setChallengeFeedback(feedbacks);
         tempNew.setRatings(ratings);
         return update(challengeId, tempNew);
@@ -134,12 +133,12 @@ public class ChallengeService {
     public Challenge update(Integer challengeId, Challenge newChallenge) {
         Challenge oldChallenge = findById(challengeId);
         if (newChallenge.getChallengeTitle() != null) oldChallenge.setChallengeTitle(newChallenge.getChallengeTitle());
-        if (newChallenge.getIntroduction() != null) oldChallenge.setIntroduction(newChallenge.getIntroduction());
+        if (newChallenge.getDescription() != null) oldChallenge.setDescription(newChallenge.getDescription());
         if (newChallenge.getThumbnail() != null) oldChallenge.setThumbnail(newChallenge.getThumbnail());
         if (newChallenge.getStream() != null) oldChallenge.setStream(newChallenge.getStream());
         if (newChallenge.getCompletion() != null) oldChallenge.setCompletion(newChallenge.getCompletion());
         oldChallenge = challengeRepo.saveAndFlush(oldChallenge);
-        Map<Integer, Question> newQuestions = newChallenge.getQuestion();
+        Map<Integer, Question> newQuestions = newChallenge.getQuestions();
         Map<Boolean, ChallengeFeedback> newFeedback = newChallenge.getChallengeFeedback();
         if (newQuestions != null && !newQuestions.isEmpty()) {
             newQuestions.forEach((k, v) -> questionService.update(k, v));

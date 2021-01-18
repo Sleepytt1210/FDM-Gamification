@@ -3,10 +3,9 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       xmlns:th="http://www.thymeleaf.org" layout:decorate="~{headinglayout.html}">
 <head>
-    <meta charset="UTF-8"/>
-    <title>Default title for my pages</title>
     <link href="../static/css/heading.css" rel="stylesheet" th:href="@{/css/sideNav.css}">
-</head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.2/jquery.validate.min.js" integrity="sha512-UdIMMlVx0HEynClOIFSyOrPggomfhBKJE28LKl8yR3ghkgugPnG6iLfRfHwushZl1MOPSY6TsuBDGPK2X4zYKg==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.2/additional-methods.min.js" integrity="sha512-6Uv+497AWTmj/6V14BsQioPrm3kgwmK9HYIyWP+vClykX52b0zrDGP7lajZoIY1nNlX4oQuh7zsGjmF7D0VZYA==" crossorigin="anonymous"></script>
 <body>
     <th:block layout:fragment="heading">
         <nav class="header" layout:fragment="navigation-bar">
@@ -26,6 +25,9 @@
         <div class="sidenav">
             <div class="sidenav sidenav-column">
                 <ul class="sidebar-menu-list" layout:fragment="sidenav">
+                    <li class="sidebar-menu"><a th:href="@{/admin/challenges}">Challenges</a></li>
+                    <li class="sidebar-menu"><a th:href="@{/admin/questions}">Questions</a></li>
+                    <li class="sidebar-menu"><a th:href="@{/admin/choices}">Choices</a></li>
                 </ul>
             </div>
         </div>

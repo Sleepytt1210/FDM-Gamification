@@ -22,6 +22,10 @@ public class Question {
     @Column(name = "question_completion")
     private Integer questionCompletion = 0;
 
+    @Column(name = "question_type")
+    @Enumerated(EnumType.STRING)
+    private QuestionType questionType = QuestionType.NONE;
+
     @ManyToOne
     @JoinColumn(name = "challenge_id")
     private Challenge challenge;
@@ -32,10 +36,11 @@ public class Question {
 
     public Question(){}
 
-    public Question(String questionTitle, String questionText, Integer questionCompletion) {
+    public Question(String questionTitle, String questionText, Integer questionCompletion, QuestionType questionType) {
         this.questionTitle = questionTitle;
         this.questionText = questionText;
         this.questionCompletion = questionCompletion;
+        this.questionType = questionType;
     }
 
     public Integer getQuestionId() {
@@ -70,6 +75,14 @@ public class Question {
         this.questionCompletion = questionCompletion;
     }
 
+    public QuestionType getQuestionType() {
+        return questionType;
+    }
+
+    public void setQuestionType(QuestionType questionType) {
+        this.questionType = questionType;
+    }
+
     public Challenge getChallenge() {
         return challenge;
     }
@@ -93,6 +106,7 @@ public class Question {
                 ", questionTitle='" + questionTitle + '\'' +
                 ", questionText='" + questionText + '\'' +
                 ", questionCompletion=" + questionCompletion +
+                ", questionType=" + questionType +
                 ", challengeId=" + challenge.getId() +
                 '}';
     }

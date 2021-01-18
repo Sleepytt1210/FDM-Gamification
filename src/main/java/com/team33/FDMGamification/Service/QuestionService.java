@@ -4,6 +4,7 @@ import com.team33.FDMGamification.DAO.QuestionRepository;
 import com.team33.FDMGamification.Model.Challenge;
 import com.team33.FDMGamification.Model.Choice;
 import com.team33.FDMGamification.Model.Question;
+import com.team33.FDMGamification.Model.QuestionType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,11 +34,12 @@ public class QuestionService {
      * @param questionTitle Title of question.
      * @param questionText  Text of question.
      * @param completion    Number of completions of question.
+     * @param questionType  Type of current question.
      * @return Question: Question entity persisted in database.
      * @throws InstanceAlreadyExistsException If question already exists in challenge.
      */
-    public Question create(Integer challengeId, String questionTitle, String questionText, Integer completion) throws InstanceAlreadyExistsException {
-        Question question = new Question(questionTitle, questionText, completion);
+    public Question create(Integer challengeId, String questionTitle, String questionText, Integer completion, QuestionType questionType) throws InstanceAlreadyExistsException {
+        Question question = new Question(questionTitle, questionText, completion, questionType);
         return create(challengeId, question);
     }
 
@@ -64,7 +66,7 @@ public class QuestionService {
     public Question create(Challenge challenge, Question question) {
         question.setChallenge(challenge);
         question = questionRepo.saveAndFlush(question);
-        challenge.getQuestion().put(question.getQuestionId(), question);
+        challenge.getQuestions().put(question.getQuestionId(), question);
         return question;
     }
 
@@ -88,6 +90,14 @@ public class QuestionService {
         return questionRepo.findAll();
     }
 
+    public List<Question> getQuestionsByType(String type) {
+        return getQuestionsByType(QuestionType.valueOf(type));
+    }
+
+    public List<Question> getQuestionsByType(QuestionType type) {
+        return questionRepo.queryQuestionsByQuestionTypeEquals(type);
+    }
+
     /**
      * Return choices map of a question.
      *
@@ -109,8 +119,8 @@ public class QuestionService {
      * @param choices       New choices map of question.
      * @return Question: Updated question entity.
      */
-    public Question update(Integer questionId, String questionTitle, String questionText, Integer completion, Map<Integer, Choice> choices) {
-        Question tempNew = new Question(questionTitle, questionText, completion);
+    public Question update(Integer questionId, String questionTitle, String questionText, Integer completion, QuestionType questionType, Map<Integer, Choice> choices) {
+        Question tempNew = new Question(questionTitle, questionText, completion, questionType);
         tempNew.setChoices(choices);
         return update(questionId, tempNew);
     }
@@ -162,8 +172,6 @@ public class QuestionService {
      * @param question Question entity to be deleted.
      */
     public void delete(Question question) {
-        Challenge challenge = question.getChallenge();
-        challenge.getQuestion().remove(question.getQuestionId());
         questionRepo.delete(question);
     }
 
@@ -173,10 +181,6 @@ public class QuestionService {
      * @param questions Collection of questions to be deleted.
      */
     public void batchDelete(Iterable<Question> questions) {
-        for (Question q : questions) {
-            Challenge challenge = q.getChallenge();
-            challenge.getQuestion().remove(q.getQuestionId());
-        }
         questionRepo.deleteAll(questions);
     }
 }

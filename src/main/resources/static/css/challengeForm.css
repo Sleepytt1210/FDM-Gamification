@@ -1,0 +1,101 @@
+.container2 {
+  float: left;
+  text-align: left;
+  margin: auto;
+  margin-top: 20px;
+  margin-bottom: 90px;
+  margin-left: 160px;
+}
+
+.hidden {
+  display: none;
+}
+
+.form-group {
+  padding: 5px;
+  padding-left: 20px;
+  padding-right: 15px;
+}
+.form-group input, .form-group select {
+  margin: 5px 0;
+  border: 1px solid #aaaccc;
+  border-radius: 5px;
+  padding: 2px 5px 5px;
+  font-size: 12px;
+  font-family: "Verdana", sans-serif;
+  font-weight: normal;
+  color: #3b3a3a;
+}
+.form-group .image-display {
+  background-image: url("../images/uploadImageBg.svg");
+  background-size: cover;
+  margin: 5px 0;
+  padding: 0;
+  height: 240px;
+  width: 426px;
+  border-radius: 8px;
+}
+.form-group .image-display img {
+  height: inherit;
+  width: inherit;
+  box-shadow: 0 0.1em 4px #000;
+}
+.form-group .image-display:hover {
+  cursor: pointer;
+  background-image: url("../images/uploadImageHover.svg");
+  transition: 0.2s;
+  box-shadow: 0 0.1em 4px #000;
+}
+.form-group label {
+  font-family: "Helvetica", sans-serif;
+  font-size: 17px;
+  font-weight: 600;
+}
+.form-group button {
+  border: none;
+  color: white;
+  padding: 5px 10px;
+  font-size: 13px;
+  font-weight: bold;
+}
+.form-group button:hover {
+  cursor: pointer;
+}
+.form-group .add-button {
+  background: #18dd5a;
+}
+.form-group .remove-button {
+  background: #ff2a36;
+}
+.form-group .remove-icon, .form-group .add-icon {
+  font-weight: bolder;
+  background: none;
+  font-size: 15px;
+}
+.form-group .remove-icon {
+  color: #ff2a36;
+}
+.form-group .add-row {
+  text-align: center;
+}
+.form-group .add-icon {
+  color: #18dd5a;
+  border-radius: 7px;
+  padding: 2px;
+}
+.form-group input[type=submit] {
+  border: none;
+  background: #909090;
+  color: white;
+}
+.form-group input[type=submit]:hover {
+  background: blue;
+}
+.form-group label.error {
+  color: red;
+  font-size: 15px;
+  font-weight: normal;
+  margin: 0 5px;
+}
+
+/*# sourceMappingURL=challengeForm.css.map */
