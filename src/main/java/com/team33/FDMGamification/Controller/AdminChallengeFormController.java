@@ -39,6 +39,11 @@ public class AdminChallengeFormController {
         return Stream.values();
     }
 
+    @ModelAttribute("allQuestionType")
+    public QuestionType[] questionTypes() {
+        return QuestionType.values();
+    }
+
     @GetMapping("/{id}")
     public ModelAndView getChallengeView(@PathVariable("id") Integer id) {
         ModelAndView mav = new ModelAndView("admin/challengeForm");
