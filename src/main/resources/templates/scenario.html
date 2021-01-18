@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" layout:decorate="~{headinglayout.html}"
+<html lang="en" layout:decorate="~{scenarioLayout.html}"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -9,11 +9,14 @@
     <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@600&display=swap" rel="stylesheet">
 </head>
     <body>
-        <div layout:fragment="content">
+        <ul layout:fragment="sidenav">
+            <li th:each="question : ${questions}" th:with="curQ=${questions[__${question.key}__]}">
+                <a th:text="${curQ.questionTitle}" th:href="@{/scenario/__${sid}__/__${curQ.questionId}__}"></a>
+            </li>
+        </ul>
+
+        <div layout:fragment="content2">
             <p th:text="${scenario.challengeTitle}"></p>
-            <ul th:each="question : ${questions}" th:with="curQ=${questions[__${question.key}__]}">
-                <li><a th:text="${curQ.questionTitle}" th:href="@{/scenario/__${sid}__/__${curQ.questionId}__}"></a></li>
-            </ul>
         </div>
     </body>
 </html>
