@@ -5,7 +5,29 @@
 <head>
     <link href="../static/css/heading.css" rel="stylesheet" th:href="@{/css/sideNav.css}">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.2/jquery.validate.min.js" integrity="sha512-UdIMMlVx0HEynClOIFSyOrPggomfhBKJE28LKl8yR3ghkgugPnG6iLfRfHwushZl1MOPSY6TsuBDGPK2X4zYKg==" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.2/additional-methods.min.js" integrity="sha512-6Uv+497AWTmj/6V14BsQioPrm3kgwmK9HYIyWP+vClykX52b0zrDGP7lajZoIY1nNlX4oQuh7zsGjmF7D0VZYA==" crossorigin="anonymous"></script>
+    <script th:src="${'https://cdn.tiny.cloud/1/'+@environment.getProperty('tinyMCEAPI')+'/tinymce/5/tinymce.min.js'}" referrerpolicy="origin"></script>
+    <script>
+        tinymce.init({
+            selector: '.feedback',
+            height: 200,
+            width: '80%',
+            menubar: false,
+            plugins: [
+                'advlist autolink lists link image charmap print preview anchor',
+                'searchreplace visualblocks code fullscreen',
+                'insertdatetime media table paste code help wordcount'
+            ],
+            toolbar: 'undo redo | fontsizeselect |' +
+                'bold italic |' +
+                'bullist numlist outdent indent | ' +
+                'link | help',
+            contextmenu: 'link lists',
+            skin_url: '/css/tinyMCESkin/skins/ui/tinyMCESkin',
+            skin: 'tinyMCESkin',
+            content_css: false,
+            resize: false
+        });
+    </script>
 <body>
     <th:block layout:fragment="heading">
         <nav class="header" layout:fragment="navigation-bar">
