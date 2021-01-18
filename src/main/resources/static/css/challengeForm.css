@@ -12,74 +12,86 @@
   display: none;
 }
 
-.questionSection h2 {
+.question-section h2 {
   display: inline-block;
   margin: 15px 0;
   width: auto;
 }
-.questionSection .header-add-button {
+.question-section .header-add-button {
   float: right;
   margin: 15px 100px 15px 0;
   padding: 7px 15px;
   font-size: 15px;
 }
-.questionSection #questionAccordion .question-row-one {
+.question-section #question-accordion .question-row-one {
   background: #f9f9fc;
   width: 80%;
   position: relative;
   color: #454545;
   border: 1px solid #aaaccc;
 }
-.questionSection #questionAccordion .question-row-one h3 {
+.question-section #question-accordion .question-row-one h3 {
   display: inline-block;
   margin: 5px 2px;
 }
-.questionSection #questionAccordion .question-row-one .remove-question-button {
+.question-section #question-accordion .question-row-one .remove-question-button {
   position: absolute;
   right: 40px;
   top: 12px;
 }
-.questionSection #questionAccordion .question-row-one:hover {
+.question-section #question-accordion .question-row-one:hover {
   background: #fafafc;
 }
-.questionSection #questionAccordion .question-row-one:active {
+.question-section #question-accordion .question-row-one:active {
   color: #454545;
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
 }
-.questionSection #questionAccordion .question-content-group {
+.question-section #question-accordion .question-content-group {
   width: 80%;
 }
-.questionSection .add-button {
+.question-section #question-accordion .question-content-group .choice-section {
+  margin-bottom: 10px;
+}
+.question-section #question-accordion .question-content-group .choice-section table {
+  width: 100%;
+}
+.question-section #question-accordion .question-content-group .choice-section table tr th {
+  min-width: 25%;
+}
+.question-section .add-button {
   background: #18dd5a;
 }
-.questionSection .remove-button {
+.question-section .remove-button {
   background: none;
+  color: #454545;
+}
+.question-section .remove-button:hover {
   color: #ff2a36;
 }
-.questionSection .remove-icon, .questionSection .add-icon {
+.question-section .remove-icon, .question-section .add-icon {
   font-weight: bolder;
   background: none;
   font-size: 15px;
 }
-.questionSection .remove-icon {
+.question-section .remove-icon {
   color: #ff2a36;
+  font-size: inherit;
 }
-.questionSection .add-row {
+.question-section .add-row {
   text-align: center;
 }
-.questionSection .add-icon {
+.question-section .fa-plus {
   color: #18dd5a;
-  border-radius: 7px;
-  padding: 2px;
+  font-size: inherit;
 }
 
-.form-group {
+.form-group, .choice-section {
   padding: 5px;
   padding-left: 20px;
   padding-right: 15px;
 }
-.form-group input, .form-group select, .form-group textarea {
+.form-group input, .form-group select, .form-group textarea, .choice-section input, .choice-section select, .choice-section textarea {
   margin: 5px 0;
   border: 1px solid #aaaccc;
   border-radius: 5px;
@@ -92,11 +104,11 @@
   width: 80%;
   height: 40px;
 }
-.form-group textarea {
+.form-group textarea, .choice-section textarea {
   padding: 8px 10px 5px;
   height: 200px;
 }
-.form-group .image-display {
+.form-group .image-display, .choice-section .image-display {
   background-image: url("../images/uploadImageBg.svg");
   background-size: cover;
   margin: 5px 0;
@@ -105,35 +117,35 @@
   width: 426px;
   border-radius: 8px;
 }
-.form-group .image-display img {
+.form-group .image-display img, .choice-section .image-display img {
   height: inherit;
   width: inherit;
   box-shadow: 0 0.1em 4px #000;
 }
-.form-group .image-display:hover {
+.form-group .image-display:hover, .choice-section .image-display:hover {
   cursor: pointer;
   background-image: url("../images/uploadImageHover.svg");
   transition: 0.2s;
   box-shadow: 0 0.1em 4px #000;
 }
-.form-group label {
+.form-group label, .choice-section label {
   font-family: "Helvetica", sans-serif;
   font-size: 17px;
   font-weight: 600;
   color: #454545;
 }
-.form-group .feedback-box {
+.form-group .feedback-box, .choice-section .feedback-box {
   margin: 5px 0;
 }
-.form-group input[type=submit] {
+.form-group input[type=submit], .choice-section input[type=submit] {
   border: none;
   background: #909090;
   color: white;
 }
-.form-group input[type=submit]:hover {
+.form-group input[type=submit]:hover, .choice-section input[type=submit]:hover {
   background: blue;
 }
-.form-group label.error {
+.form-group label.error, .choice-section label.error {
   color: red;
   font-size: 15px;
   font-weight: normal;
@@ -163,6 +175,10 @@ button:hover {
   border: none;
   padding: 10px 30px;
   margin: 0 auto;
+}
+
+input[type=number] {
+  -moz-appearance: textfield;
 }
 
 /*# sourceMappingURL=challengeForm.css.map */
