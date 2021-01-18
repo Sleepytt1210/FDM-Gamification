@@ -4,24 +4,17 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
     <title th:text="'Challenge ' + ${challenge.id}"></title>
     <link rel="stylesheet" th:href="@{/css/challengeForm.css}" type="text/css">
+    <link rel="stylesheet" th:href="@{/css/jquery-ui.theme.css}">
     <script th:src="@{/javascript/imageUpload.js}"></script>
     <script th:src="@{/javascript/validation.js}"></script>
+    <script th:src="@{/javascript/challengeForm.js}"></script>
 </head>
 <body>
-<ul layout:fragment="sidenav">
-    <li class="sidebar-menu"><a th:href="@{/admin/challenges}">Challenges</a></li>
-    <li class="sidebar-menu"><a th:href="@{/admin/questions}">Questions</a></li>
-    <li class="sidebar-menu"><a th:href="@{/admin/choices}">Choices</a></li>
-</ul>
 <div layout:fragment="content2">
     <form enctype="multipart/form-data" id="challenge-form" method="post"
           th:action="@{/admin/challenges/__${challenge.id}__}" th:object="${challenge}">
-        <ul class="errorlist" th:if="${#fields.hasErrors('*')}">
-            <li th:each="err : ${#fields.errors('*')}" th:text="${err}">Input is incorrect</li>
-        </ul>
         <div class="form-group">
             <label for="title" th:text="${'Title'}"></label>
             <div class="input-div">
@@ -30,11 +23,10 @@
             </div>
         </div>
         <div class="form-group">
-            <label for="description" th:text="${'Description'}"></label>
+            <label for="challenge-description" th:text="${'Description'}"></label>
             <div class="input-div">
-                <input id="description" name="challenge-description" th:errorclass="fieldError" th:field="*{description}"
-                       th:value="*{description}"
-                       type="text" class="description-input"/>
+                <textarea id="challenge-description" name="challenge-description" th:errorclass="fieldError" th:field="*{description}"
+                       th:value="*{description}" class="description-input"></textarea>
             </div>
         </div>
         <div class="form-group">
@@ -56,65 +48,109 @@
             </div>
         </div>
         <div class="form-group">
-            <label>Questions</label>
-            <button class="add-button" name="addQuestion" type="submit">ADD</button>
-            <table>
-                <th:block class="questions" th:each="ques : ${challenge.questions}">
-                    <thead>
-                    <tr>
-                        <th th:text="'Question ID: ' + ${ques.key}">Question</th>
-                        <th>Question text</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td>
-                            <input class="title-input" name="question-title" th:field="*{questions[__${ques.key}__].questionTitle}"
-                                   type="text"/>
-                        </td>
-                        <td>
-                            <input class="description-input" name="question-text" th:field="*{questions[__${ques.key}__].questionText}"
-                                   type="text"/>
-                        </td>
-                        <td>
-                            <button class="remove-button" name="removeQuestion"
+            <label>Feedbacks</label>
+            <div class="feedback-box">
+                <label> Positive Feedback Title
+                    <div class="input-div">
+                        <input type="text" class="title-input" th:field="${challenge.challengeFeedback[true].feedback_title}">
+                    </div>
+                </label>
+                <label> Positive Feedback Text
+                    <div class="input-div">
+                        <textarea class="feedback" th:field="${challenge.challengeFeedback[true].feedback_text}"></textarea>
+                    </div>
+                </label>
+            </div>
+            <div class="feedback-box">
+                <label>Negative Feedback Title
+                    <div class="input-div">
+                        <input type="text" class="title-input" th:field="${challenge.challengeFeedback[false].feedback_title}">
+                    </div>
+                </label>
+                <label>Negative Feedback Text
+                    <div class="input-div">
+                        <textarea class="feedback" th:field="${challenge.challengeFeedback[false].feedback_text}"></textarea>
+                    </div>
+                </label>
+            </div>
+        </div>
+        <div class="questionSection">
+            <div class="questionHeader">
+                <h2>Questions</h2>
+                <button class="add-button header-add-button" name="addQuestion" type="submit">ADD</button>
+            </div>
+            <div id="questionAccordion">
+                <th:block th:each="ques : ${challenge.questions}">
+                    <div class="question-row-one">
+                        <h3 class="question-id" th:text="'Question ID: ' + ${ques.key}">Question</h3>
+                        <div class="question-row-one-button">
+                            <button class="remove-button remove-question-button" name="removeQuestion"
                                     th:value="${ques.key}" type="submit">REMOVE
                             </button>
-                        </td>
-                    </tr>
-                    <!-- Choice part -->
-                    <th:block class="choices">
-                        <tr>
-                            <th>
-                                Choice Text
-                            </th>
-                            <th>
-                            </th>
-                        </tr>
-                        <tr th:each="choice : ${ques.value.choices}">
-                            </td>
-                            <td>
-                                <input th:field="*{questions[__${ques.key}__].choices[__${choice.key}__].choiceText}"
-                                       type="text">
-                            </td>
-                            <td>
-                                <button class="remove-icon" name="removeChoice"
-                                        th:value="${ques.key + ',' + choice.key}" type="submit">&times;
-                                </button>
-                            </td>
-                        </tr>
-                        <tr class="add-row">
-                            <td>
-                                <button class="add-icon" name="addChoice" th:value="${ques.key}" type="submit">+
-                                </button>
-                            </td>
-                        </tr>
-                    </th:block>
-                    </tbody>
+                        </div>
+                    </div>
+                    <div class="question-content-group">
+                        <div class="form-group">
+                            <label>Question Title
+                                <div class="input-div">
+                                    <input class="title-input" name="question-title"
+                                           th:field="*{questions[__${ques.key}__].questionTitle}"
+                                           type="text"/>
+                                </div>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>Question Text
+                                <div class="input-div">
+                                    <textarea class="description-input" name="question-text"
+                                              th:field="*{questions[__${ques.key}__].questionText}"></textarea>
+                                </div>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label for="question-type" th:text="${'Question Type'}"></label>
+                            <div class="input-div">
+                                <select id="question-type" name="question_type"
+                                        th:field="*{questions[__${ques.key}__].questionType}">
+                                    <option th:each="questionType : ${allQuestionType}"
+                                            th:selected="${questionType == challenge.questions[__${ques.key}__].questionType}"
+                                            th:label="${(questionType.name == 'NONE') ? 'Choose question type...' : questionType.fullName}"
+                                            th:value="${questionType}"></option>
+                                </select>
+                            </div>
+                        </div>
+                        <!-- Choice part -->
+                        <div class="choices">
+                            <tr>
+                                <th>
+                                    Choice Text
+                                </th>
+                                <th>
+                                </th>
+                            </tr>
+                            <tr th:each="choice : ${ques.value.choices}">
+                                </td>
+                                <td>
+                                    <input th:field="*{questions[__${ques.key}__].choices[__${choice.key}__].choiceText}"
+                                           type="text">
+                                </td>
+                                <td>
+                                    <button class="remove-icon" name="removeChoice"
+                                            th:value="${ques.key + ',' + choice.key}" type="submit">&times;
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr class="add-row">
+                                <td>
+                                    <button class="add-icon" name="addChoice" th:value="${ques.key}" type="submit">+
+                                    </button>
+                                </td>
+                            </tr>
+                        </div>
+                    </div>
                 </th:block>
-            </table>
+            </div>
         </div>
-
         <div class="submit">
             <input name="save" type="submit" value="Save">
         </div>

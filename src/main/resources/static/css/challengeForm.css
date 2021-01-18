@@ -1,6 +1,7 @@
 .container2 {
   float: left;
   text-align: left;
+  width: 90%;
   margin: auto;
   margin-top: 20px;
   margin-bottom: 90px;
@@ -11,20 +12,89 @@
   display: none;
 }
 
+.questionSection h2 {
+  display: inline-block;
+  margin: 15px 0;
+  width: auto;
+}
+.questionSection .header-add-button {
+  float: right;
+  margin: 15px 100px 15px 0;
+  padding: 7px 15px;
+  font-size: 15px;
+}
+.questionSection #questionAccordion .question-row-one {
+  background: #f9f9fc;
+  width: 80%;
+  position: relative;
+  color: #454545;
+  border: 1px solid #aaaccc;
+}
+.questionSection #questionAccordion .question-row-one h3 {
+  display: inline-block;
+  margin: 5px 2px;
+}
+.questionSection #questionAccordion .question-row-one .remove-question-button {
+  position: absolute;
+  right: 40px;
+  top: 12px;
+}
+.questionSection #questionAccordion .question-row-one:hover {
+  background: #fafafc;
+}
+.questionSection #questionAccordion .question-row-one:active {
+  color: #454545;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.questionSection #questionAccordion .question-content-group {
+  width: 80%;
+}
+.questionSection .add-button {
+  background: #18dd5a;
+}
+.questionSection .remove-button {
+  background: none;
+  color: #ff2a36;
+}
+.questionSection .remove-icon, .questionSection .add-icon {
+  font-weight: bolder;
+  background: none;
+  font-size: 15px;
+}
+.questionSection .remove-icon {
+  color: #ff2a36;
+}
+.questionSection .add-row {
+  text-align: center;
+}
+.questionSection .add-icon {
+  color: #18dd5a;
+  border-radius: 7px;
+  padding: 2px;
+}
+
 .form-group {
   padding: 5px;
   padding-left: 20px;
   padding-right: 15px;
 }
-.form-group input, .form-group select {
+.form-group input, .form-group select, .form-group textarea {
   margin: 5px 0;
   border: 1px solid #aaaccc;
   border-radius: 5px;
-  padding: 2px 5px 5px;
-  font-size: 12px;
+  padding: 2px 10px 5px;
+  font-size: 14px;
   font-family: "Verdana", sans-serif;
   font-weight: normal;
   color: #3b3a3a;
+  resize: none;
+  width: 80%;
+  height: 40px;
+}
+.form-group textarea {
+  padding: 8px 10px 5px;
+  height: 200px;
 }
 .form-group .image-display {
   background-image: url("../images/uploadImageBg.svg");
@@ -50,38 +120,10 @@
   font-family: "Helvetica", sans-serif;
   font-size: 17px;
   font-weight: 600;
+  color: #454545;
 }
-.form-group button {
-  border: none;
-  color: white;
-  padding: 5px 10px;
-  font-size: 13px;
-  font-weight: bold;
-}
-.form-group button:hover {
-  cursor: pointer;
-}
-.form-group .add-button {
-  background: #18dd5a;
-}
-.form-group .remove-button {
-  background: #ff2a36;
-}
-.form-group .remove-icon, .form-group .add-icon {
-  font-weight: bolder;
-  background: none;
-  font-size: 15px;
-}
-.form-group .remove-icon {
-  color: #ff2a36;
-}
-.form-group .add-row {
-  text-align: center;
-}
-.form-group .add-icon {
-  color: #18dd5a;
-  border-radius: 7px;
-  padding: 2px;
+.form-group .feedback-box {
+  margin: 5px 0;
 }
 .form-group input[type=submit] {
   border: none;
@@ -96,6 +138,31 @@
   font-size: 15px;
   font-weight: normal;
   margin: 0 5px;
+}
+
+button {
+  border: none;
+  color: white;
+  padding: 5px 10px;
+  font-size: 13px;
+  font-weight: bold;
+}
+button:hover {
+  cursor: pointer;
+}
+
+.submit {
+  width: 80%;
+  margin: 20px 0;
+  text-align: center;
+}
+.submit input {
+  width: 80%;
+  font-size: 25px;
+  border-radius: 9px;
+  border: none;
+  padding: 10px 30px;
+  margin: 0 auto;
 }
 
 /*# sourceMappingURL=challengeForm.css.map */
