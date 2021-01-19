@@ -51,16 +51,6 @@ public class AdminController {
         return "admin/adminHome";
     }
 
-    @PostMapping(value = "{page:questions|choices}", params = {"create"})
-    public String createItem(ModelMap model, @PathVariable("page") String page) {
-        if ("choices".equals(page)) {
-            model.addAttribute("choice", new Choice());
-            return "admin/choiceForm";
-        }
-        model.addAttribute("question", new Question());
-        return "admin/questionForm";
-    }
-
     @PostMapping(value = "{page:challenges|questions|choices}", params = {"delete", "ids"})
     public String deleteItem(ModelMap model, @RequestParam("ids") Integer[] ids, @PathVariable("page") String page) {
         model.remove(page.substring(0, page.length()-1));

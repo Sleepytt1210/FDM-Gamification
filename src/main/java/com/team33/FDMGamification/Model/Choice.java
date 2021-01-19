@@ -1,6 +1,10 @@
 package com.team33.FDMGamification.Model;
 
+import com.team33.FDMGamification.Validation.Annotation.NullOrNotEqualChallengeID;
+import com.team33.FDMGamification.Validation.Annotation.NullOrNotEqualQuestionID;
+
 import javax.persistence.*;
+import javax.validation.constraints.*;
 
 @Entity(name = "Choice")
 public class Choice {
@@ -10,15 +14,24 @@ public class Choice {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer choiceId;
 
+    @NotBlank(message = "Please do not leave this field blank!")
+    @Pattern(regexp = "^[^<>]+$", message = "Angle brackets (<, >) are not allowed!")
+    @Size(max = 200, message = "Please provide a title not longer than 200 characters!")
     @Column(name = "choice_text")
     private String choiceText = "";
 
+    @Min(value = 0, message = "Must be ≥ 0")
+    @Max(value = 2, message = "Must be ≤ 2")
     @Column(name = "choice_weight")
     private int choiceWeight;
 
+    @NotBlank(message = "Please do not leave this field blank!")
+    @Pattern(regexp = "^[^<>]+$", message = "Angle brackets (<, >) are not allowed!")
+    @Size(max = 400, message = "Please provide a title not longer than 400 characters!")
     @Column(name = "choice_reason")
     private String choiceReason = "";
 
+    @NullOrNotEqualQuestionID(message = "Please select an associate question!")
     @ManyToOne
     @JoinColumn(name = "question_id")
     private Question question;

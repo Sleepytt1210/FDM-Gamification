@@ -17,6 +17,7 @@ import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.persistence.EntityNotFoundException;
+import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
 
@@ -57,16 +58,17 @@ public class AdminChallengeFormController {
         return mav;
     }
 
-    @PostMapping(value = {"", "/"}, params = {"create"})
+    @GetMapping(value = {"/new"})
     public String createChallenge(ModelMap model) {
-        model.addAttribute("challenge", challengeService.create(new Challenge()));
+        model.addAttribute("challenge", new Challenge());
         return "admin/challengeForm";
     }
 
-    @PostMapping(value = "/{id}", headers=("content-type=multipart/*"), params = {"save"})
-    public String saveChallenge(@ModelAttribute("challenge") Challenge challenge, @PathVariable("id") Integer id,
-                                @RequestPart("pic") MultipartFile picData,
+    @PostMapping(value = {"/new", "/{id}"}, headers=("content-type=multipart/*"), params = {"save"})
+    public String saveChallenge(@Valid @ModelAttribute("challenge") Challenge challenge,
                                 final BindingResult bindingResult, ModelMap model,
+                                @PathVariable(value = "id", required = false) Integer id,
+                                @RequestPart("pic") MultipartFile picData,
                                 SessionStatus status) {
         try {
             if (bindingResult.hasErrors()) {
@@ -75,7 +77,11 @@ public class AdminChallengeFormController {
             Thumbnail thumbnail = challenge.getThumbnail();
             processImage(picData, thumbnail);
             challenge.setThumbnail(thumbnail);
-            challengeService.update(id, challenge);
+            if(id == null){
+                challengeService.create(challenge);
+            }else {
+                challengeService.update(id, challenge);
+            }
             status.setComplete();
             model.clear();
             return "redirect:/admin";
@@ -87,24 +93,28 @@ public class AdminChallengeFormController {
         }
     }
 
-    @PostMapping(value = "/{id}", params = {"addQuestion"})
-    public ModelAndView addQuestion(@ModelAttribute("challenge") Challenge challenge) {
-        ModelAndView mav = new ModelAndView("admin/challengeForm");
+    @PostMapping(value = {"/new","/{id}"}, params = {"addQuestion"})
+    public String addQuestion(@ModelAttribute("challenge") Challenge challenge,
+                                    @PathVariable(value = "id", required = false) Integer id) {
         try {
             Question tempQ = new Question();
-            questionService.create(challenge, tempQ);
+            challenge.getQuestions().add(tempQ);
         } catch (Exception ex) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, ex.getMessage(), ex);
         }
-        return mav;
+        return "admin/challengeForm";
     }
 
-    @PostMapping(value = "/{id}", params = {"removeQuestion"})
-    public String removeQuestion(@ModelAttribute("challenge") Challenge challenge, @RequestParam("removeQuestion") Integer rmId) {
+    @PostMapping(value = {"/new","/{id}"}, params = {"removeQuestion"})
+    public String removeQuestion(@ModelAttribute("challenge") Challenge challenge,
+                                 @PathVariable(value = "id", required = false) Integer id,
+                                 @RequestParam("removeQuestion") Integer rmIdx) {
         try {
-            challenge.getQuestions().remove(rmId);
-            questionService.delete(rmId);
+            Question question = challenge.getQuestions().get(rmIdx);
+            challenge.getQuestions().remove(rmIdx.intValue());
+            // If it's form edit, delete the persisted question from database as well.
+            if(question.getQuestionId() != null) questionService.delete(question.getQuestionId());
             return "admin/challengeForm";
         } catch (Exception ex) {
             throw new ResponseStatusException(
@@ -112,13 +122,15 @@ public class AdminChallengeFormController {
         }
     }
 
-    @PostMapping(value = "/{id}", params = {"addChoice"})
-    public ModelAndView addChoice(@ModelAttribute("challenge") Challenge challenge, @RequestParam("addChoice") Integer qid) {
+    @PostMapping(value = {"/new","/{id}"}, params = {"addChoice"})
+    public ModelAndView addChoice(@ModelAttribute("challenge") Challenge challenge,
+                                  @PathVariable(value = "id", required = false) Integer id,
+                                  @RequestParam("addChoice") Integer qIdx) {
         ModelAndView mav = new ModelAndView("admin/challengeForm");
         try {
-            Question question = challenge.getQuestions().get(qid);
+            Question question = challenge.getQuestions().get(qIdx);
             Choice tempC = new Choice();
-            choiceService.create(question, tempC);
+            question.getChoices().add(tempC);
         } catch (Exception ex) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, ex.getMessage(), ex);
@@ -127,12 +139,17 @@ public class AdminChallengeFormController {
     }
 
     @PostMapping(value = "/{id}", params = {"removeChoice"})
-    public String removeChoice(@ModelAttribute("challenge") Challenge challenge, @RequestParam("removeChoice") List<Integer> ids) {
+    public String removeChoice(@ModelAttribute("challenge") Challenge challenge,
+                               @PathVariable(value = "id", required = false) Integer id,
+                               @RequestParam("removeChoice") List<Integer> ids) {
         try {
-            Integer qid = ids.get(0);
-            Integer choiceId = ids.get(1);
-            challenge.getQuestions().get(qid).getChoices().remove(choiceId);
-            choiceService.delete(choiceId);
+            Integer qIdx = ids.get(0);
+            Integer choiceIdx = ids.get(1);
+            Question question = challenge.getQuestions().get(qIdx);
+            Choice choice = question.getChoices().get(choiceIdx);
+            question.getChoices().remove(choiceIdx.intValue());
+            // If it's form edit, delete the persisted choice from database as well.
+            if(choice.getChoiceId() != null) choiceService.delete(choice.getChoiceId());
             return "admin/challengeForm";
         } catch (Exception ex) {
             throw new ResponseStatusException(

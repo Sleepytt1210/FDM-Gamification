@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.persistence.EntityNotFoundException;
-import java.util.Map;
+import java.util.List;
 
 @Controller
 @RequestMapping("/scenario/{sid}")
@@ -87,7 +87,7 @@ public class ScenarioPageController {
             if(question == null) {
                 throw new EntityNotFoundException("Question id " + qid + " does not exist in scenario id " + sid + " !!");
             }
-            Map<Integer, Choice> choices = questionService.getChoices(qid);
+            List<Choice> choices = questionService.getChoices(qid);
             model.addAttribute("question", question);
             model.addAttribute("choices", choices);
         } catch (EntityNotFoundException ex){
