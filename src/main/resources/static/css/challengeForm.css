@@ -165,20 +165,36 @@ button:hover {
 
 .submit {
   width: 80%;
-  margin: 20px 0;
+  margin: 60px 0;
   text-align: center;
 }
 .submit input {
-  width: 80%;
+  width: 46%;
   font-size: 25px;
   border-radius: 9px;
   border: none;
   padding: 10px 30px;
   margin: 0 auto;
+  font-family: "Verdana", sans-serif;
+  background: #909090;
+  color: #fafafc;
+  outline: none;
+}
+.submit input:hover {
+  cursor: pointer;
+  background: #2196F3;
+  color: #fff;
+  transition: ease-in-out;
 }
 
 input[type=number] {
   -moz-appearance: textfield;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 /*# sourceMappingURL=challengeForm.css.map */
