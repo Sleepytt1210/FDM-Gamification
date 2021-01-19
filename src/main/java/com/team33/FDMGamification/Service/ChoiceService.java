@@ -54,7 +54,7 @@ public class ChoiceService {
     public Choice create(Question question, Choice choice) {
         choice.setQuestion(question);
         choice = choiceRepo.saveAndFlush(choice);
-        question.getChoices().put(choice.getChoiceId(), choice);
+        question.getChoices().add(choice);
         return choice;
     }
 

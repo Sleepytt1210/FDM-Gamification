@@ -13,6 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Bean;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -29,6 +32,46 @@ import static org.junit.jupiter.api.Assertions.*;
 @ActiveProfiles("test")
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class DatabaseTests {
+
+    @TestConfiguration
+    static class QuestionServiceTestConfiguration{
+        @Bean
+        protected QuestionService questionService(){
+            return new QuestionService();
+        }
+    }
+
+    @TestConfiguration
+    static class ChoiceServiceTestConfiguration{
+        @Bean
+        protected ChoiceService choiceService(){
+            return new ChoiceService();
+        }
+    }
+
+    @TestConfiguration
+    static class ChallengeServiceTestConfiguration{
+        @Bean
+        protected ChallengeService challengeService(){
+            return new ChallengeService();
+        }
+    }
+
+    @TestConfiguration
+    static class ChallengeFeedbackServiceTestConfiguration{
+        @Bean
+        protected ChallengeFeedbackService challengeFeedbackService(){
+            return new ChallengeFeedbackService();
+        }
+    }
+
+    @TestConfiguration
+    static class RatingServiceTestConfiguration{
+        @Bean
+        protected RatingService ratingService() {
+            return new RatingService();
+        }
+    }
 
     @Autowired
     private ChallengeService challengeS;
@@ -588,6 +631,18 @@ public class DatabaseTests {
         assertNotNull(question.getChoices().get(1));
         assertNotNull(question.getChoices().get(2));
     }
+    
+    @Test
+    public void testQuestionCreationWithExistingChallenge() {
+        Question question = new Question("New question", "This is question 1", 0, QuestionType.MULTIPLE_CHOICE);
+        question.getChoices().add(new Choice("Choice A", 2, "Perfect choice"));
+        question.getChoices().add(new Choice("Choice B", 1, "Not bad"));
+        assertDoesNotThrow(()->{
+            questionS.create(challenge1.getId(), question);
+        });
+        assertEquals(2, challengeS.findById(challenge1.getId()).getQuestions().size());
+        assertEquals(2, challengeS.findById(challenge1.getId()).getQuestions().get(1).getChoices().size());
+    }
 
     @Test
     public void testQuestionUpdatedInChallenge() {
@@ -629,7 +684,7 @@ public class DatabaseTests {
         newQuestion.setChallenge(challenge1);
 
         // Put the question into the challenge set.
-        updatedChallenge.getQuestions().put(newQuestion.getQuestionId(), newQuestion);
+        updatedChallenge.getQuestions().add(newQuestion);
 
         // Before updates
         assertEquals(challenge1.getChallengeTitle(), challengeS.findById(1).getChallengeTitle());
@@ -671,8 +726,8 @@ public class DatabaseTests {
         newChoice.setQuestion(question1);
 
         // Put the question into the challenge set.
-        question1.getChoices().put(newChoice.getChoiceId(), newChoice);
-        updatedChallenge.getQuestions().put(question1.getQuestionId(), question1);
+        question1.getChoices().add(newChoice);
+        updatedChallenge.getQuestions().add(question1);
 
         // Before updates
         assertEquals(challenge1.getChallengeTitle(), challengeS.findById(1).getChallengeTitle());

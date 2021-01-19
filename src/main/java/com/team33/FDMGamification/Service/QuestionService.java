@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.management.InstanceAlreadyExistsException;
 import javax.persistence.EntityNotFoundException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -36,9 +37,8 @@ public class QuestionService {
      * @param completion    Number of completions of question.
      * @param questionType  Type of current question.
      * @return Question: Question entity persisted in database.
-     * @throws InstanceAlreadyExistsException If question already exists in challenge.
      */
-    public Question create(Integer challengeId, String questionTitle, String questionText, Integer completion, QuestionType questionType) throws InstanceAlreadyExistsException {
+    public Question create(Integer challengeId, String questionTitle, String questionText, Integer completion, QuestionType questionType) {
         Question question = new Question(questionTitle, questionText, completion, questionType);
         return create(challengeId, question);
     }
@@ -49,9 +49,8 @@ public class QuestionService {
      * @param challengeId Foreign key id of challenge to be added to.
      * @param question    Question entity with properties.
      * @return Question: Question entity persisted in database.
-     * @throws InstanceAlreadyExistsException If question already exists in challenge.
      */
-    public Question create(Integer challengeId, Question question) throws InstanceAlreadyExistsException {
+    public Question create(Integer challengeId, Question question) {
         Challenge challenge = cls.findById(challengeId);
         return create(challenge, question);
     }
@@ -65,8 +64,16 @@ public class QuestionService {
      */
     public Question create(Challenge challenge, Question question) {
         question.setChallenge(challenge);
-        question = questionRepo.saveAndFlush(question);
-        challenge.getQuestions().put(question.getQuestionId(), question);
+        if(question.getQuestionId() == null) {
+            List<Choice> tempChoices = question.getChoices();
+            question.setChoices(new ArrayList<>());
+            question = questionRepo.saveAndFlush(question);
+            Question finalQuestion = question;
+            tempChoices.forEach((choice) -> chs.create(finalQuestion.getQuestionId(), choice));
+        }else {
+            question = questionRepo.saveAndFlush(question);
+        }
+        challenge.getQuestions().add(question);
         return question;
     }
 
@@ -78,7 +85,7 @@ public class QuestionService {
      * @throws EntityNotFoundException: If question is not found.
      */
     public Question findById(Integer questionId) {
-        return questionRepo.findById(questionId).orElseThrow(() -> new EntityNotFoundException("Challenge not found!"));
+        return questionRepo.findById(questionId).orElseThrow(() -> new EntityNotFoundException("Question not found!"));
     }
 
     /**
@@ -105,7 +112,7 @@ public class QuestionService {
      * @return Map<Integer, Choice> choices: Map of choices with their id as key.
      */
     @Transactional
-    public Map<Integer, Choice> getChoices(Integer id){
+    public List<Choice> getChoices(Integer id){
         return findById(id).getChoices();
     }
 
@@ -119,7 +126,7 @@ public class QuestionService {
      * @param choices       New choices map of question.
      * @return Question: Updated question entity.
      */
-    public Question update(Integer questionId, String questionTitle, String questionText, Integer completion, QuestionType questionType, Map<Integer, Choice> choices) {
+    public Question update(Integer questionId, String questionTitle, String questionText, Integer completion, QuestionType questionType, List<Choice> choices) {
         Question tempNew = new Question(questionTitle, questionText, completion, questionType);
         tempNew.setChoices(choices);
         return update(questionId, tempNew);
@@ -139,9 +146,9 @@ public class QuestionService {
         if (newQuestion.getQuestionCompletion() != null)
             oldQuestion.setQuestionCompletion(newQuestion.getQuestionCompletion());
         oldQuestion = questionRepo.saveAndFlush(oldQuestion);
-        Map<Integer, Choice> newChoices = newQuestion.getChoices();
+        List<Choice> newChoices = newQuestion.getChoices();
         if (newChoices != null && !newChoices.isEmpty()) {
-            newChoices.forEach((k, v) -> chs.update(k, v.getChoiceText(), v.getChoiceWeight(), v.getChoiceReason()));
+            newChoices.forEach((v) -> chs.update(v.getChoiceId(), v.getChoiceText(), v.getChoiceWeight(), v.getChoiceReason()));
         }
         return oldQuestion;
     }

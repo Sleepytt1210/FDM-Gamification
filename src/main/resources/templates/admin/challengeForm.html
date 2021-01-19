@@ -5,11 +5,10 @@
       xmlns:th="http://www.thymeleaf.org">
 <head>
     <title th:text="'Challenge ' + ${challenge.id}"></title>
-    <link rel="stylesheet" th:href="@{/css/challengeForm.css}" type="text/css">
+    <link rel="stylesheet" th:href="@{/css/form.min.css}" type="text/css">
     <link rel="stylesheet" th:href="@{/css/jquery-ui.theme.css}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script th:src="@{/javascript/imageUpload.js}"></script>
-    <script th:src="@{/javascript/validation.js}"></script>
     <script th:src="@{/javascript/challengeForm.js}"></script>
 </head>
 <body>
@@ -22,12 +21,16 @@
                 <input class="title-input" id="title" name="challenge-title" th:field="*{challengeTitle}" th:value="*{challengeTitle}"
                        type="text"/>
             </div>
+            <div class="errorMessage" th:if="${#fields.hasErrors('challengeTitle')}" th:errors="*{challengeTitle}">
+            </div>
         </div>
         <div class="form-group">
             <label for="challenge-description" th:text="${'Description'}"></label>
             <div class="input-div">
                 <textarea id="challenge-description" name="challenge-description" th:errorclass="fieldError" th:field="*{description}"
                        th:value="*{description}" class="description-input"></textarea>
+            </div>
+            <div class="errorMessage" th:if="${#fields.hasErrors('description')}" th:errors="*{description}">
             </div>
         </div>
         <div class="form-group">
@@ -43,36 +46,48 @@
             <label for="stream" th:text="${'Stream'}"></label>
             <div class="input-div">
                 <select id="stream" name="stream">
-                    <option th:each="stream : ${allStreams}" th:selected="${stream == challenge.stream}" th:label="${(stream.name == 'NONE') ? 'Choose stream...' : stream.fullName}"
+                    <option th:each="stream : ${allStreams}"
+                            th:selected="${stream == challenge.stream}"
+                            th:label="${(stream.name == 'NONE') ? 'Choose stream...' : stream.fullName}"
                             th:value="${stream}"></option>
                 </select>
+            </div>
+            <div class="errorMessage" th:if="${#fields.hasErrors('stream')}" th:errors="*{stream}">
             </div>
         </div>
         <div class="form-group">
             <label>Feedbacks</label>
             <div class="feedback-box">
-                <label> Positive Feedback Title
-                    <div class="input-div">
-                        <input type="text" class="title-input" th:field="${challenge.challengeFeedback[true].feedback_title}">
-                    </div>
-                </label>
-                <label> Positive Feedback Text
-                    <div class="input-div">
-                        <textarea class="feedback" th:field="${challenge.challengeFeedback[true].feedback_text}"></textarea>
-                    </div>
-                </label>
+                <label> Positive Feedback Title</label>
+                <div class="input-div">
+                    <input type="text" class="title-input" th:field="${challenge.challengeFeedback[true].feedback_title}">
+                </div>
+                <div class="errorMessage" th:if="${#fields.hasErrors('${challenge.challengeFeedback[true].feedback_title}')}"
+                     th:errors="${challenge.challengeFeedback[true].feedback_title}">
+                </div>
+                <label> Positive Feedback Text</label>
+                <div class="input-div">
+                    <textarea class="feedback" th:field="${challenge.challengeFeedback[true].feedback_text}"></textarea>
+                </div>
+                <div class="errorMessage" th:if="${#fields.hasErrors('${challenge.challengeFeedback[true].feedback_text}')}"
+                     th:errors="${challenge.challengeFeedback[true].feedback_text}">
+                </div>
             </div>
             <div class="feedback-box">
-                <label>Negative Feedback Title
-                    <div class="input-div">
-                        <input type="text" class="title-input" th:field="${challenge.challengeFeedback[false].feedback_title}">
-                    </div>
-                </label>
-                <label>Negative Feedback Text
-                    <div class="input-div">
-                        <textarea class="feedback" th:field="${challenge.challengeFeedback[false].feedback_text}"></textarea>
-                    </div>
-                </label>
+                <label>Negative Feedback</label>
+                <div class="input-div">
+                    <input type="text" class="title-input" th:field="${challenge.challengeFeedback[false].feedback_title}">
+                </div>
+                <div class="errorMessage" th:if="${#fields.hasErrors('${challenge.challengeFeedback[false].feedback_title}')}"
+                     th:errors="${challenge.challengeFeedback[false].feedback_title}">
+                </div>
+                <label>Negative Feedback Text</label>
+                <div class="input-div">
+                    <textarea class="feedback" th:field="${challenge.challengeFeedback[false].feedback_text}"></textarea>
+                </div>
+                <div class="errorMessage" th:if="${#fields.hasErrors('${challenge.challengeFeedback[false].feedback_text}')}"
+                     th:errors="${challenge.challengeFeedback[false].feedback_text}">
+                </div>
             </div>
         </div>
         <div class="question-section">
@@ -81,43 +96,50 @@
                 <button class="add-button header-add-button" name="addQuestion" type="submit">ADD</button>
             </div>
             <div id="question-accordion">
-                <th:block th:each="ques : ${challenge.questions}">
+                <th:block th:each="ques, quesStat : ${challenge.questions}">
                     <div class="question-row-one">
-                        <h3 class="question-id" th:text="'Question ID: ' + ${ques.key}">Question</h3>
+                        <h3 class="question-id" th:text="${ques.questionId == null ? 'New Question ' + quesStat : 'Question ID: ' + ques.questionId}">Question</h3>
                         <div class="question-row-one-button">
                             <button class="remove-button remove-question-button" name="removeQuestion"
-                                    th:value="${ques.key}" type="submit">REMOVE
+                                    th:value="${quesStat.index}" type="submit">REMOVE
                             </button>
                         </div>
                     </div>
                     <div class="question-content-group">
                         <div class="form-group">
-                            <label>Question Title
-                                <div class="input-div">
-                                    <input class="title-input" name="question-title"
-                                           th:field="*{questions[__${ques.key}__].questionTitle}"
-                                           type="text"/>
-                                </div>
-                            </label>
+                            <label>Question Title</label>
+                            <div class="input-div">
+                                <input class="title-input" name="question-title"
+                                       th:field="*{questions[__${quesStat.index}__].questionTitle}"
+                                       type="text"/>
+                            </div>
+                            <div class="errorMessage" th:if="${#fields.hasErrors('questions[__${quesStat.index}__].questionTitle')}"
+                                 th:errors="*{questions[__${quesStat.index}__].questionTitle}">
+                            </div>
                         </div>
                         <div class="form-group">
-                            <label>Question Text
-                                <div class="input-div">
-                                    <textarea class="description-input" name="question-text"
-                                              th:field="*{questions[__${ques.key}__].questionText}"></textarea>
-                                </div>
-                            </label>
+                            <label>Question Text</label>
+                            <div class="input-div">
+                                <textarea class="description-input" name="question-text"
+                                          th:field="*{questions[__${quesStat.index}__].questionText}"></textarea>
+                            </div>
+                            <div class="errorMessage" th:if="${#fields.hasErrors('questions[__${quesStat.index}__].questionText')}"
+                                 th:errors="*{questions[__${quesStat.index}__].questionText}">
+                            </div>
                         </div>
                         <div class="form-group">
                             <label for="question-type" th:text="${'Question Type'}"></label>
                             <div class="input-div">
-                                <select id="question-type" name="question_type"
-                                        th:field="*{questions[__${ques.key}__].questionType}">
+                                <select id="question-type" th:name="*{questions[__${quesStat.index}__].questionType}"
+                                        th:field="*{questions[__${quesStat.index}__].questionType}">
                                     <option th:each="questionType : ${allQuestionType}"
-                                            th:selected="${questionType == challenge.questions[__${ques.key}__].questionType}"
+                                            th:selected="${questionType == challenge.questions[__${quesStat.index}__].questionType}"
                                             th:label="${(questionType.name == 'NONE') ? 'Choose question type...' : questionType.fullName}"
                                             th:value="${questionType}"></option>
                                 </select>
+                            </div>
+                            <div class="errorMessage" th:if="${#fields.hasErrors('questions[__${quesStat.index}__].questionType')}"
+                                 th:errors="*{questions[__${quesStat.index}__].questionType}">
                             </div>
                         </div>
                         <!-- Choice part -->
@@ -125,48 +147,53 @@
                             <h3>Choices</h3>
                             <table>
                                 <tr>
-                                    <th>
+                                    <th class="choice-text-col">
                                         Choice Text
                                     </th>
-                                    <th>
+                                    <th class="choice-weight-col">
                                         Choice Weight
                                     </th>
-                                    <th>
+                                    <th class="choice-reason-col">
                                         Choice Reason
                                     </th>
-                                    <th>
+                                    <th class="remove-col">
                                     </th>
                                 </tr>
-                                <tr th:each="choice : ${ques.value.choices}">
-                                    </td>
+                                <tr th:each="choice, choiceStat : ${ques.choices}">
                                     <td>
-                                        <input th:field="*{questions[__${ques.key}__].choices[__${choice.key}__].choiceText}"
+                                        <input th:field="*{questions[__${quesStat.index}__].choices[__${choiceStat.index}__].choiceText}"
                                                type="text">
+                                        <div class="errorMessage" th:if="${#fields.hasErrors('questions[__${quesStat.index}__].choices[__${choiceStat.index}__].choiceText')}"
+                                             th:errors="*{questions[__${quesStat.index}__].choices[__${choiceStat.index}__].choiceText}">
+                                        </div>
                                     </td>
                                     <td>
-                                        <input th:field="*{questions[__${ques.key}__].choices[__${choice.key}__].choiceWeight}"
+                                        <input th:field="*{questions[__${quesStat.index}__].choices[__${choiceStat.index}__].choiceWeight}"
                                                type="number">
+                                        <div class="errorMessage" th:if="${#fields.hasErrors('questions[__${quesStat.index}__].choices[__${choiceStat.index}__].choiceWeight')}"
+                                             th:errors="*{questions[__${quesStat.index}__].choices[__${choiceStat.index}__].choiceWeight}">
+                                        </div>
                                     </td>
                                     <td>
-                                        <input th:field="*{questions[__${ques.key}__].choices[__${choice.key}__].choiceReason}"
+                                        <input th:field="*{questions[__${quesStat.index}__].choices[__${choiceStat.index}__].choiceReason}"
                                                type="text">
+                                        <div class="errorMessage" th:if="${#fields.hasErrors('questions[__${quesStat.index}__].choices[__${choiceStat.index}__].choiceReason')}"
+                                             th:errors="*{questions[__${quesStat.index}__].choices[__${choiceStat.index}__].choiceReason}">
+                                        </div>
                                     </td>
                                     <td>
                                         <button class="remove-icon" name="removeChoice"
-                                                th:value="${ques.key + ',' + choice.key}" type="submit">
+                                                th:value="${quesStat.index + ',' + choiceStat.index}" type="submit">
                                             <i class="fa fa-times"></i>
                                         </button>
                                     </td>
                                 </tr>
-                                <tr class="add-row">
-                                    <td></td>
-                                    <td>
-                                        <button class="add-icon" name="addChoice" th:value="${ques.key}" type="submit">
-                                            <i class="fa fa-plus" aria-hidden="true"></i>
-                                        </button>
-                                    </td>
-                                </tr>
                             </table>
+                            <div class="add-row">
+                                <button class="add-icon" name="addChoice" type="submit" th:value="${quesStat.index}">
+                                    <i class="fa fa-plus" aria-hidden="true"></i>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </th:block>

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -45,7 +46,16 @@ public class ChallengeService {
      * @return Challenge: Challenge entity persisted in database.
      */
     public Challenge create(Challenge challenge) {
-        return challengeRepo.saveAndFlush(challenge);
+        if(challenge.getId() == null) {
+            List<Question> tempQuestions = challenge.getQuestions();
+            challenge.setQuestions(new ArrayList<>());
+            challenge = challengeRepo.saveAndFlush(challenge);
+            Challenge finalChallenge = challenge;
+            tempQuestions.forEach((choice) -> questionService.create(finalChallenge.getId(), choice));
+        }else{
+            challenge = challengeRepo.saveAndFlush(challenge);
+        }
+        return challenge;
     }
 
     /**
@@ -95,7 +105,7 @@ public class ChallengeService {
      * @return Map<Integer, Question> questions: Map of questions with their id as key.
      */
     @Transactional
-    public Map<Integer, Question> getQuestions(Integer id){
+    public List<Question> getQuestions(Integer id){
         return findById(id).getQuestions();
     }
 
@@ -114,7 +124,7 @@ public class ChallengeService {
      * @return Challenge: Updated challenge entity.
      */
     public Challenge update(Integer challengeId, String title, String introduction, Thumbnail thumbnail,
-                            Stream stream, Integer completion, Map<Integer, Question> questions,
+                            Stream stream, Integer completion, List<Question> questions,
                             Map<Boolean, ChallengeFeedback> feedbacks, Set<Rating> ratings) {
         Challenge tempNew = new Challenge(title, introduction, stream, completion);
         tempNew.setQuestions(questions);
@@ -138,10 +148,10 @@ public class ChallengeService {
         if (newChallenge.getStream() != null) oldChallenge.setStream(newChallenge.getStream());
         if (newChallenge.getCompletion() != null) oldChallenge.setCompletion(newChallenge.getCompletion());
         oldChallenge = challengeRepo.saveAndFlush(oldChallenge);
-        Map<Integer, Question> newQuestions = newChallenge.getQuestions();
+        List<Question> newQuestions = newChallenge.getQuestions();
         Map<Boolean, ChallengeFeedback> newFeedback = newChallenge.getChallengeFeedback();
         if (newQuestions != null && !newQuestions.isEmpty()) {
-            newQuestions.forEach((k, v) -> questionService.update(k, v));
+            newQuestions.forEach((v) -> questionService.update(v.getQuestionId(), v));
         }
         if (newFeedback != null && !newFeedback.isEmpty()) {
             newFeedback.forEach((k, v) -> challengeFeedbackService.update(v.getFeedback_id(), v.getFeedback_title(), v.getFeedback_text()));

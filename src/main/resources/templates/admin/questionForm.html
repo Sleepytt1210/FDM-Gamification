@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="~{adminLayout.html}">
+<html lang="en">
+<head>
+    <title th:text="${question.questionId == null ? 'New Question' : 'Question ' + question.questionId}"></title>
+    <link rel="stylesheet" th:href="@{/css/form.min.css}" type="text/css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+    <div layout:fragment="content2">
+        <form class="question-section question-form"
+              id="question-form"
+              th:action="@{/admin/questions/__${question.questionId == null ? 'new' : question.questionId}__}"
+              th:object="${question}" method="post">
+            <div class="question-content-group">
+                <div class="form-group">
+                    <label>Question Title</label>
+                    <div class="input-div">
+                        <input class="title-input" name="question-title"
+                               th:field="*{questionTitle}"
+                               type="text"/>
+                    </div>
+                    <div class="errorMessage" th:if="${#fields.hasErrors('questionTitle')}" th:errors="*{questionTitle}">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Question Text</label>
+                    <div class="input-div">
+                                <textarea class="description-input" name="question-text"
+                                          th:field="*{questionText}"></textarea>
+                    </div>
+                    <div class="errorMessage" th:if="${#fields.hasErrors('questionText')}" th:errors="*{questionText}">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="question-type" th:text="${'Question Type'}"></label>
+                    <div class="input-div">
+                        <select id="question-type" th:name="*{questionType}"
+                                th:field="*{questionType}">
+                            <option th:each="questionType : ${allQuestionType}"
+                                    th:selected="${questionType == question.questionType}"
+                                    th:label="${(questionType.name == 'NONE') ? 'Choose question type...' : questionType.fullName}"
+                                    th:value="${questionType}"></option>
+                        </select>
+                    </div>
+                    <div class="errorMessage" th:if="${#fields.hasErrors('questionType')}" th:errors="*{questionType}">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="challenge-type" th:text="Challenge"></label>
+                    <div class="input-div">
+                        <select id="challenge-type" name="challengeChoose"
+                                th:field="*{challenge.id}">
+                            <option th:value="${'-1'}">Choose a challenge...</option>
+                            <option th:each="challenge : ${allChallenges}"
+                                    th:selected="${challenge == question.challenge}"
+                                    th:label="${challenge.challengeTitle}"
+                                    th:value="${challenge.id}"></option>
+                        </select>
+                    </div>
+                    <div class="errorMessage" th:if="${#fields.hasErrors('challenge')}" th:errors="*{challenge}">
+                    </div>
+                </div>
+                <!-- Choice part -->
+                <div class="choice-section">
+                    <h3>Choices</h3>
+                    <table>
+                        <tr>
+                            <th class="choice-text-col">
+                                Choice Text
+                            </th>
+                            <th class="choice-weight-col">
+                                Choice Weight
+                            </th>
+                            <th class="choice-reason-col">
+                                Choice Reason
+                            </th>
+                            <th class="remove-col">
+                            </th>
+                        </tr>
+                        <tr th:each="choice, choiceStat : ${question.choices}">
+                            <td>
+                                <input th:field="*{choices[__${choiceStat.index}__].choiceText}"
+                                       type="text">
+                                <div class="errorMessage" th:if="${#fields.hasErrors('choices[__${choiceStat.index}__].choiceText')}"
+                                     th:errors="*{choices[__${choiceStat.index}__].choiceText}">
+                                </div>
+                            </td>
+                            <td>
+                                <input th:field="*{choices[__${choiceStat.index}__].choiceWeight}"
+                                       type="number">
+                                <div class="errorMessage" th:if="${#fields.hasErrors('choices[__${choiceStat.index}__].choiceWeight')}"
+                                     th:errors="*{choices[__${choiceStat.index}__].choiceWeight}">
+                                </div>
+                            </td>
+                            <td>
+                                <input th:field="*{choices[__${choiceStat.index}__].choiceReason}"
+                                       type="text">
+                                <div class="errorMessage" th:if="${#fields.hasErrors('choices[__${choiceStat.index}__].choiceReason')}"
+                                     th:errors="*{choices[__${choiceStat.index}__].choiceReason}">
+                                </div>
+                            </td>
+                            <td class="remove-col">
+                                <button class="remove-icon" name="removeChoice"
+                                        th:value="${choiceStat.index}" type="submit">
+                                    <i class="fa fa-times"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </table>
+                    <div class="add-row">
+                        <button class="add-icon" name="addChoice" type="submit">
+                            <i class="fa fa-plus" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="submit">
+                <input name="save" type="submit" value="Save">
+            </div>
+        </form>
+    </div>
+</body>
+</html>
