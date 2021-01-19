@@ -1,6 +1,7 @@
 $(function () {
 
     let form = $("#panel-form");
+    const textMax = 70;
 
     const dialog = $( "#dialog-confirm" ).dialog({
         autoOpen: false,
@@ -50,4 +51,15 @@ $(function () {
         const del = $(".delete-button");
         del.prop("disabled", !any);
     })
+
+    $(".text-column").each(function(){
+        trimmer(this);
+    });
+
+    function trimmer(element) {
+        const text = $(element).text();
+        if(text.length > textMax) {
+            $(element).text(text.substring(0, textMax) + "...");
+        }
+    }
 })
