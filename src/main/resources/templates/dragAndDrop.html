@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{headinglayout.html}">
+      layout:decorate="~{scenarioLayout.html}">
 <head>
     <meta charset="UTF-8">
     <title>Question</title>
@@ -10,7 +10,13 @@
     <script th:src="@{/javascript/dragAndDrop.js}"></script>
 </head>
 <body>
-    <div layout:fragment="content">
+    <ul layout:fragment="sidenav">
+        <li th:each="question : ${questions}" th:with="curQ=${questions[__${question.key}__]}">
+            <a th:text="${curQ.questionTitle}" th:href="@{/scenario/__${sid}__/__${curQ.questionId}__}"></a>
+        </li>
+    </ul>
+
+    <div layout:fragment="content2">
         <h1 th:text="${question.questionTitle}"></h1>
         <div class="textArea">
             <p th:text="${question.questionText}">
@@ -51,7 +57,7 @@
                         </tr>
                     </tbody>
                 </table>
-                <input id="submit" type="submit" value="Submit">
+                <input id="submit" type="submit" name="dragAndDrop" value="Submit">
             </form>
         </div>
         <div class="result" layout:fragment="result" th:style="'display:'+ ${score != null ? 'block' : 'none'}">

@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.persistence.EntityNotFoundException;
-import java.util.Arrays;
 import java.util.Map;
 
 @Controller
@@ -48,10 +47,10 @@ public class ScenarioPageController {
     public String questionPage(@PathVariable("sid") Integer sid, @PathVariable("qid") Integer qid,
                                Model model){
         populateQuestionAndChoices(model, sid, qid);
-        return "question";
+        return "dragAndDrop";
     }
 
-    @PostMapping("/{qid}")
+    @PostMapping(value = "/{qid}", params = {"dragAndDrop"})
     public String submitQuestion(Model model,
                                  @PathVariable("sid") Integer sid, @PathVariable("qid") Integer qid,
                                  @RequestParam(value = "score0", required = false) Integer[] cids0,
@@ -67,7 +66,7 @@ public class ScenarioPageController {
         populateQuestionAndChoices(model, sid, qid);
 
         model.addAttribute("score", score);
-        return "question";
+        return "dragAndDrop";
     }
 
     private int scoreCheck(Integer[] cids, int weight){
@@ -84,6 +83,7 @@ public class ScenarioPageController {
     private void populateQuestionAndChoices(Model model, Integer sid, Integer qid) {
         try {
             Question question = challengeService.getQuestions(sid).get(qid);
+            model.addAttribute("questions", challengeService.getQuestions(sid));
             if(question == null) {
                 throw new EntityNotFoundException("Question id " + qid + " does not exist in scenario id " + sid + " !!");
             }
