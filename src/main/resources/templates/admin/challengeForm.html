@@ -97,8 +97,8 @@
             </div>
             <div id="question-accordion">
                 <th:block th:each="ques, quesStat : ${challenge.questions}">
-                    <div class="question-row-one">
-                        <h3 class="question-id" th:text="${ques.questionId == null ? 'New Question ' + quesStat : 'Question ID: ' + ques.questionId}">Question</h3>
+                    <div class="question-row-one" th:id="${'question-accordion-'+quesStat}">
+                        <h3 class="question-id" th:text="${ques.questionId == null ? 'New Question ' + (quesStat.index + 1) : 'Question ID: ' + ques.questionId}">Question</h3>
                         <div class="question-row-one-button">
                             <button class="remove-button remove-question-button" name="removeQuestion"
                                     th:value="${quesStat.index}" type="submit">REMOVE
