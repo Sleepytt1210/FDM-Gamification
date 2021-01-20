@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{headinglayout.html}">
+<head>
+    <meta charset="UTF-8">
+    <title>Question</title>
+    <link rel="stylesheet" href="../static/css/question.css" type="text/css" th:href="@{/css/radioStyle.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@600&display=swap" rel="stylesheet">
+</head>
+<body>
+<div layout:fragment="content">
+    <h1 th:text="${question.questionTitle}"></h1>
+    <div class="textArea">
+        <p th:text="${question.questionText}">
+    </div>
+    <form th:action="@{/scenario/__${sid}__/__${qid}__}" method="post" th:object="${question}">
+        <label>Type in your answer here:</label>
+        <input name="textBox" type="text">
+
+
+        <input id="submit" type="submit" value="Submit">
+
+
+
+    </form>
+
+
+
+
+
+
+</div>
+<div class="result" layout:fragment="result" th:style="'display:'+ ${score != null ? 'block' : 'none'}">
+    <p id="score" th:text="'Score: ' + ${score}" th:value="${score}"></p>
+</div>
+</body>
+</html>
