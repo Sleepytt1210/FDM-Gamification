@@ -15,7 +15,7 @@ public class Choice {
     private Integer choiceId;
 
     @NotBlank(message = "Please do not leave this field blank!")
-    @Pattern(regexp = "^[^<>]+$", message = "Angle brackets (<, >) are not allowed!")
+    @Pattern(regexp = "^[^<>]*$", message = "Angle brackets (<, >) are not allowed!")
     @Size(max = 200, message = "Please provide a title not longer than 200 characters!")
     @Column(name = "choice_text")
     private String choiceText = "";
@@ -26,7 +26,7 @@ public class Choice {
     private int choiceWeight;
 
     @NotBlank(message = "Please do not leave this field blank!")
-    @Pattern(regexp = "^[^<>]+$", message = "Angle brackets (<, >) are not allowed!")
+    @Pattern(regexp = "^[^<>]*$", message = "Angle brackets (<, >) are not allowed!")
     @Size(max = 400, message = "Please provide a title not longer than 400 characters!")
     @Column(name = "choice_reason")
     private String choiceReason = "";

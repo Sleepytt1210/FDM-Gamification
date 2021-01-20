@@ -18,13 +18,13 @@ public class Challenge {
     private Integer id;
 
     @NotBlank(message = "Please do not leave this field blank!")
-    @Pattern(regexp = "^[^<>]+$", message = "Angle brackets (<, >) are not allowed!")
+    @Pattern(regexp = "^[^<>]*$", message = "Angle brackets (<, >) are not allowed!")
     @Size(max = 100, message = "Please provide a title not longer than 100 characters!")
     @Column(name = "challenge_title")
     private String challengeTitle = "";
 
     @NotBlank(message = "Please do not leave this field blank!")
-    @Pattern(regexp = "^[^<>]+$", message = "Angle brackets (<, >) are not allowed!")
+    @Pattern(regexp = "^[^<>]*$", message = "Angle brackets (<, >) are not allowed!")
     @Column(name = "challenge_description")
     private String description = "";
 
@@ -43,14 +43,20 @@ public class Challenge {
     private Thumbnail thumbnail = new Thumbnail(this);
 
     @Valid
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "challenge", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "challenge",
+            cascade = {CascadeType.MERGE, CascadeType.REMOVE, CascadeType.REFRESH, CascadeType.DETACH},
+            orphanRemoval = true)
     private List<Question> questions = new ArrayList<>();
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "challenge", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "challenge",
+            cascade = {CascadeType.MERGE, CascadeType.REMOVE, CascadeType.REFRESH, CascadeType.DETACH},
+            orphanRemoval = true)
     @MapKeyColumn(name = "positive")
     private Map<Boolean, ChallengeFeedback> challengeFeedback = new HashMap<>();
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "challenge", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "challenge",
+            cascade = {CascadeType.MERGE, CascadeType.REMOVE, CascadeType.REFRESH, CascadeType.DETACH},
+            orphanRemoval = true)
     private Set<Rating> ratings = new HashSet<>();
 
     public Challenge(){}

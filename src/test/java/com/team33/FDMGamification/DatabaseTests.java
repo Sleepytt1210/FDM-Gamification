@@ -396,15 +396,14 @@ public class DatabaseTests {
 
     @Test
     public void testChoiceDeleteOneByEntity() {
-        assertDoesNotThrow(() -> choiceS.create(1, "Choice C", 2, "Random choice."));
+        Choice choice3 = choiceS.create(question1.getQuestionId(), "Choice C", 2, "Random choice.");
         assertEquals(3, choiceS.getAll().size());
 
-        Choice choice3 = choiceS.findById(3);
         choiceS.delete(choice3);
 
         // Ensure only 2 choice in database
         assertEquals(2, choiceS.getAll().size());
-        assertThrows(EntityNotFoundException.class, () -> choiceS.findById(3), "Expected Entity Not Found to be thrown!");
+        assertThrows(EntityNotFoundException.class, () -> choiceS.findById(choice3.getChoiceId()), "Expected Entity Not Found to be thrown!");
 
         // Ensure choice is removed from associated challenge
         assertFalse(question1.getChoices().contains(choice3));
@@ -413,14 +412,14 @@ public class DatabaseTests {
     @Test
     public void testChoiceDeleteOneById() {
         // Create a dummy choice for deletion
-        Choice choice3 = choiceS.create(1, "Choice C", 2, "Random choice.");
+        Choice choice3 = choiceS.create(question1.getQuestionId(), "Choice C", 2, "Random choice.");
         assertEquals(3, choiceS.getAll().size());
 
-        choiceS.delete(3);
+        choiceS.delete(choice3.getChoiceId());
 
         // Ensure only 2 choice in database
         assertEquals(2, choiceS.getAll().size());
-        assertThrows(EntityNotFoundException.class, () -> choiceS.findById(3), "Expected Entity Not Found to be thrown!");
+        assertThrows(EntityNotFoundException.class, () -> choiceS.findById(choice3.getChoiceId()), "Expected Entity Not Found to be thrown!");
 
         // Ensure choice is removed from associated challenge
         assertFalse(question1.getChoices().contains(choice3));
@@ -428,17 +427,17 @@ public class DatabaseTests {
 
     @Test
     public void testChoiceBatchDelete() {
-        assertDoesNotThrow(() -> choiceS.create(1, "Choice C", 2, "Random choice."));
+        Choice choice3 = choiceS.create(1, "Choice C", 2, "Random choice.");
         assertEquals(3, choiceS.getAll().size());
 
-        assertDoesNotThrow(() -> choiceS.create(1, "Choice D", 1, "Random choice 2."));
+        Choice choice4 = choiceS.create(1, "Choice D", 1, "Random choice 2.");
         assertEquals(4, choiceS.getAll().size());
 
-        List<Choice> choiceList = choiceRepo.findAllById(List.of(3, 4));
+        List<Choice> choiceList = choiceRepo.findAllById(List.of(choice3.getChoiceId(), choice4.getChoiceId()));
         choiceS.batchDelete(choiceList);
         assertEquals(2, choiceS.getAll().size());
-        assertThrows(EntityNotFoundException.class, () -> choiceS.findById(3), "Expected Entity Not Found to be thrown!");
-        assertThrows(EntityNotFoundException.class, () -> choiceS.findById(4), "Expected Entity Not Found to be thrown!");
+        assertThrows(EntityNotFoundException.class, () -> choiceS.findById(choice3.getChoiceId()), "Expected Entity Not Found to be thrown!");
+        assertThrows(EntityNotFoundException.class, () -> choiceS.findById(choice4.getChoiceId()), "Expected Entity Not Found to be thrown!");
     }
 
     @Test
@@ -676,22 +675,20 @@ public class DatabaseTests {
 
         newQuestions.add(question52);
 
-        assertDoesNotThrow(()->{
-            Challenge updatedChallege = challengeS.create(newChallenge);
-            // Ensure 2 questions are persisted
-            assertEquals(2, updatedChallege.getQuestions().size());
+        Challenge updatedChallenge = challengeS.create(newChallenge);
+        // Ensure 2 questions are persisted
+        assertEquals(2, updatedChallenge.getQuestions().size());
 
-            // Ensure choices are persisted for each question
-            assertEquals(4, updatedChallege.getQuestions().get(0).getChoices().size());
-            assertEquals(1, updatedChallege.getQuestions().get(1).getChoices().size());
+        // Ensure choices are persisted for each question
+        assertEquals(3, updatedChallenge.getQuestions().get(0).getChoices().size());
+        assertEquals(1, updatedChallenge.getQuestions().get(1).getChoices().size());
 
-            // Ensure challenge feedbacks are persisted
-            assertEquals("Good job", updatedChallege.getChallengeFeedback().get(true).getFeedback_title());
-            assertEquals("Oh no", updatedChallege.getChallengeFeedback().get(false).getFeedback_title());
+        // Ensure challenge feedbacks are persisted
+        assertEquals("Good job", updatedChallenge.getChallengeFeedback().get(true).getFeedback_title());
+        assertEquals("Oh no", updatedChallenge.getChallengeFeedback().get(false).getFeedback_title());
 
-            // Ensure correct value of challenge stream
-            assertEquals(Stream.ST, updatedChallege.getStream());
-        });
+        // Ensure correct value of challenge stream
+        assertEquals(Stream.ST, updatedChallenge.getStream());
     }
 
     @Test
@@ -704,6 +701,22 @@ public class DatabaseTests {
         });
         assertEquals(2, challengeS.findById(challenge1.getId()).getQuestions().size());
         assertEquals(2, challengeS.findById(challenge1.getId()).getQuestions().get(1).getChoices().size());
+    }
+
+    @Test
+    public void testQuestionChangeChallenge() {
+        // Dummy challenge2
+        Challenge challenge2 = challengeS.create("Challenge 2", "This is challenge 2", Stream.ST, 0);
+        question1.setChallenge(challenge2);
+        challenge2.getQuestions().add(question1);
+
+        // Before update
+        assertEquals(1, challengeS.findById(challenge1.getId()).getQuestions().size());
+        Question updatedQuestion = questionRepo.save(question1);
+
+        // After update
+        assertEquals(challenge2.getId() ,updatedQuestion.getChallenge().getId());
+        assertEquals(0, challengeS.findById(challenge1.getId()).getQuestions().size());
     }
 
     @Test

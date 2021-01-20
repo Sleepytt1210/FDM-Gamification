@@ -47,35 +47,31 @@ public class ChallengeService {
      * @return Challenge: Challenge entity persisted in database.
      */
     public Challenge create(Challenge challenge) {
-        if(challenge.getId() == null) {
 
-            // Create a temporary challenge with empty relational entities
-            Challenge tempNew = new Challenge(challenge.getChallengeTitle(), challenge.getDescription(), challenge.getStream(), challenge.getCompletion());
-            tempNew.setThumbnail(null);
+        // Create a temporary challenge with empty relational entities
+        Challenge tempNew = new Challenge(challenge.getChallengeTitle(), challenge.getDescription(), challenge.getStream(), challenge.getCompletion());
+        tempNew.setThumbnail(null);
 
-            List<Question> tempQuestions = null;
-            Map<Boolean, ChallengeFeedback> tempFeedbacks = null;
-            Set<Rating> ratings = null;
-            Thumbnail tempThumbnail = null;
-            // Temp store relational entities
-            if(challenge.getQuestions() != null && challenge.getQuestions().size() > 0) tempQuestions = challenge.getQuestions();
-            if(challenge.getChallengeFeedback() != null && challenge.getChallengeFeedback().size() > 0) tempFeedbacks = challenge.getChallengeFeedback();
-            if(challenge.getRatings() != null && challenge.getRatings().size() > 0) ratings = challenge.getRatings();
-            if(challenge.getThumbnail() != null) tempThumbnail = challenge.getThumbnail();
+        List<Question> tempQuestions = null;
+        Map<Boolean, ChallengeFeedback> tempFeedbacks = null;
+        Set<Rating> ratings = null;
+        Thumbnail tempThumbnail = null;
 
-            challenge = challengeRepo.saveAndFlush(tempNew);
+        // Temp store relational entities
+        if(challenge.getQuestions() != null && !challenge.getQuestions().isEmpty()) tempQuestions = challenge.getQuestions();
+        if(challenge.getChallengeFeedback() != null && !challenge.getChallengeFeedback().isEmpty()) tempFeedbacks = challenge.getChallengeFeedback();
+        if(challenge.getRatings() != null && !challenge.getRatings().isEmpty()) ratings = challenge.getRatings();
+        if(challenge.getThumbnail() != null) tempThumbnail = challenge.getThumbnail();
 
-            // Update relational entities
-            if(tempThumbnail != null) thumbnailService.create(challenge, tempThumbnail);
-            if(tempQuestions != null && tempQuestions.size() > 0) questionService.createAll(challenge, tempQuestions);
-            if(tempFeedbacks != null && tempFeedbacks.size() > 0) challengeFeedbackService.createBoth(challenge, tempFeedbacks);
-            if(ratings != null && ratings.size() > 0) ratingService.createAll(challenge, ratings);
+        challenge = challengeRepo.saveAndFlush(tempNew);
 
-            return findById(challenge.getId());
-        }else{
-            challenge = challengeRepo.saveAndFlush(challenge);
-        }
-        return challenge;
+        // Update relational entities
+        if(tempThumbnail != null) thumbnailService.create(challenge, tempThumbnail);
+        if(tempQuestions != null && !tempQuestions.isEmpty()) questionService.createAll(challenge, tempQuestions);
+        if(tempFeedbacks != null && !tempFeedbacks.isEmpty()) challengeFeedbackService.createBoth(challenge, tempFeedbacks);
+        if(ratings != null && ratings.isEmpty()) ratingService.createAll(challenge, ratings);
+
+        return findById(challenge.getId());
     }
 
     /**

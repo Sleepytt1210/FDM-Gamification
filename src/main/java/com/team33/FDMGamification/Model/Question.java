@@ -21,13 +21,13 @@ public class Question {
     private Integer questionId;
 
     @NotBlank(message = "Please do not leave this field blank!")
-    @Pattern(regexp = "^[^<>]+$", message = "Angle brackets (<, >) are not allowed!")
+    @Pattern(regexp = "^[^<>]*$", message = "Angle brackets (<, >) are not allowed!")
     @Size(max = 100, message = "Please provide a title not longer than 100 characters!")
     @Column(name = "question_title")
     private String questionTitle = "";
 
     @NotBlank(message = "Please do not leave this field blank!")
-    @Pattern(regexp = "^[^<>]+$", message = "Angle brackets (<, >) are not allowed!")
+    @Pattern(regexp = "^[^<>]*$", message = "Angle brackets (<, >) are not allowed!")
     @Column(name = "question_text")
     private String questionText = "";
 
@@ -45,7 +45,9 @@ public class Question {
     private Challenge challenge;
 
     @Valid
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "question",
+            cascade = {CascadeType.MERGE, CascadeType.REMOVE, CascadeType.REFRESH, CascadeType.DETACH},
+            orphanRemoval = true)
     private List<Choice> choices = new ArrayList<>();
 
     public Question(){}

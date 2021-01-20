@@ -120,7 +120,8 @@ public class ChoiceService {
     public void delete(Choice choice) {
         // To ensure bidirectional persistence in database
         choice.getQuestion().getChoices().removeIf(choice1 -> choice1.getChoiceId().equals(choice.getChoiceId()));
-        choiceRepo.delete(choice);    }
+        choiceRepo.delete(choice);
+    }
 
     /**
      * Delete a collection of choices with entities.
