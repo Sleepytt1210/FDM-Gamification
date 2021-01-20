@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
@@ -97,11 +98,28 @@ public class ChoiceService {
      * @param weight New weight of choice.
      * @return Choice: Updated choice entity.
      */
-    public Choice update(Integer choiceId, String choiceText, Integer weight, String choiceReason) {
+    public Choice update(Integer choiceId, String choiceText, Integer weight, String choiceReason, Integer questionId) {
         Choice choice = findById(choiceId);
         if(choiceText != null) choice.setChoiceText(choiceText);
         if(weight != null) choice.setChoiceWeight(weight);
         if(choiceReason != null) choice.setChoiceReason(choiceReason);
+        if(questionId != null && !choice.getQuestion().getQuestionId().equals(questionId))
+            updateQuestion(qts.findById(questionId), choice);
+        return choiceRepo.saveAndFlush(choice);
+    }
+
+    /**
+     * Replace question foreign key of choice entity.
+     *
+     * @param newQuestion New Question foreign key entity.
+     * @param choice      Choice entity to be updated.
+     * @return Choice: Updated choice entity.
+     */
+    @Transactional
+    public Choice updateQuestion(Question newQuestion, Choice choice) {
+        choice.setQuestion(newQuestion);
+        newQuestion.getChoices().add(choice);
+        choiceRepo.replaceQuestion(newQuestion, choice.getChoiceId());
         return choiceRepo.saveAndFlush(choice);
     }
 
