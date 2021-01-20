@@ -59,6 +59,20 @@ public class ChoiceService {
     }
 
     /**
+     * Insert and persist a collection of choices in Choice Table.
+     *
+     * @param question Foreign entity question to be added to.
+     * @param choices A collection of choice to be persisted.
+     * @return List<Choice>: A list of persisted choices entities.
+     */
+    public List<Choice> createAll(Question question, Iterable<Choice> choices) {
+        for (Choice choice: choices) {
+            create(question, choice);
+        }
+        return question.getChoices();
+    }
+
+    /**
      * Find a choice by its ID.
      * @param choiceId Id of choice.
      * @return Choice: Choice entity if found.
@@ -104,14 +118,17 @@ public class ChoiceService {
      * @param choice Choice entity to be deleted.
      */
     public void delete(Choice choice) {
-        choiceRepo.delete(choice);
-    }
+        // To ensure bidirectional persistence in database
+        choice.getQuestion().getChoices().removeIf(choice1 -> choice1.getChoiceId().equals(choice.getChoiceId()));
+        choiceRepo.delete(choice);    }
 
     /**
      * Delete a collection of choices with entities.
      * @param choices Collection of choices to be deleted.
      */
     public void batchDelete(Iterable<Choice> choices) {
+        // To ensure bidirectional persistence in database
+        choices.forEach(c -> c.getQuestion().getChoices().removeIf(choice1 -> choice1.getChoiceId().equals(c.getChoiceId())));
         choiceRepo.deleteAll(choices);
     }
 

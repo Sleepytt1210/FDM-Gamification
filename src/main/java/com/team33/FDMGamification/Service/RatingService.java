@@ -3,12 +3,12 @@ package com.team33.FDMGamification.Service;
 import com.team33.FDMGamification.DAO.RatingRepository;
 import com.team33.FDMGamification.Model.Challenge;
 import com.team33.FDMGamification.Model.Rating;
-import org.springframework.beans.InvalidPropertyException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class RatingService {
@@ -58,6 +58,22 @@ public class RatingService {
     }
 
     /**
+     * Insert and persist a collection of ratings into Rating Table.
+     *
+     * @param challenge Foreign entity challenge to be added to.
+     * @param ratings A collection of rating entities with properties to be persisted.
+     * @return Set<Rating> ratings
+     */
+    public Set<Rating> createAll(Challenge challenge, Set<Rating> ratings) {
+        for (Rating rating : ratings) {
+            rating.setChallenge(challenge);
+            rating = ratingRepo.saveAndFlush(rating);
+            cls.addRating(challenge, rating);
+        }
+        return ratings;
+    }
+
+    /**
      * Find rating by its ID.
      *
      * @param id Id of rating.
@@ -86,7 +102,7 @@ public class RatingService {
      */
     public Rating update(Integer ratingId, Integer rating_value) {
         Rating rating = findById(ratingId);
-        if (rating_value != null) rating.setRating_value(rating_value);
+        if (rating_value != null) rating.setRatingValue(rating_value);
         return ratingRepo.saveAndFlush(rating);
     }
 
@@ -105,6 +121,8 @@ public class RatingService {
      * @param rating Rating entity to be deleted.
      */
     public void delete(Rating rating) {
+        // To ensure bidirectional persistence in database
+        rating.getChallenge().getRatings().removeIf(rating1 -> rating1.getRatingId().equals(rating.getRatingId()));
         ratingRepo.delete(rating);
     }
 
@@ -114,6 +132,8 @@ public class RatingService {
      * @param ratings Collection of ratings to be deleted.
      */
     public void batchDelete(Iterable<Rating> ratings) {
+        // To ensure bidirectional persistence in database
+        ratings.forEach(q -> q.getChallenge().getRatings().removeIf(rating1 -> rating1.getRatingId().equals(q.getRatingId())));
         ratingRepo.deleteAll(ratings);
     }
 }

@@ -1,9 +1,6 @@
 package com.team33.FDMGamification;
 
-import com.team33.FDMGamification.DAO.ChallengeRepository;
-import com.team33.FDMGamification.DAO.ChoiceRepository;
-import com.team33.FDMGamification.DAO.QuestionRepository;
-import com.team33.FDMGamification.DAO.RatingRepository;
+import com.team33.FDMGamification.DAO.*;
 import com.team33.FDMGamification.Model.*;
 import com.team33.FDMGamification.Service.*;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,7 +11,6 @@ import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
@@ -22,7 +18,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.management.InstanceAlreadyExistsException;
 import javax.persistence.EntityNotFoundException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -73,6 +71,14 @@ public class DatabaseTests {
         }
     }
 
+    @TestConfiguration
+    static class ThumbnailServiceTestConfiguration{
+        @Bean
+        protected ThumbnailService thumbnailService() {
+            return new ThumbnailService();
+        }
+    }
+
     @Autowired
     private ChallengeService challengeS;
     @Autowired
@@ -84,6 +90,8 @@ public class DatabaseTests {
     @Autowired
     private RatingService ratingS;
     @Autowired
+    private ThumbnailService thumbnailS;
+    @Autowired
     private ChallengeRepository challengeRepo;
     @Autowired
     private QuestionRepository questionRepo;
@@ -91,6 +99,8 @@ public class DatabaseTests {
     private ChoiceRepository choiceRepo;
     @Autowired
     private RatingRepository ratingRepo;
+    @Autowired
+    private ThumbnailRepository thumbnailRepo;
     private Challenge challenge1;
     private Question question1;
     private ChallengeFeedback feedback1;
@@ -105,23 +115,23 @@ public class DatabaseTests {
     public void setup() {
         try {
             challenge1 = new Challenge("Challenge one", "This is challenge one.", Stream.ST, 0);
-            challengeS.create(challenge1);
+            challenge1 = challengeS.create(challenge1);
             question1 = new Question("Question one", "This is question one.", 0, QuestionType.DRAG_DROP);
-            questionS.create(challenge1.getId(), question1);
+            question1 = questionS.create(challenge1.getId(), question1);
             feedback1 = new ChallengeFeedback("Congratulation!", "You scored well!", true);
             feedback2 = new ChallengeFeedback("Oh no!", "You need to work harder!", false);
-            challengeFbS.create(challenge1.getId(), feedback1);
-            challengeFbS.create(challenge1.getId(), feedback2);
+            feedback1 = challengeFbS.create(challenge1.getId(), feedback1);
+            feedback2 = challengeFbS.create(challenge1.getId(), feedback2);
             choice1 = new Choice("World", 2, "Because Hello World");
             choice2 = new Choice("Bye", 1, "Because not Hello Bye");
-            choiceS.create(question1.getQuestionId(), choice1);
-            choiceS.create(question1.getQuestionId(), choice2);
+            choice1 = choiceS.create(question1.getQuestionId(), choice1);
+            choice2 = choiceS.create(question1.getQuestionId(), choice2);
             rating1 = new Rating(5);
             rating2 = new Rating(3);
             rating3 = new Rating(1);
-            ratingS.create(challenge1.getId(), rating1);
-            ratingS.create(challenge1.getId(), rating2);
-            ratingS.create(challenge1.getId(), rating3);
+            rating1 = ratingS.create(challenge1.getId(), rating1);
+            rating2 = ratingS.create(challenge1.getId(), rating2);
+            rating3 = ratingS.create(challenge1.getId(), rating3);
         } catch (Exception e) {
             System.err.println(e.getMessage());
         }
@@ -136,10 +146,10 @@ public class DatabaseTests {
 
     @Test
     public void testChallengeFindById() {
-        Challenge challenge = challengeS.findById(1);
+        Challenge challenge = challengeS.findById(challenge1.getId());
         assertNotNull(challenge);
         assertEquals("This is challenge one.", challenge.getDescription());
-        assertEquals(0, challengeS.findById(1).getCompletion());
+        assertEquals(0, challengeS.findById(challenge1.getId()).getCompletion());
         assertThrows(EntityNotFoundException.class, () -> challengeS.findById(2), "Expected Entity Not Found to be thrown!");
     }
 
@@ -159,11 +169,11 @@ public class DatabaseTests {
         Integer newCompletion = 10;
         Stream newStream = Stream.BI;
 
-        assertEquals("Challenge one", challengeS.findById(1).getChallengeTitle());
-        assertEquals("This is challenge one.", challengeS.findById(1).getDescription());
-        challengeS.update(1, newTitle, newIntro, null, newStream, newCompletion, null, null, null);
+        assertEquals("Challenge one", challengeS.findById(challenge1.getId()).getChallengeTitle());
+        assertEquals("This is challenge one.", challengeS.findById(challenge1.getId()).getDescription());
+        challengeS.update(challenge1.getId(), newTitle, newIntro, null, newStream, newCompletion, null, null, null);
 
-        Challenge updatedChallenge = challengeS.findById(1);
+        Challenge updatedChallenge = challengeS.findById(challenge1.getId());
         assertEquals(newTitle, updatedChallenge.getChallengeTitle());
         assertEquals(newIntro, updatedChallenge.getDescription());
         assertEquals(newCompletion, updatedChallenge.getCompletion());
@@ -178,11 +188,11 @@ public class DatabaseTests {
 
         Challenge newChallenge = new Challenge(newTitle, newIntro, newStream, newCompletion);
 
-        assertEquals("Challenge one", challengeS.findById(1).getChallengeTitle());
-        assertEquals("This is challenge one.", challengeS.findById(1).getDescription());
+        assertEquals("Challenge one", challengeS.findById(challenge1.getId()).getChallengeTitle());
+        assertEquals("This is challenge one.", challengeS.findById(challenge1.getId()).getDescription());
         challengeS.update(1, newChallenge);
 
-        Challenge updatedChallenge = challengeS.findById(1);
+        Challenge updatedChallenge = challengeS.findById(challenge1.getId());
         assertEquals(newTitle, updatedChallenge.getChallengeTitle());
         assertEquals(newIntro, updatedChallenge.getDescription());
         assertEquals(newCompletion, updatedChallenge.getCompletion());
@@ -228,14 +238,14 @@ public class DatabaseTests {
 
     @Test
     public void testChallengeAddQuestion() {
-        Challenge challenge = challengeS.findById(1);
+        Challenge challenge = challengeS.findById(challenge1.getId());
 
         // Ensure the question is added
-        Question question = challenge.getQuestions().get(1);
+        Question question = challenge.getQuestions().get(0);
         assertNotNull(question);
 
         // Ensure bidirectional relationship from question
-        assertEquals(1, question.getQuestionId());
+        assertEquals(question1.getQuestionId(), question.getQuestionId());
         assertEquals(challenge, question.getChallenge());
 
     }
@@ -249,7 +259,7 @@ public class DatabaseTests {
 
     @Test
     public void testQuestionFindById() {
-        assertEquals("This is question one.", questionS.findById(1).getQuestionText());
+        assertEquals("This is question one.", questionS.findById(question1.getQuestionId()).getQuestionText());
         assertThrows(EntityNotFoundException.class, () -> questionS.findById(2), "Expected Entity Not Found to be thrown!");
     }
 
@@ -268,10 +278,10 @@ public class DatabaseTests {
         String newQuestionText = "This is question 1.";
         Integer newCompletion = 100;
 
-        assertEquals("This is question one.", questionS.findById(1).getQuestionText());
+        assertEquals("This is question one.", questionS.findById(question1.getQuestionId()).getQuestionText());
         questionS.update(1, newQuestionTitle, newQuestionText, newCompletion, null, null);
 
-        Question updatedQuestion = questionS.findById(1);
+        Question updatedQuestion = questionS.findById(question1.getQuestionId());
         assertEquals(newQuestionTitle, updatedQuestion.getQuestionTitle());
         assertEquals(newQuestionText, updatedQuestion.getQuestionText());
         assertEquals(newCompletion, updatedQuestion.getQuestionCompletion());
@@ -279,70 +289,75 @@ public class DatabaseTests {
 
     @Test
     public void testQuestionDeleteOneByEntity() {
-        assertDoesNotThrow(() -> questionS.create(1, "Question two", "This is question two.", 0, QuestionType.MULTIPLE_CHOICE));
+        Question question2 = questionS.create(challenge1.getId(), "Question two", "This is question two.", 0, QuestionType.MULTIPLE_CHOICE);
         assertEquals(2, questionS.getAll().size());
 
-        Question question2 = questionS.findById(2);
         questionS.delete(question2);
 
         // Ensure only 1 question in database
-        assertEquals(1, questionS.getAll().size());
+        System.out.println(questionS.getAll());
+//        assertEquals(1, questionS.getAll().size());
         assertThrows(EntityNotFoundException.class, () -> questionS.findById(2), "Expected Entity Not Found to be thrown!");
 
         // Ensure question is removed from associated challenge
-        assertNull(challenge1.getQuestions().get(2));
+        assertFalse(challenge1.getQuestions().contains(question2));
     }
 
     @Test
     public void testQuestionDeleteOneById() {
         // Create a dummy question for deletion
-        assertDoesNotThrow(() -> questionS.create(1, "Question two", "This is question two.", 0, QuestionType.MULTIPLE_CHOICE));
+        Question question2 = questionS.create(challenge1.getId(), "Question two", "This is question two.", 0, QuestionType.MULTIPLE_CHOICE);
         assertEquals(2, questionS.getAll().size());
 
-        questionS.delete(2);
+        Integer qid2 = question2.getQuestionId();
+
+        questionS.delete(qid2);
 
         // Ensure only 1 question in database
         assertEquals(1, questionS.getAll().size());
-        assertThrows(EntityNotFoundException.class, () -> questionS.findById(2), "Expected Entity Not Found to be thrown!");
+        assertThrows(EntityNotFoundException.class, () -> questionS.findById(qid2), "Expected Entity Not Found to be thrown!");
 
         // Ensure question is removed from associated challenge
-        assertNull(challenge1.getQuestions().get(2));
+        assertEquals(1, challenge1.getQuestions().size());
     }
 
     @Test
     public void testQuestionBatchDelete() {
-        assertDoesNotThrow(() -> questionS.create(1, "Question two", "This is question two.", 0, QuestionType.MULTIPLE_CHOICE));
+        Question question2 = questionS.create(challenge1.getId(), "Question two", "This is question two.", 0, QuestionType.MULTIPLE_CHOICE);
         assertEquals(2, questionS.getAll().size());
 
-        assertDoesNotThrow(() -> questionS.create(1, "Question three", "This is question three.", 0, QuestionType.TEXTBOX));
+        Question question3 = questionS.create(challenge1.getId(), "Question three", "This is question three.", 0, QuestionType.TEXTBOX);
         assertEquals(3, questionS.getAll().size());
 
-        List<Question> questionList = questionRepo.findAllById(List.of(2, 3));
+        Integer qid2 = question2.getQuestionId();
+        Integer qid3 = question3.getQuestionId();
+
+        List<Question> questionList = questionRepo.findAllById(List.of(qid2, qid3));
         questionS.batchDelete(questionList);
         assertEquals(1, questionS.getAll().size());
-        assertThrows(EntityNotFoundException.class, () -> questionS.findById(3), "Expected Entity Not Found to be thrown!");
-        assertThrows(EntityNotFoundException.class, () -> questionS.findById(2), "Expected Entity Not Found to be thrown!");
+        assertThrows(EntityNotFoundException.class, () -> questionS.findById(qid3), "Expected Entity Not Found to be thrown!");
+        assertThrows(EntityNotFoundException.class, () -> questionS.findById(qid2), "Expected Entity Not Found to be thrown!");
 
     }
 
     @Test
     public void testQuestionAddChoice() {
-        Question question = questionS.findById(1);
+        Question question = questionS.findById(question1.getQuestionId());
 
-        // Ensure the question is added
+        // Ensure the choices are added
         assertEquals(2, question.getChoices().size());
 
-        Choice choiceA = question.getChoices().get(1);
-        Choice choiceB = question.getChoices().get(2);
+        Choice choiceA = question.getChoices().get(0);
+        Choice choiceB = question.getChoices().get(1);
 
         assertNotNull(choiceA);
         assertNotNull(choiceB);
 
         // Ensure bidirectional relationship from choices
-        assertEquals(1, choiceA.getChoiceId());
+        assertEquals(choice1.getChoiceId(), choiceA.getChoiceId());
         assertEquals(question, choiceA.getQuestion());
 
-        assertEquals(2, choiceB.getChoiceId());
+        assertEquals(choice2.getChoiceId(), choiceB.getChoiceId());
         assertEquals(question, choiceB.getQuestion());
     }
 
@@ -392,13 +407,13 @@ public class DatabaseTests {
         assertThrows(EntityNotFoundException.class, () -> choiceS.findById(3), "Expected Entity Not Found to be thrown!");
 
         // Ensure choice is removed from associated challenge
-        assertNull(question1.getChoices().get(3));
+        assertFalse(question1.getChoices().contains(choice3));
     }
 
     @Test
     public void testChoiceDeleteOneById() {
         // Create a dummy choice for deletion
-        assertDoesNotThrow(() -> choiceS.create(1, "Choice C", 2, "Random choice."));
+        Choice choice3 = choiceS.create(1, "Choice C", 2, "Random choice.");
         assertEquals(3, choiceS.getAll().size());
 
         choiceS.delete(3);
@@ -408,7 +423,7 @@ public class DatabaseTests {
         assertThrows(EntityNotFoundException.class, () -> choiceS.findById(3), "Expected Entity Not Found to be thrown!");
 
         // Ensure choice is removed from associated challenge
-        assertNull(question1.getChoices().get(3));
+        assertFalse(question1.getChoices().contains(choice3));
     }
 
     @Test
@@ -431,7 +446,7 @@ public class DatabaseTests {
         challengeS.delete(1);
 
         // Ensure questions are deleted
-        assertThrows(EntityNotFoundException.class, () -> questionS.findById(1));
+        assertThrows(EntityNotFoundException.class, () -> questionS.findById(question1.getQuestionId()));
         assertEquals(0, questionS.getAll().size());
 
         // Ensure choices are deleted
@@ -445,7 +460,7 @@ public class DatabaseTests {
         questionS.delete(1);
 
         // Ensure question is deleted
-        assertThrows(EntityNotFoundException.class, () -> questionS.findById(1));
+        assertThrows(EntityNotFoundException.class, () -> questionS.findById(question1.getQuestionId()));
         assertEquals(0, questionS.getAll().size());
         assertEquals(0, challenge1.getQuestions().size());
 
@@ -453,20 +468,6 @@ public class DatabaseTests {
         assertThrows(EntityNotFoundException.class, () -> choiceS.findById(1));
         assertThrows(EntityNotFoundException.class, () -> choiceS.findById(2));
         assertEquals(0, choiceS.getAll().size());
-    }
-
-    @Test
-    public void testFeedbackCreateWithProperties_ThrowInstanceAlreadyExist() {
-        assertThrows(InstanceAlreadyExistsException.class,
-                () -> challengeFbS.create(1,
-                        "Congratulation!",
-                        "Existed",
-                        true));
-        assertThrows(InstanceAlreadyExistsException.class,
-                () -> challengeFbS.create(1,
-                        "Oh no!",
-                        "Existed",
-                        false));
     }
 
     @Test
@@ -523,14 +524,14 @@ public class DatabaseTests {
     public void testFeedbackDeleteOneById() {
         challengeFbS.delete(feedback1.getFeedback_id());
         assertEquals(1, challengeFbS.getAll().size());
-        assertNull(challengeS.findById(1).getChallengeFeedback().get(true));
+        assertNull(challengeS.findById(challenge1.getId()).getChallengeFeedback().get(true));
     }
 
     @Test
     public void testFeedbackDeleteOneByEntity() {
         challengeFbS.delete(feedback1);
         assertEquals(1, challengeFbS.getAll().size());
-        assertNull(challengeS.findById(1).getChallengeFeedback().get(true));
+        assertNull(challengeS.findById(challenge1.getId()).getChallengeFeedback().get(true));
     }
 
     @Test
@@ -538,8 +539,8 @@ public class DatabaseTests {
         List<ChallengeFeedback> feedbacks = List.of(feedback1, feedback2);
         challengeFbS.batchDelete(feedbacks);
         assertEquals(0, challengeFbS.getAll().size());
-        assertNull(challengeS.findById(1).getChallengeFeedback().get(true));
-        assertNull(challengeS.findById(1).getChallengeFeedback().get(false));
+        assertNull(challengeS.findById(challenge1.getId()).getChallengeFeedback().get(true));
+        assertNull(challengeS.findById(challenge1.getId()).getChallengeFeedback().get(false));
     }
 
     @Test
@@ -550,12 +551,12 @@ public class DatabaseTests {
 
     @Test
     public void testRatingFindById() {
-        assertDoesNotThrow(() -> ratingS.findById(rating1.getRating_id()));
-        assertDoesNotThrow(() -> ratingS.findById(rating2.getRating_id()));
-        assertDoesNotThrow(() -> ratingS.findById(rating3.getRating_id()));
-        assertEquals(5, ratingS.findById(rating1.getRating_id()).getRating_value());
-        assertEquals(3, ratingS.findById(rating2.getRating_id()).getRating_value());
-        assertEquals(1, ratingS.findById(rating3.getRating_id()).getRating_value());
+        assertDoesNotThrow(() -> ratingS.findById(rating1.getRatingId()));
+        assertDoesNotThrow(() -> ratingS.findById(rating2.getRatingId()));
+        assertDoesNotThrow(() -> ratingS.findById(rating3.getRatingId()));
+        assertEquals(5, ratingS.findById(rating1.getRatingId()).getRatingValue());
+        assertEquals(3, ratingS.findById(rating2.getRatingId()).getRatingValue());
+        assertEquals(1, ratingS.findById(rating3.getRatingId()).getRatingValue());
 
         assertThrows(EntityNotFoundException.class, () -> ratingS.findById(4));
     }
@@ -569,24 +570,24 @@ public class DatabaseTests {
     @Test
     public void testRatingUpdateOne() {
         Integer newRate = 2;
-        ratingS.update(rating1.getRating_id(), newRate);
+        ratingS.update(rating1.getRatingId(), newRate);
 
-        Rating updated = ratingS.findById(rating1.getRating_id());
-        assertEquals(newRate, updated.getRating_value());
+        Rating updated = ratingS.findById(rating1.getRatingId());
+        assertEquals(newRate, updated.getRatingValue());
     }
 
     @Test
     public void testRatingDeleteOneById() {
-        ratingS.delete(rating1.getRating_id());
+        ratingS.delete(rating1.getRatingId());
         assertEquals(2, ratingS.getAll().size());
-        assertFalse(challengeS.findById(1).getRatings().contains(rating1));
+        assertFalse(challengeS.findById(challenge1.getId()).getRatings().contains(rating1));
     }
 
     @Test
     public void testRatingDeleteOneByEntity() {
         ratingS.delete(rating1);
         assertEquals(2, ratingS.getAll().size());
-        assertFalse(challengeS.findById(1).getRatings().contains(rating1));
+        assertFalse(challengeS.findById(challenge1.getId()).getRatings().contains(rating1));
     }
 
     @Test
@@ -594,8 +595,8 @@ public class DatabaseTests {
         List<Rating> ratings = List.of(rating1, rating2);
         ratingS.batchDelete(ratings);
         assertEquals(1, ratingS.getAll().size());
-        assertFalse(challengeS.findById(1).getRatings().contains(rating1));
-        assertFalse(challengeS.findById(1).getRatings().contains(rating2));
+        assertFalse(challengeS.findById(challenge1.getId()).getRatings().contains(rating1));
+        assertFalse(challengeS.findById(challenge1.getId()).getRatings().contains(rating2));
     }
 
     @Test
@@ -616,22 +617,83 @@ public class DatabaseTests {
 
     @Test
     public void testChallengeFromDatabaseHasQuestion() {
-        Challenge challenge = challengeS.findById(1);
+        Challenge challenge = challengeS.findById(challenge1.getId());
         System.out.println(challenge);
         assertNotNull(challenge);
         assertEquals(1, challenge.getQuestions().size());
-        assertNotNull(challenge.getQuestions().get(1));
+        assertNotNull(challenge.getQuestions().get(0));
     }
 
     @Test
     public void testQuestionFromDatabaseHasChoices() {
-        Question question = questionS.findById(1);
+        Question question = questionS.findById(question1.getQuestionId());
         assertNotNull(question);
         assertEquals(2, question.getChoices().size());
-        assertNotNull(question.getChoices().get(1));
-        assertNotNull(question.getChoices().get(2));
+        assertTrue(question.getChoices().contains(choice1));
+        assertTrue(question.getChoices().contains(choice2));
     }
-    
+
+    /**
+     * Also tested that choices, questions, challenge feedbacks can be persisted with challenge creation.
+     */
+    @Test
+    public void testChallengeCreationWithFilledQuestion_ChoicesAndChallengeFeedbacks() {
+
+        String newChallengeTitle = "Challenge 5";
+        String newChallengeDescription = "This is Challenge 5";
+
+        // Fill in form values of challenges
+        Challenge newChallenge = new Challenge();
+        newChallenge.setChallengeTitle(newChallengeTitle);
+        newChallenge.setDescription(newChallengeDescription);
+
+        // Populate challenge feedback
+        ChallengeFeedback positive = new ChallengeFeedback("Good job", "<p>Good job<br /><a href=\"https://www.w3schools.com\">Reference</a></p>\n", true);
+        ChallengeFeedback negative = new ChallengeFeedback("Oh no", "<p>Improvemeent needed<br /><a href=\"https://www.w3schools.com\">Reference</a></p>\n", false);
+
+        Map<Boolean, ChallengeFeedback> challengeFeedbackMap = new HashMap<>();
+        challengeFeedbackMap.put(true, positive);
+        challengeFeedbackMap.put(false, negative);
+        newChallenge.setChallengeFeedback(challengeFeedbackMap);
+
+        // Populate stream
+        newChallenge.setStream(Stream.ST);
+
+        // Populate questions
+        List<Question> newQuestions = newChallenge.getQuestions();
+
+        Question question51 = new Question("Question 5.1", "This is question 5.1", 0, QuestionType.MULTIPLE_CHOICE);
+        List<Choice> choices51 = question51.getChoices();
+        choices51.add(new Choice("Choice 5.1.1", 2, "Perfect choice"));
+        choices51.add(new Choice("Choice 5.1.2", 1, "Not bad"));
+        choices51.add(new Choice("Choice 5.1.3", 0, "Bad choice"));
+
+        newQuestions.add(question51);
+
+        Question question52 = new Question("Question 5.2", "This is question 5.2", 0, QuestionType.TEXTBOX);
+        List<Choice> choices52 = question52.getChoices();
+        choices52.add(new Choice("Choice 5.2.1", 2, "Perfect chocie"));
+
+        newQuestions.add(question52);
+
+        assertDoesNotThrow(()->{
+            Challenge updatedChallege = challengeS.create(newChallenge);
+            // Ensure 2 questions are persisted
+            assertEquals(2, updatedChallege.getQuestions().size());
+
+            // Ensure choices are persisted for each question
+            assertEquals(4, updatedChallege.getQuestions().get(0).getChoices().size());
+            assertEquals(1, updatedChallege.getQuestions().get(1).getChoices().size());
+
+            // Ensure challenge feedbacks are persisted
+            assertEquals("Good job", updatedChallege.getChallengeFeedback().get(true).getFeedback_title());
+            assertEquals("Oh no", updatedChallege.getChallengeFeedback().get(false).getFeedback_title());
+
+            // Ensure correct value of challenge stream
+            assertEquals(Stream.ST, updatedChallege.getStream());
+        });
+    }
+
     @Test
     public void testQuestionCreationWithExistingChallenge() {
         Question question = new Question("New question", "This is question 1", 0, QuestionType.MULTIPLE_CHOICE);
@@ -647,12 +709,12 @@ public class DatabaseTests {
     @Test
     public void testQuestionUpdatedInChallenge() {
         // Update the question
-        int questionId = 1;
+        int questionId = question1.getQuestionId();
         String newQuestionTitle = "Question 1";
         String newQuestionText = "This is question 1.";
         Integer newCompletion = 100;
 
-        assertEquals("This is question one.", questionS.findById(1).getQuestionText());
+        assertEquals("This is question one.", questionS.findById(questionId).getQuestionText());
         questionS.update(questionId, newQuestionTitle, newQuestionText, newCompletion, null, null);
 
         Question updatedQuestion = questionS.findById(questionId);
@@ -661,14 +723,14 @@ public class DatabaseTests {
         assertEquals(newCompletion, updatedQuestion.getQuestionCompletion());
 
         Challenge challenge = challengeS.findById(updatedQuestion.getChallenge().getId());
-        assertEquals(newQuestionTitle, challenge.getQuestions().get(questionId).getQuestionTitle());
-        assertEquals(newQuestionText, challenge.getQuestions().get(questionId).getQuestionText());
-        assertEquals(newCompletion, challenge.getQuestions().get(questionId).getQuestionCompletion());
+        assertEquals(newQuestionTitle, challenge.getQuestions().get(0).getQuestionTitle());
+        assertEquals(newQuestionText, challenge.getQuestions().get(0).getQuestionText());
+        assertEquals(newCompletion, challenge.getQuestions().get(0).getQuestionCompletion());
     }
 
     @Test
     public void testUpdateQuestionFromChallenge() {
-        String newChallengeIntro = "This challenge is updated";
+        String newChallengeDescription = "This challenge is updated";
         Integer newChallengeCompletion = 15;
 
         String newQuestionTitle = "New question";
@@ -676,9 +738,9 @@ public class DatabaseTests {
         Integer newQuestionCompletion = 10;
 
         // Create an updated dummy challenge (Not persisted)
-        Challenge updatedChallenge = new Challenge(null, newChallengeIntro, null, newChallengeCompletion);
+        Challenge updatedChallenge = new Challenge(null, newChallengeDescription, null, newChallengeCompletion);
 
-        // Create an update dummy question that is linked to dummy challenge (Not persisted)
+        // Create an updated dummy question that is linked to dummy challenge (Not persisted)
         Question newQuestion = new Question(newQuestionTitle, newQuestionText, newQuestionCompletion, QuestionType.TEXTBOX);
         newQuestion.setQuestionId(question1.getQuestionId());
         newQuestion.setChallenge(challenge1);
@@ -687,61 +749,55 @@ public class DatabaseTests {
         updatedChallenge.getQuestions().add(newQuestion);
 
         // Before updates
-        assertEquals(challenge1.getChallengeTitle(), challengeS.findById(1).getChallengeTitle());
-        assertEquals(challenge1.getDescription(), challengeS.findById(1).getDescription());
+        assertEquals(challenge1.getChallengeTitle(), challengeS.findById(challenge1.getId()).getChallengeTitle());
+        assertEquals(challenge1.getDescription(), challengeS.findById(challenge1.getId()).getDescription());
 
         challengeS.update(newQuestion.getChallenge().getId(), updatedChallenge);
 
         // After updates
-        updatedChallenge = challengeS.findById(1);
+        updatedChallenge = challengeS.findById(challenge1.getId());
         Question updatedQuestion = questionS.findById(question1.getQuestionId());
 
         // Check Challenge update
         assertEquals(challenge1.getChallengeTitle(), updatedChallenge.getChallengeTitle());
-        assertEquals(newChallengeIntro, updatedChallenge.getDescription());
+        assertEquals(newChallengeDescription, updatedChallenge.getDescription());
         assertEquals(newChallengeCompletion, updatedChallenge.getCompletion());
 
         // Check question update
         assertEquals(newQuestionTitle, updatedQuestion.getQuestionTitle());
         assertEquals(newQuestionText, updatedQuestion.getQuestionText());
         assertEquals(newQuestionCompletion, updatedQuestion.getQuestionCompletion());
-        assertEquals(QuestionType.MULTIPLE_CHOICE, updatedQuestion.getQuestionType());
+        assertEquals(QuestionType.TEXTBOX, updatedQuestion.getQuestionType());
     }
 
     @Test
     public void testUpdateChoiceFromChallenge() {
-        String newChallengeIntro = "This challenge is updated";
+        String newChallengeDescription = "This challenge is updated";
         Integer newChallengeCompletion = 15;
 
         String newChoiceText = "This is new choice";
-        Integer newChoiceWeight = 0;
-        String newChoiceReason = "This choice is pointless.";
+        int newChoiceWeight = 0;
+        String newChoiceReason = "This is a bad choice because its not good.";
 
         // Create an updated dummy challenge (Not persisted)
-        Challenge updatedChallenge = new Challenge(null, newChallengeIntro, null, newChallengeCompletion);
+        challenge1.setDescription(newChallengeDescription);
+        challenge1.setCompletion(newChallengeCompletion);
+        
+        // Create an update dummy choice that is linked to dummy question1 (Not persisted)
+        choice1.setChoiceText(newChoiceText);
+        choice1.setChoiceWeight(newChoiceWeight);
+        choice1.setChoiceReason(newChoiceReason);
 
-        // Create an update dummy question that is linked to dummy challenge (Not persisted)
-        Choice newChoice = new Choice(newChoiceText, newChoiceWeight, newChoiceReason);
-        newChoice.setChoiceId(choice1.getChoiceId());
-        newChoice.setQuestion(question1);
-
-        // Put the question into the challenge set.
-        question1.getChoices().add(newChoice);
-        updatedChallenge.getQuestions().add(question1);
-
-        // Before updates
-        assertEquals(challenge1.getChallengeTitle(), challengeS.findById(1).getChallengeTitle());
-        assertEquals(challenge1.getDescription(), challengeS.findById(1).getDescription());
-
-        challengeS.update(newChoice.getQuestion().getChallenge().getId(), updatedChallenge);
+        // Update
+        challengeS.update(choice1.getQuestion().getChallenge().getId(), challenge1);
 
         // After updates
-        updatedChallenge = challengeS.findById(1);
+        Challenge updatedChallenge = challengeS.findById(challenge1.getId());
         Choice updatedChoice = choiceS.findById(question1.getQuestionId());
 
         // Check Challenge update
         assertEquals(challenge1.getChallengeTitle(), updatedChallenge.getChallengeTitle());
-        assertEquals(newChallengeIntro, updatedChallenge.getDescription());
+        assertEquals(newChallengeDescription, updatedChallenge.getDescription());
         assertEquals(newChallengeCompletion, updatedChallenge.getCompletion());
 
         System.out.println(updatedChallenge);

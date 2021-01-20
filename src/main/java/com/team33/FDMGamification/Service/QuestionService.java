@@ -65,16 +65,31 @@ public class QuestionService {
     public Question create(Challenge challenge, Question question) {
         question.setChallenge(challenge);
         if(question.getQuestionId() == null) {
+            // Save questions without choices first due to empty question id.
             List<Choice> tempChoices = question.getChoices();
             question.setChoices(new ArrayList<>());
             question = questionRepo.saveAndFlush(question);
-            Question finalQuestion = question;
-            tempChoices.forEach((choice) -> chs.create(finalQuestion.getQuestionId(), choice));
+            if(tempChoices != null && tempChoices.size() > 0) chs.createAll(question, tempChoices);
+            question = findById(question.getQuestionId());
         }else {
             question = questionRepo.saveAndFlush(question);
         }
         challenge.getQuestions().add(question);
         return question;
+    }
+
+    /**
+     * Insert and persist a collection of questions into Question Table.
+     *
+     * @param challenge Foreign entity challenge to be added to.
+     * @param questions A collection of question entities to be persisted in database.
+     * @return List<Question>: A list of persisted question entities.
+     */
+    public List<Question> createAll(Challenge challenge, List<Question> questions){
+        for(Question question : questions){
+            create(challenge, question);
+        }
+        return challenge.getQuestions();
     }
 
     /**
@@ -145,6 +160,8 @@ public class QuestionService {
         if (newQuestion.getQuestionText() != null) oldQuestion.setQuestionText(newQuestion.getQuestionText());
         if (newQuestion.getQuestionCompletion() != null)
             oldQuestion.setQuestionCompletion(newQuestion.getQuestionCompletion());
+        if (newQuestion.getQuestionType() != null)
+            oldQuestion.setQuestionType(newQuestion.getQuestionType());
         oldQuestion = questionRepo.saveAndFlush(oldQuestion);
         List<Choice> newChoices = newQuestion.getChoices();
         if (newChoices != null && !newChoices.isEmpty()) {
@@ -179,6 +196,8 @@ public class QuestionService {
      * @param question Question entity to be deleted.
      */
     public void delete(Question question) {
+        // To ensure bidirectional persistence in database
+        question.getChallenge().getQuestions().removeIf(question1 -> question1.getQuestionId().equals(question.getQuestionId()));
         questionRepo.delete(question);
     }
 
@@ -188,6 +207,8 @@ public class QuestionService {
      * @param questions Collection of questions to be deleted.
      */
     public void batchDelete(Iterable<Question> questions) {
+        // To ensure bidirectional persistence in database
+        questions.forEach(q -> q.getChallenge().getQuestions().removeIf(question1 -> question1.getQuestionId().equals(q.getQuestionId())));
         questionRepo.deleteAll(questions);
     }
 }
