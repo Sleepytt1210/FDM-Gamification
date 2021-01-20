@@ -363,15 +363,15 @@ public class DatabaseTests {
 
     @Test
     public void testChoiceCreateWithProperties() {
-        assertDoesNotThrow(() -> choiceS.create(1, "Choice C", 2, "Random weight"));
+        Choice choice3 = choiceS.create(question1.getQuestionId(), "Choice C", 2, "Random weight");
         assertEquals(3, choiceRepo.findAll().size());
-        assertEquals("Choice C", choiceS.findById(3).getChoiceText());
+        assertEquals("Choice C", choiceS.findById(choice3.getChoiceId()).getChoiceText());
     }
 
     @Test
     public void testChoiceFindById() {
-        assertEquals("World", choiceS.findById(1).getChoiceText());
-        assertEquals("Bye", choiceS.findById(2).getChoiceText());
+        assertEquals("World", choiceS.findById(choice1.getChoiceId()).getChoiceText());
+        assertEquals("Bye", choiceS.findById(choice2.getChoiceId()).getChoiceText());
         assertThrows(EntityNotFoundException.class, () -> choiceS.findById(3), "Expected Entity Not Found to be thrown!");
     }
 
@@ -379,7 +379,7 @@ public class DatabaseTests {
     public void testChoiceGetAll() {
         assertEquals(2, choiceS.getAll().size());
 
-        assertDoesNotThrow(() -> choiceS.create(1, "Choice C", 2, "Random choice."));
+        assertDoesNotThrow(() -> choiceS.create(question1.getQuestionId(), "Choice C", 2, "Random choice."));
         assertEquals(3, choiceS.getAll().size());
     }
 
@@ -387,10 +387,10 @@ public class DatabaseTests {
     public void testChoiceUpdateOne() {
         String newChoiceText = "Hello World!";
 
-        assertEquals("World", choiceS.findById(1).getChoiceText());
-        choiceS.update(1, newChoiceText, null, null);
+        assertEquals("World", choiceS.findById(choice1.getChoiceId()).getChoiceText());
+        choiceS.update(choice1.getChoiceId(), newChoiceText, null, null, null);
 
-        Choice updatedChoice = choiceS.findById(1);
+        Choice updatedChoice = choiceS.findById(choice1.getChoiceId());
         assertEquals(newChoiceText, updatedChoice.getChoiceText());
     }
 
@@ -704,19 +704,39 @@ public class DatabaseTests {
     }
 
     @Test
-    public void testQuestionChangeChallenge() {
-        // Dummy challenge2
+    public void testQuestionReplaceChallenge() {
+        // Create a new parent
         Challenge challenge2 = challengeS.create("Challenge 2", "This is challenge 2", Stream.ST, 0);
-        question1.setChallenge(challenge2);
-        challenge2.getQuestions().add(question1);
 
         // Before update
         assertEquals(1, challengeS.findById(challenge1.getId()).getQuestions().size());
-        Question updatedQuestion = questionRepo.save(question1);
+        Question updatedQuestion = questionS.updateChallenge(challenge2, question1);
+
+        // Test
+        Challenge challenge01 = challengeS.findById(challenge1.getId());
+        List<Question> questions01 = challengeS.getQuestions(challenge01.getId());
 
         // After update
         assertEquals(challenge2.getId() ,updatedQuestion.getChallenge().getId());
-        assertEquals(0, challengeS.findById(challenge1.getId()).getQuestions().size());
+        assertEquals(0, challenge01.getQuestions().size());
+    }
+
+    @Test
+    public void testChoiceReplaceQuestion() {
+        // Create a new parent
+        Question question2 = questionS.create(challenge1.getId(),"Question 2", "This is question 2", 0, QuestionType.TEXTBOX);
+
+        // Before update
+        assertEquals(2, questionS.findById(question1.getQuestionId()).getChoices().size());
+        Choice updatedChoice = choiceS.updateQuestion(question2, choice1);
+
+        // Test
+        Question question01 = questionS.findById(question1.getQuestionId());
+        List<Choice> choices01 = questionS.getChoices(question01.getQuestionId());
+
+        // After update
+        assertEquals(question2.getQuestionId() ,updatedChoice.getQuestion().getQuestionId());
+        assertEquals(1, question01.getChoices().size());
     }
 
     @Test

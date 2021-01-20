@@ -1,15 +1,16 @@
 $(function () {
     function readURL(input) {
         if (input.files && input.files[0]){
-            if(input.files[0].type === "image/jpeg" || input.files[0].type === "image/png") {
+            const file = input.files[0]
+            if(file.type === "image/jpeg" || file.type === "image/png") {
 
                 const fileLimit = 256 * 1024; //256kiB
                 const fileLimitString = "256kiB";
-                if (input.files[0].size <= fileLimit) {
-
+                if (file.size <= fileLimit) {
                     var reader = new FileReader();
                     $("#preview").show();
                     reader.onload = function (e) {
+                        document.getElementById('preview').setAttribute('alt-text', file.name);
                         document.getElementById('preview').src = e.target.result;
                     }
 
