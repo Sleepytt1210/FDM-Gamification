@@ -79,7 +79,7 @@ public class ChallengeFeedback {
                 ", feedback_title='" + feedback_title + '\'' +
                 ", feedback_text='" + feedback_text + '\'' +
                 ", positive=" + positive +
-                ", challengeId=" + challenge.getId() +
+                ", challengeId=" + (challenge == null ? null : challenge.getId()) +
                 '}';
     }
 }

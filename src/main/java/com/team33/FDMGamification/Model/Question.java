@@ -121,7 +121,7 @@ public class Question {
                 ", questionText='" + questionText + '\'' +
                 ", questionCompletion=" + questionCompletion +
                 ", questionType=" + questionType +
-                ", challengeId=" + challenge.getId() +
+                ", challengeId=" + (challenge == null ? null : challenge.getId()) +
                 '}';
     }
 }

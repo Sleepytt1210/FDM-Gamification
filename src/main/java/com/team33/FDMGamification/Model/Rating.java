@@ -53,7 +53,7 @@ public class Rating {
         return "Rating{" +
                 "rating_id=" + rating_id +
                 ", rating_value='" + rating_value + '\'' +
-                ", challengeId=" + challenge.getId() +
+                ", challengeId=" + (challenge == null ? null : challenge.getId()) +
                 '}';
     }
 }

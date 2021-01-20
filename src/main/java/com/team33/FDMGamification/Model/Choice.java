@@ -92,7 +92,7 @@ public class Choice {
                 ", choice_text='" + choiceText + '\'' +
                 ", weight=" + choiceWeight +
                 ", choice_reason'" + choiceReason + '\'' +
-                ", questionId=" + question.getQuestionId() +
+                ", questionId=" + (question == null ? null :question.getQuestionId()) +
                 '}';
     }
 }
