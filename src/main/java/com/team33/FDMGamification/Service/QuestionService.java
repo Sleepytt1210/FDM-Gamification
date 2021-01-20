@@ -156,18 +156,44 @@ public class QuestionService {
      */
     public Question update(Integer questionId, Question newQuestion) {
         Question oldQuestion = findById(questionId);
-        if (newQuestion.getQuestionTitle() != null) oldQuestion.setQuestionTitle(newQuestion.getQuestionTitle());
-        if (newQuestion.getQuestionText() != null) oldQuestion.setQuestionText(newQuestion.getQuestionText());
-        if (newQuestion.getQuestionCompletion() != null)
+        if (newQuestion.getQuestionTitle() != null) {
+            oldQuestion.setQuestionTitle(newQuestion.getQuestionTitle());
+        }
+        if (newQuestion.getQuestionText() != null) {
+            oldQuestion.setQuestionText(newQuestion.getQuestionText());
+        }
+        if (newQuestion.getQuestionCompletion() != null) {
             oldQuestion.setQuestionCompletion(newQuestion.getQuestionCompletion());
-        if (newQuestion.getQuestionType() != null)
+        }
+        if (newQuestion.getQuestionType() != null) {
             oldQuestion.setQuestionType(newQuestion.getQuestionType());
+        }
+        if (newQuestion.getChallenge() != null &&
+                !newQuestion.getChallenge().getId().equals(oldQuestion.getChallenge().getId())) {
+            updateChallenge(cls.findById(newQuestion.getChallenge().getId()), oldQuestion);
+        }
+
         oldQuestion = questionRepo.saveAndFlush(oldQuestion);
         List<Choice> newChoices = newQuestion.getChoices();
         if (newChoices != null && !newChoices.isEmpty()) {
-            newChoices.forEach((v) -> chs.update(v.getChoiceId(), v.getChoiceText(), v.getChoiceWeight(), v.getChoiceReason()));
+            newChoices.forEach((v) -> chs.update(v.getChoiceId(), v.getChoiceText(), v.getChoiceWeight(), v.getChoiceReason(), questionId));
         }
         return oldQuestion;
+    }
+
+    /**
+     * Replace Challenge foreign key of question.
+     *
+     * @param newChallenge New challenge foreign key entity.
+     * @param question     Question entity to be updated.
+     * @return Question: Updated question entity.
+     */
+    @Transactional
+    public Question updateChallenge(Challenge newChallenge, Question question) {
+        question.setChallenge(newChallenge);
+        newChallenge.getQuestions().add(question);
+        questionRepo.replaceChallenge(newChallenge, question.getQuestionId());
+        return questionRepo.saveAndFlush(question);
     }
 
     /**
