@@ -146,6 +146,7 @@ public class ChallengeService {
         tempNew.setQuestions(questions);
         tempNew.setChallengeFeedback(feedbacks);
         tempNew.setRatings(ratings);
+        tempNew.setThumbnail(thumbnail);
         return update(challengeId, tempNew);
     }
 
@@ -169,6 +170,7 @@ public class ChallengeService {
 
         oldChallenge = challengeRepo.saveAndFlush(oldChallenge);
         List<Question> newQuestions = newChallenge.getQuestions();
+
         Map<Boolean, ChallengeFeedback> newFeedback = newChallenge.getChallengeFeedback();
         if (newQuestions != null && !newQuestions.isEmpty()) {
             newQuestions.forEach((v) -> questionService.update(v.getQuestionId(), v));
