@@ -15,6 +15,7 @@ import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.persistence.EntityNotFoundException;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -64,7 +65,7 @@ public class AdminQuestionFormController {
 
     @GetMapping("/new")
     public String createQuestion(ModelMap model) {
-        model.addAttribute("question", new Question());
+        if(model.getAttribute("question") == null) model.addAttribute("question", new Question());
         return "admin/questionForm";
     }
 
@@ -78,6 +79,7 @@ public class AdminQuestionFormController {
             if (bindingResult.hasErrors()) {
                 return "admin/questionForm";
             }
+            // Create a new entity if the path is not id
             if(id == null) {
                 questionService.create(challengeId, question);
             } else {
@@ -96,7 +98,9 @@ public class AdminQuestionFormController {
 
     @PostMapping(value = {"/new","/{id}"}, params = {"addChoice"})
     public String addChoice(@ModelAttribute("question") Question question,
-                                  @PathVariable(value = "id", required = false) Integer id) {
+                            @PathVariable(value = "id", required = false) Integer id,
+                            HttpServletRequest request) {
+        String uri = request.getRequestURI()+"?addChoice";
         try {
             Choice tempC = new Choice();
             question.getChoices().add(tempC);
@@ -104,19 +108,21 @@ public class AdminQuestionFormController {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, ex.getMessage(), ex);
         }
-        return "admin/questionForm";
+        return "redirect:"+uri;
     }
 
     @PostMapping(value = {"/new","/{id}"}, params = {"removeChoice"})
     public String removeChoice(@ModelAttribute("question") Question question,
                                @PathVariable(value = "id", required = false) Integer id,
-                               @RequestParam("removeChoice") Integer idx) {
+                               @RequestParam("removeChoice") Integer idx,
+                               HttpServletRequest request) {
         try {
+            String uri = request.getRequestURI()+"?addChoice";
             Choice choice = question.getChoices().get(idx);
             question.getChoices().remove(idx.intValue());
             // If it's form edit, delete the persisted choice from database as well.
             if(choice.getChoiceId() != null) choiceService.delete(choice.getChoiceId());
-            return "admin/questionForm";
+            return "redirect:"+uri;
         } catch (Exception ex) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, ex.getMessage(), ex);
