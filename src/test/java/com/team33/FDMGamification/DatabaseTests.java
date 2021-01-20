@@ -712,9 +712,8 @@ public class DatabaseTests {
         assertEquals(1, challengeS.findById(challenge1.getId()).getQuestions().size());
         Question updatedQuestion = questionS.updateChallenge(challenge2, question1);
 
-        // Test
+        // Fetch
         Challenge challenge01 = challengeS.findById(challenge1.getId());
-        List<Question> questions01 = challengeS.getQuestions(challenge01.getId());
 
         // After update
         assertEquals(challenge2.getId() ,updatedQuestion.getChallenge().getId());
@@ -730,9 +729,8 @@ public class DatabaseTests {
         assertEquals(2, questionS.findById(question1.getQuestionId()).getChoices().size());
         Choice updatedChoice = choiceS.updateQuestion(question2, choice1);
 
-        // Test
+        // Fetch
         Question question01 = questionS.findById(question1.getQuestionId());
-        List<Choice> choices01 = questionS.getChoices(question01.getQuestionId());
 
         // After update
         assertEquals(question2.getQuestionId() ,updatedChoice.getQuestion().getQuestionId());
