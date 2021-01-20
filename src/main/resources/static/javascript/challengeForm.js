@@ -1,8 +1,7 @@
 $( function() {
 
     const url = new URL(window.location.href);
-    const addQues = url.searchParams.has('addQuestion');
-    const removeQues = url.searchParams.has('removeQuestion');
+    const quesOp = url.searchParams.has('addQuestion') || url.searchParams.has('removeQuestion');
     const qIdx = url.searchParams.get('addChoice') || url.searchParams.get('removeChoice');
 
     $("#question-accordion").accordion({
@@ -11,10 +10,10 @@ $( function() {
         header: '.question-row-one'
     });
 
-    if(addQues || qIdx){
+    if(quesOp || qIdx){
         $('html, body').animate({
             scrollTop: $(".question-section").offset().top
-        }, 200, 'swing');
+        }, 500, 'swing');
     }
 
     $(".remove-question-button").each(function () {
