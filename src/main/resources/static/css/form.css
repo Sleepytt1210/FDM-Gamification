@@ -164,7 +164,7 @@
   color: white;
 }
 .form-group input[type=submit]:hover, .choice-section input[type=submit]:hover {
-  background: blue;
+  background: #2196F3;
 }
 
 button {
@@ -178,12 +178,12 @@ button:hover {
   cursor: pointer;
 }
 
-.submit {
+.submit, .choice-form .submit {
   width: 80%;
   margin: 60px 0;
   text-align: center;
 }
-.submit input {
+.submit input, .choice-form .submit input {
   width: 46%;
   font-size: 25px;
   border-radius: 9px;
@@ -194,8 +194,9 @@ button:hover {
   background: #909090;
   color: #fafafc;
   outline: none;
+  height: auto;
 }
-.submit input:hover {
+.submit input:hover, .choice-form .submit input:hover {
   cursor: pointer;
   background: #2196F3;
   color: #fff;
