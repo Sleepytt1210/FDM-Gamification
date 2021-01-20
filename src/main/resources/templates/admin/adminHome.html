@@ -20,7 +20,7 @@
         <form th:action="${''}" method="post" id="panel-form">
             <div class="content-head">
                 <button class="create-new-button" name="create" type="button" value="NEW">
-                    <a th:href="@{__${#httpServletRequest.requestURI.endsWith('/') ? #httpServletRequest.requestURI.substring(0, #httpServletRequest.requestURI.length()-1) : #httpServletRequest.requestURI}__/new}">NEW</a>
+                    <a th:href="@{/admin/__${page}__/new}">NEW</a>
                 </button>
                 <input class="delete-button" name="delete" type="submit" value="DELETE" disabled="disabled">
             </div>

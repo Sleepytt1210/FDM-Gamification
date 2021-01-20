@@ -29,10 +29,13 @@ public class AdminController {
     private ChoiceService choiceService;
 
     @RequestMapping({"/", "", "{page:challenges|questions|choices}"})
-    public String renderAdminHome(@AuthenticationPrincipal AdminDetails activeUser, Model model, @PathVariable("page") Optional<String> tab) {
+    public String renderAdminHome(@AuthenticationPrincipal AdminDetails activeUser,
+                                  Model model,
+                                  @PathVariable("page") Optional<String> tab) {
         String tabRes = "";
         if(tab.isPresent()){
             tabRes = tab.get();
+            model.addAttribute("page", tabRes);
         }else{
             return "redirect:/admin/challenges";
         }
