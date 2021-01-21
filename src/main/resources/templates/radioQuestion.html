@@ -27,10 +27,6 @@
                 <li th:each="choice, choiceStat : ${choices}" th:id="'ch'+${choice.choiceId}" class="choice">
                     <input name = "choices" type="radio" th:text="${choices[__${choiceStat.index}__].choiceText}"
                            th:id="${choice.choiceId}" th:value="${choice.choiceId}"/>
-                    <!--
-                    <input name = "choices" type="checkbox" th:text="${choices[__${choice.key}__].choiceText}"></input>
-                    <input type="hidden" th:value="${choice.key}" name="choices"/>
-                    -->
                 </li>
             </ul>
         <input id="submit" type="submit" name="radioQuestion" value="Submit">

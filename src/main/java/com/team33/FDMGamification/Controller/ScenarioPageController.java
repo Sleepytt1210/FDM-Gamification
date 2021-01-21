@@ -104,6 +104,9 @@ public class ScenarioPageController {
         int score = 0;
 
         Choice correctChoice = choiceService.findById(1);
+        if (correctChoice.getChoiceText().contains(answer)){
+            score+=2;
+        }
         populateQuestionAndChoices(model,sid,qid);
         model.addAttribute("score", score);
 

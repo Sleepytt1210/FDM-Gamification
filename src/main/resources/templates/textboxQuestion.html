@@ -5,8 +5,9 @@
 <head>
     <meta charset="UTF-8">
     <title>Question</title>
-    <link rel="stylesheet" href="../static/css/question.css" type="text/css" th:href="@{/css/radioStyle.css}">
+    <link rel="stylesheet" href="../static/css/question.css" type="text/css" th:href="@{/css/textbox.css}">
     <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@600&display=swap" rel="stylesheet">
+    <script th:src="@{/javascript/textbox.js}"></script>
 </head>
 <body>
     <ul layout:fragment="sidenav">
@@ -16,14 +17,14 @@
     </ul>
 
 
-    <div layout:fragment="content">
+    <div layout:fragment="content2">
         <h1 th:text="${question.questionTitle}"></h1>
         <div class="textArea">
             <p th:text="${question.questionText}">
         </div>
         <form th:action="@{/scenario/__${sid}__/__${qid}__}" method="post" th:object="${question}">
             <label>Type in your answer here:</label>
-            <input name="textBox" type="text">
+            <input name="answer" type="text" id="answer">
 
 
             <input id="submit" type="submit" name="textboxQuestion" value="Submit">

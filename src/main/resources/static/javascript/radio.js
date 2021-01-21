@@ -16,7 +16,6 @@ $(function () {
 
 
         const cid = ($('input[name=choices]:checked')).val();
-        console.log(cid)
 
 
 
@@ -56,7 +55,6 @@ $(function () {
             btn.css("cursor", "pointer");
         }
     }
-
 }
 
 
