@@ -1,6 +1,9 @@
 package com.team33.FDMGamification.Model;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "ChallengeFeedback")
@@ -10,6 +13,9 @@ public class ChallengeFeedback {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer feedback_id;
 
+    @NotBlank(message = "Please do not leave this field blank!")
+    @Pattern(regexp = "^[^<>]*$", message = "Angle brackets (<, >) are not allowed!")
+    @Size(max = 100, message = "Please provide a title not longer than 100 characters!")
     @Column(name = "feedback_title")
     private String feedback_title = "";
 
@@ -79,7 +85,7 @@ public class ChallengeFeedback {
                 ", feedback_title='" + feedback_title + '\'' +
                 ", feedback_text='" + feedback_text + '\'' +
                 ", positive=" + positive +
-                ", challengeId=" + challenge.getId() +
+                ", challengeId=" + (challenge == null ? null : challenge.getId()) +
                 '}';
     }
 }

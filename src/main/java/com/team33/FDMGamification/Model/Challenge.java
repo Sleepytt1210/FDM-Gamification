@@ -1,6 +1,12 @@
 package com.team33.FDMGamification.Model;
 
+import com.team33.FDMGamification.Validation.Annotation.EnumNotEquals;
+
 import javax.persistence.*;
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.util.*;
 
 @Entity(name="Challenge")
@@ -11,12 +17,18 @@ public class Challenge {
     @Column(name = "challenge_id")
     private Integer id;
 
+    @NotBlank(message = "Please do not leave this field blank!")
+    @Pattern(regexp = "^[^<>]*$", message = "Angle brackets (<, >) are not allowed!")
+    @Size(max = 100, message = "Please provide a title not longer than 100 characters!")
     @Column(name = "challenge_title")
     private String challengeTitle = "";
 
+    @NotBlank(message = "Please do not leave this field blank!")
+    @Pattern(regexp = "^[^<>]*$", message = "Angle brackets (<, >) are not allowed!")
     @Column(name = "challenge_description")
     private String description = "";
 
+    @EnumNotEquals
     @Column(name = "challenge_stream")
     @Enumerated(EnumType.STRING)
     private Stream stream = Stream.NONE;
@@ -30,15 +42,21 @@ public class Challenge {
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "challenge")
     private Thumbnail thumbnail = new Thumbnail(this);
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "challenge", cascade = CascadeType.ALL, orphanRemoval = true)
-    @MapKeyColumn(name = "question_id")
-    private Map<Integer, Question> questions = new HashMap<>();
+    @Valid
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "challenge",
+            cascade = {CascadeType.MERGE, CascadeType.REMOVE, CascadeType.REFRESH, CascadeType.DETACH},
+            orphanRemoval = true)
+    private List<Question> questions = new ArrayList<>();
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "challenge", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "challenge",
+            cascade = {CascadeType.MERGE, CascadeType.REMOVE, CascadeType.REFRESH, CascadeType.DETACH},
+            orphanRemoval = true)
     @MapKeyColumn(name = "positive")
     private Map<Boolean, ChallengeFeedback> challengeFeedback = new HashMap<>();
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "challenge", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "challenge",
+            cascade = {CascadeType.MERGE, CascadeType.REMOVE, CascadeType.REFRESH, CascadeType.DETACH},
+            orphanRemoval = true)
     private Set<Rating> ratings = new HashSet<>();
 
     public Challenge(){}
@@ -115,11 +133,11 @@ public class Challenge {
         this.ratings = ratings;
     }
 
-    public Map<Integer, Question> getQuestions() {
+    public List<Question> getQuestions() {
         return questions;
     }
 
-    public void setQuestions(Map<Integer, Question> question) {
+    public void setQuestions(List<Question> question) {
         this.questions = question;
     }
 

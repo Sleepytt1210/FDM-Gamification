@@ -1,8 +1,15 @@
 package com.team33.FDMGamification.Model;
 
+import com.team33.FDMGamification.Validation.Annotation.EnumNotEquals;
+import com.team33.FDMGamification.Validation.Annotation.NullOrNotEqualChallengeID;
+
 import javax.persistence.*;
-import java.util.HashMap;
-import java.util.Map;
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Entity(name = "Question")
@@ -13,26 +20,35 @@ public class Question {
     @Column(name = "question_id")
     private Integer questionId;
 
+    @NotBlank(message = "Please do not leave this field blank!")
+    @Pattern(regexp = "^[^<>]*$", message = "Angle brackets (<, >) are not allowed!")
+    @Size(max = 100, message = "Please provide a title not longer than 100 characters!")
     @Column(name = "question_title")
     private String questionTitle = "";
 
+    @NotBlank(message = "Please do not leave this field blank!")
+    @Pattern(regexp = "^[^<>]*$", message = "Angle brackets (<, >) are not allowed!")
     @Column(name = "question_text")
     private String questionText = "";
 
     @Column(name = "question_completion")
     private Integer questionCompletion = 0;
 
+    @EnumNotEquals
     @Column(name = "question_type")
     @Enumerated(EnumType.STRING)
     private QuestionType questionType = QuestionType.NONE;
 
+    @NullOrNotEqualChallengeID(message = "Please select an associate challenge!")
     @ManyToOne
     @JoinColumn(name = "challenge_id")
     private Challenge challenge;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
-    @MapKeyColumn(name = "choice_id")
-    private Map<Integer, Choice> choices = new HashMap<>();
+    @Valid
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "question",
+            cascade = {CascadeType.MERGE, CascadeType.REMOVE, CascadeType.REFRESH, CascadeType.DETACH},
+            orphanRemoval = true)
+    private List<Choice> choices = new ArrayList<>();
 
     public Question(){}
 
@@ -91,11 +107,11 @@ public class Question {
         this.challenge = challenge;
     }
 
-    public Map<Integer, Choice> getChoices() {
+    public List<Choice> getChoices() {
         return choices;
     }
 
-    public void setChoices(Map<Integer, Choice> choices) {
+    public void setChoices(List<Choice> choices) {
         this.choices = choices;
     }
 
@@ -107,7 +123,7 @@ public class Question {
                 ", questionText='" + questionText + '\'' +
                 ", questionCompletion=" + questionCompletion +
                 ", questionType=" + questionType +
-                ", challengeId=" + challenge.getId() +
+                ", challengeId=" + (challenge == null ? null : challenge.getId()) +
                 '}';
     }
 }

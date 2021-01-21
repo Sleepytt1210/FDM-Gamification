@@ -8,10 +8,11 @@ public class Rating {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer rating_id;
+    @Column(name = "rating_id")
+    private Integer ratingId;
 
     @Column(name = "rating_value")
-    private Integer rating_value;
+    private Integer ratingValue;
 
     @ManyToOne
     @JoinColumn(name = "challenge_id")
@@ -20,24 +21,24 @@ public class Rating {
     public Rating() {
     }
 
-    public Rating(Integer rating_value) {
-        this.rating_value = rating_value;
+    public Rating(Integer ratingValue) {
+        this.ratingValue = ratingValue;
     }
 
-    public Integer getRating_id() {
-        return rating_id;
+    public Integer getRatingId() {
+        return ratingId;
     }
 
-    public void setRating_id(Integer rating_id) {
-        this.rating_id = rating_id;
+    public void setRatingId(Integer ratingId) {
+        this.ratingId = ratingId;
     }
 
-    public Integer getRating_value() {
-        return rating_value;
+    public Integer getRatingValue() {
+        return ratingValue;
     }
 
-    public void setRating_value(Integer rating_value) {
-        this.rating_value = rating_value;
+    public void setRatingValue(Integer rating_value) {
+        this.ratingValue = rating_value;
     }
 
     public Challenge getChallenge() {
@@ -51,9 +52,9 @@ public class Rating {
     @Override
     public String toString() {
         return "Rating{" +
-                "rating_id=" + rating_id +
-                ", rating_value='" + rating_value + '\'' +
-                ", challengeId=" + challenge.getId() +
+                "ratingId=" + ratingId +
+                ", ratingValue='" + ratingValue + '\'' +
+                ", challengeId=" + (challenge == null ? null : challenge.getId()) +
                 '}';
     }
 }

@@ -29,10 +29,13 @@ public class AdminController {
     private ChoiceService choiceService;
 
     @RequestMapping({"/", "", "{page:challenges|questions|choices}"})
-    public String renderAdminHome(@AuthenticationPrincipal AdminDetails activeUser, Model model, @PathVariable("page") Optional<String> tab) {
+    public String renderAdminHome(@AuthenticationPrincipal AdminDetails activeUser,
+                                  Model model,
+                                  @PathVariable("page") Optional<String> tab) {
         String tabRes = "";
         if(tab.isPresent()){
             tabRes = tab.get();
+            model.addAttribute("page", tabRes);
         }else{
             return "redirect:/admin/challenges";
         }
@@ -49,16 +52,6 @@ public class AdminController {
         }
         model.addAttribute("admin", activeUser);
         return "admin/adminHome";
-    }
-
-    @PostMapping(value = "{page:questions|choices}", params = {"create"})
-    public String createItem(ModelMap model, @PathVariable("page") String page) {
-        if ("choices".equals(page)) {
-            model.addAttribute("choice", new Choice());
-            return "admin/choiceForm";
-        }
-        model.addAttribute("question", new Question());
-        return "admin/questionForm";
     }
 
     @PostMapping(value = "{page:challenges|questions|choices}", params = {"delete", "ids"})
