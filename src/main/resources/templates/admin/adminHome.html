@@ -17,9 +17,11 @@
         <li class="sidebar-menu"><a th:href="@{/admin/choices}">Choices</a></li>
     </ul>
     <div layout:fragment="content2">
-        <form th:action="@{''}" method="post" id="panel-form">
+        <form th:action="${''}" method="post" id="panel-form">
             <div class="content-head">
-                <input class="create-new-button" name="create" type="submit" value="NEW">
+                <button class="create-new-button" name="create" type="button" value="NEW">
+                    <a th:href="@{/admin/__${page}__/new}">NEW</a>
+                </button>
                 <input class="delete-button" name="delete" type="submit" value="DELETE" disabled="disabled">
             </div>
             <div id="dialog-confirm" title="Delete selected items">
@@ -39,6 +41,8 @@
                             <th>Challenge Title</th>
                             <th>Challenge Stream</th>
                             <th>Completion</th>
+                            <th>Average Rating</th>
+                            <th>Number of questions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -48,6 +52,8 @@
                             <td><a th:href="@{'/admin/challenges/' + ${challenge.id}}" th:text="${challenge.challengeTitle}"></a></td>
                             <td th:text="${challenge.stream}"></td>
                             <td th:text="${challenge.completion}"></td>
+                            <td th:text="${challenge.avgRating}"></td>
+                            <td th:text="${challenge.questions.size()}"></td>
                         </tr>
                     </tbody>
                 </table>
@@ -63,7 +69,11 @@
                             </label>
                         </th>
                         <th>ID</th>
-                        <th>Question</th>
+                        <th>Question Title</th>
+                        <th>Question Type</th>
+                        <th>Question Completion</th>
+                        <th>Question Challenge ID</th>
+                        <th>Number of Choices</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -71,6 +81,10 @@
                             <td><label class="checkbox-container"><input type="checkbox" class="question-item-selection item-selection" name="ids" th:value="${question.questionId}"><span class="checkmark"></span></label></td>
                             <td th:text="${question.questionId}"></td>
                             <td><a th:href="@{'/admin/questions/' + ${question.questionId}}" th:text="${question.questionTitle}"></a></td>
+                            <td th:text="${question.questionType.fullName}"></td>
+                            <td th:text="${question.questionCompletion}"></td>
+                            <td th:text="${question.challenge.id}"></td>
+                            <td th:text="${question.choices.size()}"></td>
                         </tr>
                     </tbody>
                 </table>
@@ -86,14 +100,18 @@
                             </label>
                         </th>
                         <th>ID</th>
-                        <th>Choice</th>
+                        <th>Choice Text</th>
+                        <th>Choice Weight</th>
+                        <th>Choice Question ID</th>
                     </tr>
                     </thead>
                     <tbody>
                         <tr th:each="choice : ${choices}">
                             <td><label class="checkbox-container"><input type="checkbox" class="choice-item-selection item-selection" name="ids" th:value="${choice.choiceId}"><span class="checkmark"></span></label></td>
                             <td th:text="${choice.choiceId}"></td>
-                            <td><a th:href="@{'/admin/choices/' + ${choice.choiceId}}" th:text="${choice.choiceText}"></a></td>
+                            <td><a class="text-column" th:href="@{'/admin/choices/' + ${choice.choiceId}}" th:text="${choice.choiceText}"></a></td>
+                            <td th:text="${choice.choiceWeight}"></td>
+                            <td th:text="${choice.question.questionId}"></td>
                         </tr>
                     </tbody>
                 </table>

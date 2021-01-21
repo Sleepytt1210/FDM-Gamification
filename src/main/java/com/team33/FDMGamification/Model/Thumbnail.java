@@ -75,4 +75,15 @@ public class Thumbnail {
     public void setChallenge(Challenge challenge) {
         this.challenge = challenge;
     }
+
+    @Override
+    public String toString() {
+        return "Thumbnail{" +
+                "id=" + id +
+                ", base64String='" + base64String + '\'' +
+                ", fileName='" + fileName + '\'' +
+                ", fileType='" + fileType + '\'' +
+                ", challengeId=" + (challenge == null ? null : challenge.getId()) +
+                '}';
+    }
 }

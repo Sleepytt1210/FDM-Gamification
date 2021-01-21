@@ -9,9 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class ChallengeService {
@@ -23,6 +21,10 @@ public class ChallengeService {
     private QuestionService questionService;
     @Autowired
     private ChallengeFeedbackService challengeFeedbackService;
+    @Autowired
+    private ThumbnailService thumbnailService;
+    @Autowired
+    private RatingService ratingService;
 
     /**
      * Insert and persist data into Challenge Table with properties.
@@ -45,7 +47,31 @@ public class ChallengeService {
      * @return Challenge: Challenge entity persisted in database.
      */
     public Challenge create(Challenge challenge) {
-        return challengeRepo.saveAndFlush(challenge);
+
+        // Create a temporary challenge with empty relational entities
+        Challenge tempNew = new Challenge(challenge.getChallengeTitle(), challenge.getDescription(), challenge.getStream(), challenge.getCompletion());
+        tempNew.setThumbnail(null);
+
+        List<Question> tempQuestions = null;
+        Map<Boolean, ChallengeFeedback> tempFeedbacks = null;
+        Set<Rating> ratings = null;
+        Thumbnail tempThumbnail = null;
+
+        // Temp store relational entities
+        if(challenge.getQuestions() != null && !challenge.getQuestions().isEmpty()) tempQuestions = challenge.getQuestions();
+        if(challenge.getChallengeFeedback() != null && !challenge.getChallengeFeedback().isEmpty()) tempFeedbacks = challenge.getChallengeFeedback();
+        if(challenge.getRatings() != null && !challenge.getRatings().isEmpty()) ratings = challenge.getRatings();
+        if(challenge.getThumbnail() != null) tempThumbnail = challenge.getThumbnail();
+
+        challenge = challengeRepo.saveAndFlush(tempNew);
+
+        // Update relational entities
+        if(tempThumbnail != null) thumbnailService.create(challenge, tempThumbnail);
+        if(tempQuestions != null && !tempQuestions.isEmpty()) questionService.createAll(challenge, tempQuestions);
+        if(tempFeedbacks != null && !tempFeedbacks.isEmpty()) challengeFeedbackService.createBoth(challenge, tempFeedbacks);
+        if(ratings != null && ratings.isEmpty()) ratingService.createAll(challenge, ratings);
+
+        return findById(challenge.getId());
     }
 
     /**
@@ -95,7 +121,7 @@ public class ChallengeService {
      * @return Map<Integer, Question> questions: Map of questions with their id as key.
      */
     @Transactional
-    public Map<Integer, Question> getQuestions(Integer id){
+    public List<Question> getQuestions(Integer id){
         return findById(id).getQuestions();
     }
 
@@ -114,12 +140,13 @@ public class ChallengeService {
      * @return Challenge: Updated challenge entity.
      */
     public Challenge update(Integer challengeId, String title, String introduction, Thumbnail thumbnail,
-                            Stream stream, Integer completion, Map<Integer, Question> questions,
+                            Stream stream, Integer completion, List<Question> questions,
                             Map<Boolean, ChallengeFeedback> feedbacks, Set<Rating> ratings) {
         Challenge tempNew = new Challenge(title, introduction, stream, completion);
         tempNew.setQuestions(questions);
         tempNew.setChallengeFeedback(feedbacks);
         tempNew.setRatings(ratings);
+        tempNew.setThumbnail(thumbnail);
         return update(challengeId, tempNew);
     }
 
@@ -132,16 +159,21 @@ public class ChallengeService {
      */
     public Challenge update(Integer challengeId, Challenge newChallenge) {
         Challenge oldChallenge = findById(challengeId);
+
+        // Null checks before update
         if (newChallenge.getChallengeTitle() != null) oldChallenge.setChallengeTitle(newChallenge.getChallengeTitle());
         if (newChallenge.getDescription() != null) oldChallenge.setDescription(newChallenge.getDescription());
-        if (newChallenge.getThumbnail() != null) oldChallenge.setThumbnail(newChallenge.getThumbnail());
         if (newChallenge.getStream() != null) oldChallenge.setStream(newChallenge.getStream());
         if (newChallenge.getCompletion() != null) oldChallenge.setCompletion(newChallenge.getCompletion());
+        if (newChallenge.getThumbnail() != null && newChallenge.getThumbnail().getId() != null)
+            thumbnailService.update(newChallenge.getThumbnail().getId(), newChallenge.getThumbnail());
+
         oldChallenge = challengeRepo.saveAndFlush(oldChallenge);
-        Map<Integer, Question> newQuestions = newChallenge.getQuestions();
+        List<Question> newQuestions = newChallenge.getQuestions();
+
         Map<Boolean, ChallengeFeedback> newFeedback = newChallenge.getChallengeFeedback();
         if (newQuestions != null && !newQuestions.isEmpty()) {
-            newQuestions.forEach((k, v) -> questionService.update(k, v));
+            newQuestions.forEach((v) -> questionService.update(v.getQuestionId(), v));
         }
         if (newFeedback != null && !newFeedback.isEmpty()) {
             newFeedback.forEach((k, v) -> challengeFeedbackService.update(v.getFeedback_id(), v.getFeedback_title(), v.getFeedback_text()));
@@ -208,7 +240,7 @@ public class ChallengeService {
     private String average(Set<Rating> ratings) {
         int avg = 0;
         for (Rating cur : ratings) {
-            avg += cur.getRating_value();
+            avg += cur.getRatingValue();
         }
         return String.format("%.1f", ((avg * 1.0) / (ratings.size() * 1.0)));
     }

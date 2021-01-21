@@ -19,16 +19,21 @@
 }
 
 /*Head Content Buttons Style*/
-.create-new-button, .delete-button, .ui-button, .ui-button .delete-button{
+.create-new-button, .delete-button, .ui-button, .ui-button .delete-button, .create-new-button a{
     padding: 7px 10px;
     border-radius: 2px;
     background: #909090;
     border: none;
+    text-decoration: none;
     font-weight: 510;
     font-size: 12px;
     font-family: sans-serif;
     color: #fff;
     outline: none;
+}
+
+.create-new-button a {
+    background: none;
 }
 
 .ui-dialog .ui-dialog-titlebar-close {

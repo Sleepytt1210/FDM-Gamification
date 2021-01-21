@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -43,8 +44,8 @@ public class FdmGamificationApplication {
 	 *
 	 */
 	@Bean
+	@Transactional
 	public void run(){
-		List<Challenge> challenges = new ArrayList<>();
 		log.info("Adding mock data");
 		try (BufferedReader br = new BufferedReader(new FileReader(getClass().getClassLoader().getResource("Mock data.csv").getFile().replace("%20", " "), StandardCharsets.UTF_8))) {
 			// Get number of challenges
@@ -68,8 +69,8 @@ public class FdmGamificationApplication {
 						choiceService.create(question, choice);
 					}
 				}
-				ChallengeFeedback challengeFeedbackP = cfs.create(challenge, new ChallengeFeedback("Good Job", "You did so well, here's some links for reference", true));
-				ChallengeFeedback challengeFeedbackN = cfs.create(challenge, new ChallengeFeedback("Oh No", "You did so badly, here's some links to improve yourself", false));
+				cfs.create(challenge, new ChallengeFeedback("Good Job", "You did so well, here's some links for reference", true));
+				cfs.create(challenge, new ChallengeFeedback("Oh No", "You did so badly, here's some links to improve yourself", false));
 			}
 			log.info("Finished adding mock data.");
 		} catch (IOException e) {
