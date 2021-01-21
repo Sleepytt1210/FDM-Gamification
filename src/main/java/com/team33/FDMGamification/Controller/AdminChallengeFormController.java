@@ -51,8 +51,10 @@ public class AdminChallengeFormController {
     @GetMapping("/{id}")
     public String getChallengeView(@PathVariable("id") Integer id, Model model) {
         try {
-            Challenge challenge = challengeService.findById(id);
-            model.addAttribute("challenge", challenge);
+            if(!model.containsAttribute("challenge")) {
+                Challenge challenge = challengeService.findById(id);
+                model.addAttribute("challenge", challenge);
+            }
         } catch (EntityNotFoundException ex) {
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND, ex.getMessage(), ex);
@@ -68,19 +70,20 @@ public class AdminChallengeFormController {
 
     @PostMapping(value = {"/new", "/{id}"}, headers=("content-type=multipart/*"), params = {"save"})
     public String saveChallenge(@Valid @ModelAttribute("challenge") Challenge challenge,
-                                final BindingResult bindingResult, ModelMap model,
+                                final BindingResult bindingResult,
+                                Model model,
                                 @PathVariable(value = "id", required = false) Integer id,
                                 @RequestPart("pic") MultipartFile picData,
                                 SessionStatus status) {
         try {
-            if(picData.isEmpty()){
+            Thumbnail thumbnail = challenge.getThumbnail();
+            if(thumbnail.getBase64String().isBlank() && thumbnail.getBase64String().isEmpty() && picData.isEmpty()){
                 bindingResult.rejectValue("thumbnail", "EMPTY_THUMBNAIL", "Please add a thumbnail!");
             }
             if (bindingResult.hasErrors()) {
                 return "admin/challengeForm";
             }
-            Thumbnail thumbnail = challenge.getThumbnail();
-            processImage(picData, thumbnail);
+            processImage(picData, model, challenge);
             challenge.setThumbnail(thumbnail);
             if(id == null){
                 challengeService.create(challenge);
@@ -88,7 +91,7 @@ public class AdminChallengeFormController {
                 challengeService.update(id, challenge);
             }
             status.setComplete();
-            model.clear();
+            model.asMap().clear();
             return "redirect:/admin";
         } catch (EntityNotFoundException ex) {
             throw new ResponseStatusException(
@@ -102,11 +105,12 @@ public class AdminChallengeFormController {
     public String addQuestion(@ModelAttribute("challenge") Challenge challenge,
                               @PathVariable(value = "id", required = false) Integer id,
                               @RequestPart("pic") MultipartFile picData,
+                              Model model,
                               HttpServletRequest request) {
         try {
             // Thumbnail update
             if(!picData.isEmpty()) {
-                processImage(picData, challenge.getThumbnail());
+                processImage(picData, model, challenge);
             }
             // For page scrolling to question section
             String uri = request.getRequestURI()+"?addQuestion";
@@ -124,11 +128,12 @@ public class AdminChallengeFormController {
                                  @PathVariable(value = "id", required = false) Integer id,
                                  @RequestParam("removeQuestion") Integer rmIdx,
                                  @RequestPart("pic") MultipartFile picData,
+                                 Model model,
                                  HttpServletRequest request) {
         try {
             // Thumbnail update
             if(!picData.isEmpty()) {
-                processImage(picData, challenge.getThumbnail());
+                processImage(picData, model, challenge);
             }
             Question question = challenge.getQuestions().get(rmIdx);
             challenge.getQuestions().remove(rmIdx.intValue());
@@ -148,11 +153,12 @@ public class AdminChallengeFormController {
                             @PathVariable(value = "id", required = false) Integer id,
                             @RequestParam("addChoice") Integer qIdx,
                             @RequestPart("pic") MultipartFile picData,
+                            Model model,
                             HttpServletRequest request) {
         try {
             // Thumbnail update
             if(!picData.isEmpty()) {
-                processImage(picData, challenge.getThumbnail());
+                processImage(picData, model, challenge);
             }
             // For page scrolling to question section
             String uri = request.getRequestURI()+"?addChoice="+ qIdx;
@@ -167,15 +173,16 @@ public class AdminChallengeFormController {
     }
 
     @PostMapping(value = "/{id}", params = {"removeChoice"})
-    public String removeChoice(@ModelAttribute("challenge") Challenge challenge,
+    public String removeChoice(@SessionAttribute("challenge") Challenge challenge,
                                @PathVariable(value = "id", required = false) Integer id,
                                @RequestParam("removeChoice") List<Integer> ids,
                                @RequestPart("pic") MultipartFile picData,
+                               Model model,
                                HttpServletRequest request) {
         try {
             // Thumbnail update
             if(!picData.isEmpty()) {
-                processImage(picData, challenge.getThumbnail());
+                processImage(picData, model, challenge);
             }
             Integer qIdx = ids.get(0);
             Integer choiceIdx = ids.get(1);
@@ -193,21 +200,15 @@ public class AdminChallengeFormController {
         }
     }
 
-    private void processImage(MultipartFile picture, Thumbnail thumbnail){
+    private void processImage(MultipartFile picture, Model model, Challenge challenge){
         try {
+            Thumbnail thumbnail = challenge.getThumbnail();
             byte[] bytes = picture.getBytes();
             String base64 = Base64Utils.encodeToString(bytes);
             thumbnail.setBase64String(base64);
             thumbnail.setFileName(picture.getOriginalFilename());
             thumbnail.setFileType(picture.getContentType());
-        } catch (IOException ioException) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ioException.toString(), ioException);
-        }
-    }
-
-    private String imgByteToString(MultipartFile picture){
-        try {
-            return Base64Utils.encodeToString(picture.getBytes());
+            model.addAttribute("challenge", challenge);
         } catch (IOException ioException) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ioException.toString(), ioException);
         }
