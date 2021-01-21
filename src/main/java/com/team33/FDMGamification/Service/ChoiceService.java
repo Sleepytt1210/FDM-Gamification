@@ -99,6 +99,7 @@ public class ChoiceService {
      * @return Choice: Updated choice entity.
      */
     public Choice update(Integer choiceId, String choiceText, Integer weight, String choiceReason, Integer questionId) {
+        if(choiceId == null) return create(questionId, choiceText, weight, choiceReason);
         Choice choice = findById(choiceId);
         if(choiceText != null) choice.setChoiceText(choiceText);
         if(weight != null) choice.setChoiceWeight(weight);

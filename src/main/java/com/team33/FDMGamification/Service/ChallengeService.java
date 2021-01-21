@@ -170,10 +170,14 @@ public class ChallengeService {
 
         oldChallenge = challengeRepo.saveAndFlush(oldChallenge);
         List<Question> newQuestions = newChallenge.getQuestions();
-
         Map<Boolean, ChallengeFeedback> newFeedback = newChallenge.getChallengeFeedback();
+
         if (newQuestions != null && !newQuestions.isEmpty()) {
-            newQuestions.forEach((v) -> questionService.update(v.getQuestionId(), v));
+            Challenge finalOldChallenge = oldChallenge;
+            newQuestions.forEach((v) -> {
+                if(v.getQuestionId() == null) v.setChallenge(finalOldChallenge);
+                questionService.update(v.getQuestionId(), v);
+            });
         }
         if (newFeedback != null && !newFeedback.isEmpty()) {
             newFeedback.forEach((k, v) -> challengeFeedbackService.update(v.getFeedback_id(), v.getFeedback_title(), v.getFeedback_text()));

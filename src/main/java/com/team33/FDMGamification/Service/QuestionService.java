@@ -155,6 +155,9 @@ public class QuestionService {
      * @return Question: Updated question entity.
      */
     public Question update(Integer questionId, Question newQuestion) {
+
+        if(questionId == null) return create(newQuestion.getChallenge(), newQuestion);
+
         Question oldQuestion = findById(questionId);
         if (newQuestion.getQuestionTitle() != null) {
             oldQuestion.setQuestionTitle(newQuestion.getQuestionTitle());
