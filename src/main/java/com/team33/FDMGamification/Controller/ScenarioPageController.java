@@ -75,7 +75,7 @@ public class ScenarioPageController {
         return "dragAndDropQuestion";
     }
 
-    @PostMapping(value = "/{qid}", params = {"radioStyle"})
+    @PostMapping(value = "/{qid}", params = {"radioQuestion"})
     public String submitQuestion(Model model,
                                  @PathVariable("sid") Integer sid, @PathVariable("qid") Integer qid,
                                  @RequestParam(value = "choices") String[] cids)
@@ -102,7 +102,7 @@ public class ScenarioPageController {
         return "radioQuestion";
     }
 
-    @PostMapping(value = "/{qid}", params = {"textboxStyle"})
+    @PostMapping(value = "/{qid}", params = {"textboxQuestion"})
     public String submitQuestion(Model model,
                                  @PathVariable("sid") Integer sid, @PathVariable("qid") Integer qid,
                                  @RequestParam(value = "answer") String answer)
@@ -135,7 +135,7 @@ public class ScenarioPageController {
 
     private void populateQuestionAndChoices(Model model, Integer sid, Integer qid) {
         try {
-            Question question = challengeService.getQuestions(sid).get(qid);
+            Question question = questionService.findById(qid);
             model.addAttribute("questions", challengeService.getQuestions(sid));
             if(question == null) {
                 throw new EntityNotFoundException("Question id " + qid + " does not exist in scenario id " + sid + " !!");
