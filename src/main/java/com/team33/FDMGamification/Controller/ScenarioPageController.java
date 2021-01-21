@@ -33,7 +33,6 @@ public class ScenarioPageController {
     public String scenarioPage(Model model, @ModelAttribute("scenario") Challenge scenario, @PathVariable("sid") Integer sid){
         try {
             if (!sid.equals(scenario.getId())) {
-                System.out.println("sid changed");
                 model.addAttribute("scenario", challengeService.findById(sid));
                 model.addAttribute("questions", challengeService.getQuestions(sid));
             }
