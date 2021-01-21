@@ -78,17 +78,11 @@ public class ScenarioPageController {
     @PostMapping(value = "/{qid}", params = {"radioQuestion"})
     public String submitQuestion(Model model,
                                  @PathVariable("sid") Integer sid, @PathVariable("qid") Integer qid,
-                                 @RequestParam(value = "choices") String[] cids)
+                                 @RequestParam(value = "choices") Integer cid)
     {
-        Integer cid = null;
+
         int score = 0;
-        boolean next = false;
-        for(int i = 0; i < cids.length; i++){
-            if(cids[i].equals("on")){
-                cid = Integer.parseInt(cids[i+1]);
-                break;
-            }
-        }
+
 
         Choice correctChoice = choiceService.findById(cid);
         if (correctChoice.getChoiceWeight() == 1){

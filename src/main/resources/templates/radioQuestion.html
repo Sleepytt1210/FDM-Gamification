@@ -1,15 +1,23 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{headinglayout.html}">
+      layout:decorate="~{scenarioLayout.html}">
 <head>
     <meta charset="UTF-8">
     <title>Question</title>
     <link rel="stylesheet" href="../static/css/question.css" type="text/css" th:href="@{/css/radioStyle.css}">
     <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@600&display=swap" rel="stylesheet">
+    <script th:src="@{/javascript/radio.js}"></script>
 </head>
 <body>
-    <div layout:fragment="content">
+    <ul layout:fragment="sidenav">
+        <li th:each="question, questionStat : ${questions}" th:with="curQ=${questions[__${questionStat.index}__]}">
+            <a th:text="${curQ.questionTitle}" th:href="@{/scenario/__${sid}__/__${curQ.questionId}__}"></a>
+        </li>
+    </ul>
+
+
+    <div layout:fragment="content2">
         <h1 th:text="${question.questionTitle}"></h1>
         <div class="textArea">
             <p th:text="${question.questionText}">
@@ -17,8 +25,8 @@
         <form th:action="@{/scenario/__${sid}__/__${qid}__}" method="post" th:object="${question}">
             <ul id="choices" class="droptrue">
                 <li th:each="choice, choiceStat : ${choices}" th:id="'ch'+${choice.choiceId}" class="choice">
-                    <input name = "choices" type="radio" th:text="${choices[__${choiceStat.index}__].choiceText}"></input>
-                    <input type="hidden" th:value="${choice.choiceId}" name="choices"/>
+                    <input name = "choices" type="radio" th:text="${choices[__${choiceStat.index}__].choiceText}"
+                           th:id="${choice.choiceId}" th:value="${choice.choiceId}"/>
                     <!--
                     <input name = "choices" type="checkbox" th:text="${choices[__${choice.key}__].choiceText}"></input>
                     <input type="hidden" th:value="${choice.key}" name="choices"/>
@@ -27,9 +35,10 @@
             </ul>
         <input id="submit" type="submit" name="radioQuestion" value="Submit">
         </form>
-    </div>
-    <div class="result" layout:fragment="result" th:style="'display:'+ ${score != null ? 'block' : 'none'}">
-        <p id="score" th:text="'Score: ' + ${score}" th:value="${score}"></p>
+
+        <div class="result" layout:fragment="result" th:style="'display:'+ ${score != null ? 'block' : 'none'}">
+            <p id="score" th:text="'Score: ' + ${score}" th:value="${score}"></p>
+        </div>
     </div>
 </body>
 </html>
