@@ -10,7 +10,7 @@
 </head>
     <body>
         <ul layout:fragment="sidenav">
-            <li th:each="question : ${questions}" th:with="curQ=${questions[__${question.key}__]}">
+            <li th:each="question, questionStat : ${questions}" th:with="curQ=${questions[__${questionStat.index}__]}">
                 <a th:text="${curQ.questionTitle}" th:href="@{/scenario/__${sid}__/__${curQ.questionId}__}"></a>
             </li>
         </ul>
