@@ -36,5 +36,5 @@ public class UserController {
     }
 
     @RequestMapping("/radio")
-    public String testRadio(Model model){return "radioStyle";}
+    public String testRadio(Model model){return "radioQuestion";}
 }

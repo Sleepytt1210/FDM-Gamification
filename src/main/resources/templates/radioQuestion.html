@@ -25,18 +25,8 @@
                     -->
                 </li>
             </ul>
-
         <input id="submit" type="submit" value="Submit">
-
-
-
         </form>
-
-
-
-
-
-
     </div>
     <div class="result" layout:fragment="result" th:style="'display:'+ ${score != null ? 'block' : 'none'}">
         <p id="score" th:text="'Score: ' + ${score}" th:value="${score}"></p>

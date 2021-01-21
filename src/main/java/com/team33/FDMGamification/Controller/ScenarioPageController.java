@@ -47,7 +47,13 @@ public class ScenarioPageController {
     public String questionPage(@PathVariable("sid") Integer sid, @PathVariable("qid") Integer qid,
                                Model model){
         populateQuestionAndChoices(model, sid, qid);
-        return "dragAndDrop";
+        Question question = (Question) model.getAttribute("question");
+        switch (question.getQuestionType()){
+            case TEXTBOX: return "textboxQuestion";
+            case MULTIPLE_CHOICE: return "radioQuestion";
+            case DRAG_DROP: return "dragAndDropQuestion";
+        }
+        return "dragAndDropQuestion";
     }
 
     @PostMapping(value = "/{qid}", params = {"dragAndDrop"})
@@ -66,8 +72,53 @@ public class ScenarioPageController {
         populateQuestionAndChoices(model, sid, qid);
 
         model.addAttribute("score", score);
-        return "dragAndDrop";
+        return "dragAndDropQuestion";
     }
+
+    @PostMapping(value = "/{qid}", params = {"radioStyle"})
+    public String submitQuestion(Model model,
+                                 @PathVariable("sid") Integer sid, @PathVariable("qid") Integer qid,
+                                 @RequestParam(value = "choices") String[] cids)
+    {
+        Integer cid = null;
+        int score = 0;
+        boolean next = false;
+        for(int i = 0; i < cids.length; i++){
+            if(cids[i].equals("on")){
+                cid = Integer.parseInt(cids[i+1]);
+                break;
+            }
+        }
+
+        Choice correctChoice = choiceService.findById(cid);
+        if (correctChoice.getChoiceWeight() == 1){
+            score++;
+        }
+
+        populateQuestionAndChoices(model,sid,qid);
+        model.addAttribute("score", score);
+
+
+        return "radioQuestion";
+    }
+
+    @PostMapping(value = "/{qid}", params = {"textboxStyle"})
+    public String submitQuestion(Model model,
+                                 @PathVariable("sid") Integer sid, @PathVariable("qid") Integer qid,
+                                 @RequestParam(value = "answer") String answer)
+    {
+        int score = 0;
+
+        Choice correctChoice = choiceService.findById(1);
+        populateQuestionAndChoices(model,sid,qid);
+        model.addAttribute("score", score);
+
+
+        return "textboxQuestion";
+    }
+
+
+
 
     private int scoreCheck(Integer[] cids, int weight){
         int score = 0;
@@ -79,6 +130,8 @@ public class ScenarioPageController {
         }
         return score;
     }
+
+
 
     private void populateQuestionAndChoices(Model model, Integer sid, Integer qid) {
         try {
