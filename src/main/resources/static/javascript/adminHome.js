@@ -1,5 +1,8 @@
 $(function () {
 
+    const url = new URL(window.location.href);
+    const path = url.pathname;
+
     let form = $("#panel-form");
     const textMax = 70;
 
@@ -64,7 +67,7 @@ $(function () {
     });
 
     $('div.toolbar').html('<button class="create-new-button" name="create" type="button" value="NEW">' +
-        '                    <a th:href="@{/admin/__${page}__/new}">NEW</a>' +
+        `                    <a href="${path}/new">NEW</a>` +
         '                </button>' +
         '                <input class="delete-button" name="delete" type="submit" value="DELETE" disabled="disabled">')
 
