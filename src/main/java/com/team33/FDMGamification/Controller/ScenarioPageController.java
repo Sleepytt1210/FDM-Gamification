@@ -47,7 +47,13 @@ public class ScenarioPageController {
     public String questionPage(@PathVariable("sid") Integer sid, @PathVariable("qid") Integer qid,
                                Model model){
         populateQuestionAndChoices(model, sid, qid);
-        return "dragAndDrop";
+        Question question = (Question) model.getAttribute("question");
+        switch (question.getQuestionType()){
+            case TEXTBOX: return "textboxQuestion";
+            case MULTIPLE_CHOICE: return "radioQuestion";
+            case DRAG_DROP: return "dragAndDropQuestion";
+        }
+        return "dragAndDropQuestion";
     }
 
     @PostMapping(value = "/{qid}", params = {"dragAndDrop"})
@@ -66,8 +72,50 @@ public class ScenarioPageController {
         populateQuestionAndChoices(model, sid, qid);
 
         model.addAttribute("score", score);
-        return "dragAndDrop";
+        return "dragAndDropQuestion";
     }
+
+    @PostMapping(value = "/{qid}", params = {"radioQuestion"})
+    public String submitQuestion(Model model,
+                                 @PathVariable("sid") Integer sid, @PathVariable("qid") Integer qid,
+                                 @RequestParam(value = "choices") Integer cid)
+    {
+
+        int score = 0;
+
+
+        Choice correctChoice = choiceService.findById(cid);
+        if (correctChoice.getChoiceWeight() == 1){
+            score++;
+        }
+
+        populateQuestionAndChoices(model,sid,qid);
+        model.addAttribute("score", score);
+
+
+        return "radioQuestion";
+    }
+
+    @PostMapping(value = "/{qid}", params = {"textboxQuestion"})
+    public String submitQuestion(Model model,
+                                 @PathVariable("sid") Integer sid, @PathVariable("qid") Integer qid,
+                                 @RequestParam(value = "answer") String answer)
+    {
+        int score = 0;
+
+        Choice correctChoice = choiceService.findById(1);
+        if (correctChoice.getChoiceText().contains(answer)){
+            score+=2;
+        }
+        populateQuestionAndChoices(model,sid,qid);
+        model.addAttribute("score", score);
+
+
+        return "textboxQuestion";
+    }
+
+
+
 
     private int scoreCheck(Integer[] cids, int weight){
         int score = 0;
@@ -80,9 +128,11 @@ public class ScenarioPageController {
         return score;
     }
 
+
+
     private void populateQuestionAndChoices(Model model, Integer sid, Integer qid) {
         try {
-            Question question = challengeService.getQuestions(sid).get(qid);
+            Question question = questionService.findById(qid);
             model.addAttribute("questions", challengeService.getQuestions(sid));
             if(question == null) {
                 throw new EntityNotFoundException("Question id " + qid + " does not exist in scenario id " + sid + " !!");
