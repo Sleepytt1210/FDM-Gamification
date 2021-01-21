@@ -4,8 +4,7 @@
       xmlns:th="http://www.thymeleaf.org" layout:decorate="~{headinglayout.html}">
 <head>
     <link href="../static/css/heading.css" rel="stylesheet" th:href="@{/css/sideNav.css}">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.2/jquery.validate.min.js" integrity="sha512-UdIMMlVx0HEynClOIFSyOrPggomfhBKJE28LKl8yR3ghkgugPnG6iLfRfHwushZl1MOPSY6TsuBDGPK2X4zYKg==" crossorigin="anonymous"></script>
-    <script th:src="${'https://cdn.tiny.cloud/1/'+@environment.getProperty('tinyMCEAPI')+'/tinymce/5/tinymce.min.js'}" referrerpolicy="origin"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js" integrity="sha512-uto9mlQzrs59VwILcLiRYeLKPPbS/bT71da/OEBYEwcdNUk8jYIy+D176RYoop1Da+f9mvkYrmj5MCLZWEtQuA==" crossorigin="anonymous"></script>    <script th:src="${'https://cdn.tiny.cloud/1/'+@environment.getProperty('tinyMCEAPI')+'/tinymce/5/tinymce.min.js'}" referrerpolicy="origin"></script>
     <script>
         tinymce.init({
             selector: '.feedback',
