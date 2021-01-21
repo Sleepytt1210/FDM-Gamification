@@ -11,7 +11,7 @@
 </head>
 <body>
     <ul layout:fragment="sidenav">
-        <li th:each="question : ${questions}" th:with="curQ=${questions[__${question.key}__]}">
+        <li th:each="question, questionStat : ${questions}" th:with="curQ=${questions[__${questionStat.index}__]}">
             <a th:text="${curQ.questionTitle}" th:href="@{/scenario/__${sid}__/__${curQ.questionId}__}"></a>
         </li>
     </ul>
@@ -26,9 +26,9 @@
             <form th:action="@{/scenario/__${sid}__/__${qid}__}" method="post" th:object="${question}">
                 <div class="choiceContainer">
                     <ul id="choices" class="droptrue">
-                        <li th:each="choice : ${choices}" th:id="'ch'+${choice.key}" class="choice">
-                            <span th:text="${choices[__${choice.key}__].choiceText}"></span>
-                            <input type="hidden" th:value="${choice.key}" name="choices"/>
+                        <li th:each="choice, choiceStat : ${choices}" th:id="'ch'+${choice.choiceId}" class="choice">
+                            <span th:text="${choices[__${choiceStat.index}__].choiceText}"></span>
+                            <input type="hidden" th:value="${choice.choiceId}" name="choices"/>
                         </li>
                     </ul>
                 </div>
