@@ -14,8 +14,6 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
 
 
 @SpringBootApplication
@@ -59,7 +57,7 @@ public class FdmGamificationApplication {
 				for (int j = 0; j < m; j++) {
 					String[] qLine = br.readLine().split(",");
 					int qComp = Integer.parseInt(qLine[2]);
-					Question question = questionService.create(challenge, new Question(qLine[0], qLine[1], qComp, QuestionType.DRAG_DROP));
+					Question question = questionService.create(challenge, new Question(qLine[0], qLine[1], qComp, QuestionType.valueOf(qLine[3])));
 					// Get number of choices
 					int c = (br.readLine().charAt(0) - '0');
 					for (int k = 0; k < c; k++) {
