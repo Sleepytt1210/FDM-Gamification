@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="../../static/css/adminHome.css" th:href="@{/css/adminHome.css}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../static/css/adminTable.min.css" th:href="@{/css/adminTable.css}">
+    <script src="//cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js"></script>
     <script th:src="@{/javascript/adminHome.js}"></script>
 </head>
 <body>
@@ -18,20 +20,14 @@
     </ul>
     <div layout:fragment="content2">
         <form th:action="${''}" method="post" id="panel-form">
-            <div class="content-head">
-                <button class="create-new-button" name="create" type="button" value="NEW">
-                    <a th:href="@{/admin/__${page}__/new}">NEW</a>
-                </button>
-                <input class="delete-button" name="delete" type="submit" value="DELETE" disabled="disabled">
-            </div>
-            <div id="dialog-confirm" title="Delete selected items">
+            <div id="dialog-confirm" title="Delete selected items" style="display: none;">
                 <p><i class="fa fa-exclamation-triangle" aria-hidden="true" style="font-size:24px;"></i>These items will be permanently deleted and cannot be recovered. Are you sure?</p>
             </div>
             <div th:if="${challenges}" class="table-content">
-                <table>
+                <table class="item-table row-border hover">
                     <thead>
                         <tr>
-                            <th class="column-select">
+                            <th class="column-select no-sort">
                                 <label class="checkbox-container">
                                     <input type="checkbox" id="challenge-select-all" class="select-all" title="Select all">
                                     <span class="checkmark"></span>

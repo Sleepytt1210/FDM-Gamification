@@ -58,8 +58,8 @@ input:checked ~ .checkmark:after {
 
 /* Style the checkmark/indicator */
 .checkmark::after {
-    left: 31%;
-    top: 9%;
+    left: 28%;
+    top: 6%;
     width: 3px;
     height: 6px;
     border: solid white;

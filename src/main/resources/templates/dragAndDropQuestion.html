@@ -60,7 +60,7 @@
                 <input id="submit" type="submit" name="dragAndDrop" value="Submit">
             </form>
         </div>
-        <div class="result" layout:fragment="result" th:style="'display:'+ ${score != null ? 'block' : 'none'}">
+        <div class="result" th:style="'display:'+ ${score != null ? 'block' : 'none'}">
             <p id="score" th:text="'Score: ' + ${score}" th:value="${score}"></p>
         </div>
     </div>
