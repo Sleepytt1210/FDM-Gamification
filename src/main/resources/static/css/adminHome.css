@@ -4,7 +4,6 @@
 
 .content-head {
     height: 2.3rem;
-    border-bottom: 1px solid #c8c8c8;
     width: auto;
     text-align: right;
 }
@@ -20,7 +19,7 @@
 
 /*Head Content Buttons Style*/
 .create-new-button, .delete-button, .ui-button, .ui-button .delete-button, .create-new-button a{
-    padding: 7px 10px;
+    padding: 7px 2em;
     border-radius: 2px;
     background: #909090;
     border: none;
@@ -32,8 +31,9 @@
     outline: none;
 }
 
-.create-new-button a {
+.create-new-button a{
     background: none;
+    padding: 7px 0;
 }
 
 .ui-dialog .ui-dialog-titlebar-close {
@@ -48,6 +48,9 @@
 .create-new-button:hover, .ui-button:hover{
     cursor: pointer;
     background-color: #2196F3;
+}
+
+.create-new-button:active {
     opacity: 85%;
 }
 
@@ -85,44 +88,43 @@
 }
 
 div.table-content{
-    margin: auto;
-    padding: 0;
+    margin: 20px 25px;
 }
 
-div.table-content > table {
-    color: #606060;
-    border-collapse: collapse;
-    width: 100%;
-    text-align: left;
-}
+/*div.table-content > table {*/
+/*    color: #606060;*/
+/*    border-collapse: collapse;*/
+/*    width: 100%;*/
+/*    text-align: left;*/
+/*}*/
 
-div.table-content > table > tbody > tr > td, div.table-content > table > thead > tr > th {
-    padding: 5px 10px;
-}
+/*div.table-content > table > tbody > tr > td, div.table-content > table > thead > tr > th {*/
+/*    padding: 5px 10px;*/
+/*}*/
 
-div.table-content > table > tbody > tr, div.table-content > table > thead > tr {
-    border-bottom: 1px solid #c8c8c8;
-}
+/*div.table-content > table > tbody > tr, div.table-content > table > thead > tr {*/
+/*    border-bottom: 1px solid #c8c8c8;*/
+/*}*/
 
-div.table-content > table th {
-    padding: 7px 2px;
-    font-weight: normal;
-    font-size: 0.625rem;
-}
+/*div.table-content > table th {*/
+/*    padding: 7px 2px;*/
+/*    font-weight: normal;*/
+/*    font-size: 0.625rem;*/
+/*}*/
 
-div.table-content > table > tbody > tr {
-    background-color: #fcfffc;
-    font-size: 11px;
-}
+/*div.table-content > table > tbody > tr {*/
+/*    background-color: #fcfffc;*/
+/*    font-size: 11px;*/
+/*}*/
 
-div.table-content > table > tbody > tr > td > a {
-    text-decoration: none;
-    color: inherit;
-}
+/*div.table-content > table > tbody > tr > td > a {*/
+/*    text-decoration: none;*/
+/*    color: inherit;*/
+/*}*/
 
-div.table-content > table > tbody > tr:hover {
-    background-color: #ececec;
-}
+/*div.table-content > table > tbody > tr:hover {*/
+/*    background-color: #ececec;*/
+/*}*/
 
 .container2{
     padding: 15px 0;
