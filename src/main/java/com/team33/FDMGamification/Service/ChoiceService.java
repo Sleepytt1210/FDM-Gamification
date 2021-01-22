@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
@@ -54,8 +55,22 @@ public class ChoiceService {
     public Choice create(Question question, Choice choice) {
         choice.setQuestion(question);
         choice = choiceRepo.saveAndFlush(choice);
-        question.getChoices().put(choice.getChoiceId(), choice);
+        question.getChoices().add(choice);
         return choice;
+    }
+
+    /**
+     * Insert and persist a collection of choices in Choice Table.
+     *
+     * @param question Foreign entity question to be added to.
+     * @param choices A collection of choice to be persisted.
+     * @return List<Choice>: A list of persisted choices entities.
+     */
+    public List<Choice> createAll(Question question, Iterable<Choice> choices) {
+        for (Choice choice: choices) {
+            create(question, choice);
+        }
+        return question.getChoices();
     }
 
     /**
@@ -83,11 +98,29 @@ public class ChoiceService {
      * @param weight New weight of choice.
      * @return Choice: Updated choice entity.
      */
-    public Choice update(Integer choiceId, String choiceText, Integer weight, String choiceReason) {
+    public Choice update(Integer choiceId, String choiceText, Integer weight, String choiceReason, Integer questionId) {
+        if(choiceId == null) return create(questionId, choiceText, weight, choiceReason);
         Choice choice = findById(choiceId);
         if(choiceText != null) choice.setChoiceText(choiceText);
         if(weight != null) choice.setChoiceWeight(weight);
         if(choiceReason != null) choice.setChoiceReason(choiceReason);
+        if(questionId != null && !choice.getQuestion().getQuestionId().equals(questionId))
+            updateQuestion(qts.findById(questionId), choice);
+        return choiceRepo.saveAndFlush(choice);
+    }
+
+    /**
+     * Replace question foreign key of choice entity.
+     *
+     * @param newQuestion New Question foreign key entity.
+     * @param choice      Choice entity to be updated.
+     * @return Choice: Updated choice entity.
+     */
+    @Transactional
+    public Choice updateQuestion(Question newQuestion, Choice choice) {
+        choice.setQuestion(newQuestion);
+        newQuestion.getChoices().add(choice);
+        choiceRepo.replaceQuestion(newQuestion, choice.getChoiceId());
         return choiceRepo.saveAndFlush(choice);
     }
 
@@ -104,6 +137,8 @@ public class ChoiceService {
      * @param choice Choice entity to be deleted.
      */
     public void delete(Choice choice) {
+        // To ensure bidirectional persistence in database
+        choice.getQuestion().getChoices().removeIf(choice1 -> choice1.getChoiceId().equals(choice.getChoiceId()));
         choiceRepo.delete(choice);
     }
 
@@ -112,6 +147,8 @@ public class ChoiceService {
      * @param choices Collection of choices to be deleted.
      */
     public void batchDelete(Iterable<Choice> choices) {
+        // To ensure bidirectional persistence in database
+        choices.forEach(c -> c.getQuestion().getChoices().removeIf(choice1 -> choice1.getChoiceId().equals(c.getChoiceId())));
         choiceRepo.deleteAll(choices);
     }
 

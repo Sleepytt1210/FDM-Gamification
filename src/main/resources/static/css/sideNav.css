@@ -18,7 +18,7 @@
 }
 
 .sidenav a {
-    padding: 12px 8px 12px 30px;
+    padding: 12px 30px;
     text-decoration: none;
     font-size: 20px;
     color: #202025;
@@ -55,9 +55,5 @@
     margin-top: 110px;
     margin-left: 160px;
     text-align: center;
-    padding: 15px 5px 15px 20px;
-}
-
-.tox-tinymce{
-    margin: 10px 0;
+    padding: 0 0 10px;
 }

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="~{adminLayout.html}">
+<head>
+    <title th:text="${choice.choiceId == null ? 'New Choice' : 'Choice ' + choice.choiceId}"></title>
+    <link rel="stylesheet" th:href="@{/css/form.min.css}" type="text/css">
+</head>
+<body>
+<div layout:fragment="content2">
+    <form class="choice-section choice-form"
+          id="choice-form"
+          th:action="@{/admin/choices/__${choice.choiceId == null ? 'new' : choice.choiceId}__}"
+          th:object="${choice}" method="post">
+        <div class="form-group">
+            <label>Choice Text</label>
+            <div class="input-div">
+                    <textarea class="description-input" name="choice-text"
+                              th:field="*{choiceText}"></textarea>
+            </div>
+            <div class="errorMessage" th:if="${#fields.hasErrors('choiceText')}" th:errors="*{choiceText}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label>Choice Weight</label>
+            <div class="input-div">
+                <input class="weight-input" name="choice-weight"
+                       th:field="*{choiceWeight}"
+                       type="number"/>
+            </div>
+            <div class="errorMessage" th:if="${#fields.hasErrors('choiceWeight')}" th:errors="*{choiceWeight}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label>Choice Reason</label>
+            <div class="input-div">
+                    <textarea class="description-input" name="choice-reason"
+                              th:field="*{choiceReason}"></textarea>
+            </div>
+            <div class="errorMessage" th:if="${#fields.hasErrors('choiceReason')}" th:errors="*{choiceReason}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="question-type" th:text="Question"></label>
+            <div class="input-div">
+                <select id="question-type" name="questionChoose"
+                        th:field="*{question.questionId}">
+                    <option th:value="${'-1'}">Choose a question...</option>
+                    <option th:each="question : ${allQuestions}"
+                            th:selected="${question == choice.question}"
+                            th:label="${question.questionTitle}"
+                            th:value="${question.questionId}"></option>
+                </select>
+            </div>
+            <div class="errorMessage" th:if="${#fields.hasErrors('question')}" th:errors="*{question}">
+            </div>
+        </div>
+        <div class="submit">
+            <input name="save" type="submit" value="Save">
+        </div>
+    </form>
+</div>
+</body>
+</html>

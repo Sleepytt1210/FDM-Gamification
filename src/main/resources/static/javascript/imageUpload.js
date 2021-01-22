@@ -1,30 +1,39 @@
 $(function () {
     function readURL(input) {
-        if (input.files && input.files[0] && (input.files[0].type === "image/jpeg" || input.files[0].type === "image/png")  ) {
+        if (input.files && input.files[0]){
+            const file = input.files[0]
+            if(file.type === "image/jpeg" || file.type === "image/png") {
 
-            const fileLimit = 256*1024; //256kiB
-            const fileLimitString = "256kiB";
-            if(input.files[0].size <= fileLimit) {
+                const fileLimit = 256 * 1024; //256kiB
+                const fileLimitString = "256kiB";
+                if (file.size <= fileLimit) {
+                    var reader = new FileReader();
+                    $("#preview").show();
+                    reader.onload = function (e) {
+                        document.getElementById('preview').setAttribute('alt-text', file.name);
+                        document.getElementById('preview').src = e.target.result;
+                    }
 
-                var reader = new FileReader();
-                $("#preview").show();
-                reader.onload = function (e) {
-                    document.getElementById('preview').src = e.target.result;
+                    reader.readAsDataURL(input.files[0]); // convert to base64 string
+                    return true;
+                } else {
+                    alert(`Image is too large! File size must not exceed ${fileLimitString}`);
+                    $(input).val('');
+                    return false;
                 }
-
-                reader.readAsDataURL(input.files[0]); // convert to base64 string
-            }else{
-                alert(`Image is too large! File size must not exceed ${fileLimitString}`)
+            }else {
+                alert('File must be png or jpeg!');
+                $(input).val('');
+                return false;
             }
         }
     }
 
     $("#thumbnail").change(function () {
-        readURL(this);
+        return readURL(this);
     });
 
     $("#image-upload-wrapper").click(function () {
         $("#thumbnail").click();
-        return true;
     })
 });

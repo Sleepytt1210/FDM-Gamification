@@ -1,3 +1,6 @@
+/*
+ * Design for actual content container to the left
+ */
 .container2 {
   float: left;
   text-align: left;
@@ -12,6 +15,9 @@
   display: none;
 }
 
+/*
+ * Question section
+ */
 .question-section h2 {
   display: inline-block;
   margin: 15px 0;
@@ -23,44 +29,59 @@
   padding: 7px 15px;
   font-size: 15px;
 }
-.question-section #question-accordion .question-row-one {
+.question-section .question-row-one {
   background: #f9f9fc;
   width: 80%;
   position: relative;
   color: #454545;
   border: 1px solid #aaaccc;
 }
-.question-section #question-accordion .question-row-one h3 {
+.question-section .question-row-one h3 {
   display: inline-block;
   margin: 5px 2px;
 }
-.question-section #question-accordion .question-row-one .remove-question-button {
+.question-section .question-row-one .remove-question-button {
   position: absolute;
   right: 40px;
   top: 12px;
 }
-.question-section #question-accordion .question-row-one:hover {
+.question-section .question-row-one:hover {
   background: #fafafc;
 }
-.question-section #question-accordion .question-row-one:active {
+.question-section .question-row-one:active {
   color: #454545;
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
 }
-.question-section #question-accordion .question-content-group {
+.question-section .question-content-group {
   width: 80%;
 }
-.question-section #question-accordion .question-content-group .choice-section {
+.question-section .question-content-group .choice-section {
   margin-bottom: 10px;
 }
-.question-section #question-accordion .question-content-group .choice-section table {
+.question-section .question-content-group .choice-section table {
+  width: 90%;
+}
+.question-section .question-content-group .choice-section table tr td {
+  padding-right: 5px;
+}
+.question-section .question-content-group .choice-section table tr td input, .question-section .question-content-group .choice-section table tr td .errorMessage {
   width: 100%;
 }
-.question-section #question-accordion .question-content-group .choice-section table tr th {
-  min-width: 25%;
+.question-section .question-content-group .choice-section table .choice-text-col, .question-section .question-content-group .choice-section table .choice-reason-col {
+  width: 40%;
+}
+.question-section .question-content-group .choice-section table .choice-weight-col {
+  width: 13%;
+}
+.question-section .question-content-group .choice-section table .remove-col {
+  width: 5%;
 }
 .question-section .add-button {
-  background: #18dd5a;
+  background: #909090;
+}
+.question-section .add-button:hover {
+  background: #2196F3;
 }
 .question-section .remove-button {
   background: none;
@@ -79,26 +100,36 @@
   font-size: inherit;
 }
 .question-section .add-row {
+  width: 84%;
   text-align: center;
+  padding-top: 20px;
 }
 .question-section .fa-plus {
   color: #18dd5a;
   font-size: inherit;
 }
 
+.question-form .question-content-group {
+  width: 100%;
+}
+
+/*
+ * Design for every input
+ */
 .form-group, .choice-section {
   padding: 5px;
   padding-left: 20px;
   padding-right: 15px;
 }
 .form-group input, .form-group select, .form-group textarea, .choice-section input, .choice-section select, .choice-section textarea {
+  background: #fff;
   margin: 5px 0;
   border: 1px solid #aaaccc;
   border-radius: 5px;
   padding: 2px 10px 5px;
   font-size: 14px;
-  font-family: "Verdana", sans-serif;
   font-weight: normal;
+  font-family: "Roboto", sans-serif;
   color: #3b3a3a;
   resize: none;
   width: 80%;
@@ -140,21 +171,18 @@
 .form-group input[type=submit], .choice-section input[type=submit] {
   border: none;
   background: #909090;
-  color: white;
+  color: #fff;
 }
 .form-group input[type=submit]:hover, .choice-section input[type=submit]:hover {
-  background: blue;
-}
-.form-group label.error, .choice-section label.error {
-  color: red;
-  font-size: 15px;
-  font-weight: normal;
-  margin: 0 5px;
+  background: #2196F3;
 }
 
+/*
+ * Common design for all buttons
+ */
 button {
   border: none;
-  color: white;
+  color: #fff;
   padding: 5px 10px;
   font-size: 13px;
   font-weight: bold;
@@ -163,22 +191,61 @@ button:hover {
   cursor: pointer;
 }
 
-.submit {
+/*
+ * Submit division
+ */
+.submit, .choice-form .submit {
   width: 80%;
-  margin: 20px 0;
+  margin: 60px 0;
   text-align: center;
 }
-.submit input {
-  width: 80%;
+.submit input, .choice-form .submit input {
+  width: 46%;
   font-size: 25px;
   border-radius: 9px;
   border: none;
   padding: 10px 30px;
   margin: 0 auto;
+  font-family: "Roboto", sans-serif;
+  background: #909090;
+  color: #fafafc;
+  outline: none;
+  height: auto;
+}
+.submit input:hover, .choice-form .submit input:hover {
+  cursor: pointer;
+  background: #2196F3;
+  color: #fff;
+  transition: ease-in-out;
 }
 
+/*
+ * Remove spin button from number field
+ */
 input[type=number] {
   -moz-appearance: textfield;
 }
 
-/*# sourceMappingURL=challengeForm.css.map */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/*
+ * Error division and message
+ */
+.errorMessage {
+  color: #ff2a36;
+  font-size: 15px;
+  font-weight: normal;
+  margin: 0;
+  margin-bottom: 15px;
+  padding: 10px 30px;
+  background: #fff0f1;
+  border-radius: 5px;
+  width: 80%;
+  box-shadow: 0 0 2px 1px #ff2a36;
+}
+
+/*# sourceMappingURL=form.css.map */

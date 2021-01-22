@@ -37,7 +37,6 @@ public class ThumbnailService {
      * @param challengeId Foreign key id of challenge to be added to.
      * @param thumbnail      Thumbnail entity with properties.
      * @return Thumbnail: Thumbnail entity persisted in database.
-     * @throws IllegalArgumentException If thumbnail value is not between 1 and 5.
      */
     public Thumbnail create(Integer challengeId, Thumbnail thumbnail) {
         Challenge challenge = cls.findById(challengeId);
@@ -50,9 +49,8 @@ public class ThumbnailService {
      * @param challenge Foreign entity challenge to be added to.
      * @param thumbnail    Thumbnail entity with properties.
      * @return Thumbnail: Thumbnail entity persisted in database.
-     * @throws IllegalArgumentException If thumbnail value is not between 1 and 5.
      */
-    public Thumbnail create(Challenge challenge, Thumbnail thumbnail) throws IllegalArgumentException {
+    public Thumbnail create(Challenge challenge, Thumbnail thumbnail) {
         thumbnail.setChallenge(challenge);
         return thumbnailRepo.saveAndFlush(thumbnail);
     }

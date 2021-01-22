@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import javax.management.InstanceAlreadyExistsException;
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ChallengeFeedbackService {
@@ -57,6 +58,20 @@ public class ChallengeFeedbackService {
         challengeFeedback = challengeFeedbackRepo.saveAndFlush(challengeFeedback);
         challenge.getChallengeFeedback().put(challengeFeedback.isPositive(), challengeFeedback);
         return challengeFeedback;
+    }
+
+    /**
+     * Insert and persist both positive and negative challengeFeedback entities in ChallengeFeedback Table.
+     * @param challenge Foreign entity challenge to be added to.
+     * @param challengeFeedbacks ChallengeFeedback positive and negative entities with properties.
+     * @return Map<Boolean, ChallengeFeedback>: Both positive and negative ChallengeFeedbacks entities persisted in database.
+     */
+    public Map<Boolean, ChallengeFeedback> createBoth(Challenge challenge, Map<Boolean, ChallengeFeedback> challengeFeedbacks) {
+        ChallengeFeedback positive = challengeFeedbacks.get(true);
+        ChallengeFeedback negative = challengeFeedbacks.get(false);
+        create(challenge, positive);
+        create(challenge, negative);
+        return challengeFeedbacks;
     }
 
     /**
@@ -117,6 +132,8 @@ public class ChallengeFeedbackService {
      * @param challengeFeedback Challenge feedback entity to be deleted.
      */
     public void delete(ChallengeFeedback challengeFeedback) {
+        // To ensure bidirectional persistence in database
+        challengeFeedback.getChallenge().getChallengeFeedback().remove(challengeFeedback.isPositive());
         challengeFeedbackRepo.delete(challengeFeedback);
     }
 
@@ -125,6 +142,8 @@ public class ChallengeFeedbackService {
      * @param challengeFeedbacks Collection of challenge feedbacks to be deleted.
      */
     public void batchDelete(Iterable<ChallengeFeedback> challengeFeedbacks) {
+        // To ensure bidirectional persistence in database
+        challengeFeedbacks.forEach(challengeFeedback -> challengeFeedback.getChallenge().getChallengeFeedback().remove(challengeFeedback.isPositive()));
         challengeFeedbackRepo.deleteAll(challengeFeedbacks);
     }
 

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{scenarioLayout.html}"
+      th:with="infoTitle=${question.questionTitle}, infoText=${question.questionText}, score=${score}">
+<head>
+    <meta charset="UTF-8">
+    <title>Question</title>
+    <link rel="stylesheet" href="../static/css/question.css" type="text/css" th:href="@{/css/question.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@600&display=swap" rel="stylesheet">
+    <script th:src="@{/javascript/dragAndDrop.js}"></script>
+</head>
+<body>
+    <ul layout:fragment="sidenav">
+        <li th:each="question, questionStat : ${questions}" th:with="curQ=${questions[__${questionStat.index}__]}">
+            <a th:text="${curQ.questionTitle}" th:href="@{/scenario/__${sid}__/__${curQ.questionId}__}"></a>
+        </li>
+        <li class="finishedBtn">
+            <a th:href="@{/explore}">Finished</a>
+        </li>
+    </ul>
+    <div layout:fragment="content3">
+        <form th:action="@{/scenario/__${sid}__/__${qid}__}" method="post" th:object="${question}">
+            <div class="choiceContainer">
+                <ul id="choices" class="droptrue">
+                    <li th:each="choice, choiceStat : ${choices}" th:id="'ch'+${choice.choiceId}" class="choice">
+                        <span th:text="${choices[__${choiceStat.index}__].choiceText}"></span>
+                        <input type="hidden" th:value="${choice.choiceId}" name="choices"/>
+                    </li>
+                </ul>
+            </div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>0</th>
+                        <th>1</th>
+                        <th>2</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="droppable">
+                            <ul id="score0" class="droptrue">
+                            </ul>
+                        </td>
+                        <td class="droppable">
+                            <ul id="score1" class="droptrue">
+                            </ul>
+                        </td>
+                        <td class="droppable">
+                            <ul id="score2" class="droptrue">
+                            </ul>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <input id="submit" type="submit" name="dragAndDrop" value="Submit">
+        </form>
+    </div>
+</body>
+</html>

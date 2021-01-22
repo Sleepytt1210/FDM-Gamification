@@ -3,9 +3,9 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       xmlns:th="http://www.thymeleaf.org" layout:decorate="~{headinglayout.html}">
 <head>
-    <link href="../static/css/heading.css" rel="stylesheet" th:href="@{/css/sideNav.css}">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.2/jquery.validate.min.js" integrity="sha512-UdIMMlVx0HEynClOIFSyOrPggomfhBKJE28LKl8yR3ghkgugPnG6iLfRfHwushZl1MOPSY6TsuBDGPK2X4zYKg==" crossorigin="anonymous"></script>
-    <script th:src="${'https://cdn.tiny.cloud/1/'+@environment.getProperty('tinyMCEAPI')+'/tinymce/5/tinymce.min.js'}" referrerpolicy="origin"></script>
+    <link href="../static/css/sideNav.css" rel="stylesheet" th:href="@{/css/sideNav.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Mandali&display=swap" rel="stylesheet">
     <script>
         tinymce.init({
             selector: '.feedback',
