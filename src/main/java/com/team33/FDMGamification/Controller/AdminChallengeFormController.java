@@ -115,7 +115,7 @@ public class AdminChallengeFormController {
             // For page scrolling to question section
             String uri = request.getRequestURI()+"?addQuestion";
             Question tempQ = new Question();
-            challenge.getQuestions().add(tempQ);
+            challenge.addQuestion(tempQ);
             return "redirect:"+uri;
         } catch (Exception ex) {
             throw new ResponseStatusException(
@@ -136,7 +136,7 @@ public class AdminChallengeFormController {
                 processImage(picData, model, challenge);
             }
             Question question = challenge.getQuestions().get(rmIdx);
-            challenge.getQuestions().remove(rmIdx.intValue());
+            challenge.removeQuestion(rmIdx.intValue());
             // For page scrolling to question section
             String uri = request.getRequestURI()+"?removeQuestion";
             // If it's form edit, delete the persisted question from database as well.
@@ -162,9 +162,9 @@ public class AdminChallengeFormController {
             }
             // For page scrolling to question section
             String uri = request.getRequestURI()+"?addChoice="+ qIdx;
-            Question question = challenge.getQuestions().get(qIdx);
+            Question question = challenge.getQuestionByIndex(qIdx);
             Choice tempC = new Choice();
-            question.getChoices().add(tempC);
+            question.addChoice(tempC);
             return "redirect:"+uri;
         } catch (Exception ex) {
             throw new ResponseStatusException(
@@ -186,9 +186,9 @@ public class AdminChallengeFormController {
             }
             Integer qIdx = ids.get(0);
             Integer choiceIdx = ids.get(1);
-            Question question = challenge.getQuestions().get(qIdx);
-            Choice choice = question.getChoices().get(choiceIdx);
-            question.getChoices().remove(choiceIdx.intValue());
+            Question question = challenge.getQuestionByIndex(qIdx);
+            Choice choice = question.getChoiceByIndex(choiceIdx);
+            question.removeChoice(choiceIdx.intValue());
             // For page scrolling to question section
             String uri = request.getRequestURI()+"?removeChoice="+ qIdx;
             // If it's form edit, delete the persisted choice from database as well.

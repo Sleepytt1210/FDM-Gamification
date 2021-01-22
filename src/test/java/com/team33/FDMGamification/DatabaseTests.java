@@ -936,7 +936,7 @@ public class DatabaseTests {
 
         // After updates
         Challenge updatedChallenge = challengeS.findById(challenge1.getId());
-        Choice updatedChoice = updatedChallenge.getQuestionById(question1.getQuestionId()).get().getChoices().get(2);
+        Choice updatedChoice = updatedChallenge.getQuestionById(question1.getQuestionId()).getChoiceByIndex(2);
 
         // Check Challenge update
         assertEquals(challenge1.getChallengeTitle(), updatedChallenge.getChallengeTitle());
