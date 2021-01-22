@@ -21,6 +21,7 @@ public class ChallengeFeedback {
     @Column(name = "feedback_title")
     private String feedbackTitle = "";
 
+    @NotBlank(message = "Please do not leave this field blank!")
     @Column(name = "feedback_text")
     private String feedbackText = "";
 

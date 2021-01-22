@@ -29,7 +29,6 @@ public class Question {
     private String questionTitle = "";
 
     @NotBlank(message = "Please do not leave this field blank!")
-    @Pattern(regexp = "^[^<>]*$", message = "Angle brackets (<, >) are not allowed!")
     @Column(name = "question_text")
     private String questionText = "";
 
@@ -113,10 +112,6 @@ public class Question {
         return choices;
     }
 
-    public Optional<Choice> getChoiceById(Integer choiceId) {
-        return this.choices.stream().filter(choice -> choice.getChoiceId().equals(choiceId)).findAny();
-    }
-
     private void setChoices(List<Choice> choices) {
         this.choices = choices;
     }
@@ -126,6 +121,15 @@ public class Question {
             choice.setQuestion(this);
             this.choices.add(choice);
         }
+    }
+
+    public Choice getChoiceByIndex(int index) {
+        return this.choices.get(index);
+    }
+
+    public Choice getChoiceById(Integer choiceId) {
+        return this.choices.stream().filter(choice -> choice.getChoiceId().equals(choiceId))
+                .findAny().orElseThrow(() -> new EntityNotFoundException("Choice not found!"));
     }
 
     public void removeChoice(Integer choiceId){

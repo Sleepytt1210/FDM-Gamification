@@ -24,7 +24,6 @@ public class Challenge {
     private String challengeTitle = "";
 
     @NotBlank(message = "Please do not leave this field blank!")
-    @Pattern(regexp = "^[^<>]*$", message = "Angle brackets (<, >) are not allowed!")
     @Column(name = "challenge_description")
     private String description = "";
 
@@ -144,10 +143,6 @@ public class Challenge {
         return questions;
     }
 
-    public Optional<Question> getQuestionById(Integer qid){
-        return this.questions.stream().filter(question -> question.getQuestionId().equals(qid)).findAny();
-    }
-
     private void setQuestions(List<Question> question) {
         this.questions = question;
     }
@@ -182,6 +177,15 @@ public class Challenge {
             question.setChallenge(this);
             this.questions.add(question);
         }
+    }
+
+    public Question getQuestionById(Integer qid){
+        return this.questions.stream().filter(question -> question.getQuestionId().equals(qid)).findAny()
+                .orElseThrow(() -> new EntityNotFoundException("Question not found!"));
+    }
+
+    public Question getQuestionByIndex(int index){
+        return this.questions.get(index);
     }
 
     public void removeQuestion(int index){

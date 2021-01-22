@@ -28,7 +28,7 @@
                 <div class="form-group">
                     <label>Question Text</label>
                     <div class="input-div">
-                                <textarea class="description-input" name="question-text"
+                                <textarea class="editor" name="question-text"
                                           th:field="*{questionText}"></textarea>
                     </div>
                     <div class="errorMessage" th:if="${#fields.hasErrors('questionText')}" th:errors="*{questionText}">
