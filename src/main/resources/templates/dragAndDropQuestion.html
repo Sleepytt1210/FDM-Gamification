@@ -15,6 +15,9 @@
         <li th:each="question, questionStat : ${questions}" th:with="curQ=${questions[__${questionStat.index}__]}">
             <a th:text="${curQ.questionTitle}" th:href="@{/scenario/__${sid}__/__${curQ.questionId}__}"></a>
         </li>
+        <li class="finishedBtn">
+            <a th:href="@{/explore}">Finished</a>
+        </li>
     </ul>
     <div layout:fragment="content3">
         <form th:action="@{/scenario/__${sid}__/__${qid}__}" method="post" th:object="${question}">

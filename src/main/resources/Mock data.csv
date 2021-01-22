@@ -13,7 +13,7 @@ Choice 1.2.1,Meh choice,0,,
 Choice 1.2.2,Perfect choice,1,,
 Choice 1.2.3,Meh choice,0,,
 Choice 1.2.4,Stupid choice,0,,
-Challenge 2,This is Challenge 2,0,/images/challenge/2.png,ST
+Defect Severity,As part of their role testers must assign a level of severity to any defects that they find. Severity indicates the level of risk associated with a particular defect. Assigning severity is important as it allows clients to easily understand risk and make informed decisions regarding the order in which any outstanding defects should be investigated and fixed.,0,/images/challenge/2.png,ST
 2,,,,
 Question 2.1,This is Question 2.1,0,TEXTBOX,
 4,,,,
@@ -27,7 +27,7 @@ Choice 2.2.1,Stupid choice,0,,
 Choice 2.2.2,Meh choice,1,,
 Choice 2.2.3,Perfect choice,2,,
 Choice 2.2.4,Meh choice,1,,
-Challenge 3,This is Challenge 3,0,/images/challenge/3.png,ST
+Technical Feasibility,Testers must review user stories/requirements documents to ensure that each requirement is objective and testable as this information is the basis for creating tests. In other words Testers must ensure requirements are measurable and can have acceptable criteria assigned to them to ensure they have been achieved.,0,/images/challenge/3.png,ST
 3,,,,
 Question 3.1,This is Question 3.1,0,MULTIPLE_CHOICE,
 3,,,,
