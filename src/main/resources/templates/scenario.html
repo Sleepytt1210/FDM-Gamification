@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" layout:decorate="~{scenarioLayout.html}"
+      th:with="infoTitle=${scenario.challengeTitle}, infoText=${scenario.description}"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -14,9 +15,5 @@
                 <a th:text="${curQ.questionTitle}" th:href="@{/scenario/__${sid}__/__${curQ.questionId}__}"></a>
             </li>
         </ul>
-
-        <div layout:fragment="content2">
-            <p th:text="${scenario.challengeTitle}"></p>
-        </div>
     </body>
 </html>
