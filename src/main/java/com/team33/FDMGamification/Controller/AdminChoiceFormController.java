@@ -42,11 +42,13 @@ public class AdminChoiceFormController {
     }
 
     @GetMapping("/{id}")
-    public ModelAndView getChoiceView(@PathVariable("id") Integer id) {
+    public ModelAndView getChoiceView(@PathVariable("id") Integer id, ModelMap model) {
         ModelAndView mav = new ModelAndView("admin/choiceForm");
         try {
-            Choice choice = choiceService.findById(id);
-            mav.addObject("choice", choice);
+            if(!model.containsAttribute("choice")) {
+                Choice choice = choiceService.findById(id);
+                mav.addObject("choice", choice);
+            }
         } catch (EntityNotFoundException ex) {
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND, ex.getMessage(), ex);
@@ -56,7 +58,7 @@ public class AdminChoiceFormController {
 
     @GetMapping("/new")
     public String createChoice(ModelMap model) {
-        if(model.getAttribute("choice") == null) model.addAttribute("choice", new Choice());
+        if(!model.containsAttribute("choice")) model.addAttribute("choice", new Choice());
         return "admin/choiceForm";
     }
 
@@ -71,6 +73,7 @@ public class AdminChoiceFormController {
                 return "admin/choiceForm";
             }
             // Create a new entity if the path is not id
+            System.out.println("Choice is saved!");
             if(id == null) {
                 choiceService.create(questionId, choice);
             } else {
