@@ -3,7 +3,6 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       xmlns:th="http://www.thymeleaf.org"
       layout:decorate="~{adminLayout.html}">
-<html lang="en">
 <head>
     <title th:text="${question.questionId == null ? 'New Question' : 'Question ' + question.questionId}"></title>
     <link rel="stylesheet" th:href="@{/css/form.min.css}" type="text/css">

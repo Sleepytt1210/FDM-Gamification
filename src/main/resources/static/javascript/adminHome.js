@@ -6,6 +6,9 @@ $(function () {
     let form = $("#panel-form");
     const textMax = 70;
 
+    /*
+     * Initialised the dialog
+     */
     const dialog = $( "#dialog-confirm" ).dialog({
         autoOpen: false,
         height: "auto",
@@ -16,16 +19,19 @@ $(function () {
             "Delete": function() {
                 form.append(dialog.data("button")).submit();
             },
-            Cancel: function() {
+            "Cancel": function() {
                 $(this).dialog("close");
             }
         }
     });
 
+    /*
+     * Table select all
+     */
     $(document).on("change",".select-all",function() {
         const main = this;
         const tabName = $(main).attr("id").split("-")[0] + '-item-selection';
-        $("."+tabName).map(function (){
+        $(`.${tabName}:checkbox`).each(function (){
             $(this).prop("checked", main.checked);
         })
         $(".delete-button").prop("disabled", !main.checked);
@@ -33,16 +39,19 @@ $(function () {
 
     $(document).on("change", ".item-selection", function() {
         const classDiv = '.' + $(this).prop("class").split(/\s+/)[0];
-        const arr = $(classDiv).map((index, obj) => {
-            return obj.checked;
+        const arr = $(classDiv).map(function() {
+            return this.checked;
         }).get();
-        console.log(arr);
         const any = arr.some((element) => element);
         const all = arr.every((element) => element);
         $(".select-all").prop("checked", all);
         const del = $(".delete-button");
         del.prop("disabled", !any);
     })
+
+    /*
+     * Long text trimming
+     */
 
     $(".text-column").each(function(){
         trimmer(this);
@@ -66,12 +75,12 @@ $(function () {
         aaSorting: [[1, 'asc']]
     });
 
-    $('div.toolbar').html('<button class="create-new-button" name="create" type="button" value="NEW">' +
-        `                    <a href="${path}/new">NEW</a>` +
-        '                </button>' +
+    $('div.toolbar').html('<button class="create-new-button" name="create" id="create-new" type="button">NEW</button>' +
         '                <input class="delete-button" name="delete" type="submit" value="DELETE" disabled="disabled">')
 
-    // Move this listener below the button's creation
+    /*
+     * Move the listener below the button's creation method
+     */
     $(".delete-button").click(function (ev) {
         ev.preventDefault();
         const $this = $(this);
@@ -82,4 +91,8 @@ $(function () {
         $(".ui-button:contains('Delete')").addClass("delete-button");
         dialog.dialog("open");
     });
+
+    $("#create-new").click(function () {
+        location.href = path+"/new";
+    })
 })
