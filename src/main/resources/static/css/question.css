@@ -18,7 +18,7 @@
   border-radius: 5px;
   cursor: grab;
   text-align: center;
-  font-size: 1.3rem;
+  font-size: 0.7rem;
 }
 .droptrue .placeholder {
   box-shadow: none;
@@ -49,10 +49,6 @@ table .droppable ul li {
   margin: 10px auto;
 }
 
-.container {
-  padding: 20px;
-}
-
 input[type=submit] {
   color: black;
   margin: 10px auto;
@@ -72,5 +68,4 @@ input[type=submit]:hover {
 .highlight {
   border: 1px dashed red;
 }
-
 /*# sourceMappingURL=question.css.map */

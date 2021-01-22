@@ -80,11 +80,6 @@ body{
     color: #009dff !important;
 }
 
-.container{
-    text-align: center;
-    margin: 20px auto 100px;
-}
-
 /*Top of Page*/
 .heading{
     background-image: url("../images/headingimage3.jpg");
@@ -93,12 +88,20 @@ body{
     height: 300px;
     display: flex;
     justify-content: center;
+    transition: 0.5s;
 }
 
 .heading h1{
     color: white;
     font-size: 80px;
     margin-top: 150px;
+}
+
+/*Middle of page*/
+.container{
+    text-align: center;
+    margin: 20px auto 100px;
+    padding: 20px;
 }
 
 /*Footer*/

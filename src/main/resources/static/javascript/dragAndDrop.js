@@ -46,6 +46,12 @@ $(function () {
         move(cids0, "score0");
         move(cids1, "score1");
         move(cids2, "score2");
+
+        const allIDs = (cids0 + cids1 + cids2).split(",");
+        // Remove everything in choice list after migration.
+        $("#choices > li").each(function () {
+            if (allIDs.includes($(this).attr("id")))$(this).remove();
+        });
         btnToggle();
     }
 

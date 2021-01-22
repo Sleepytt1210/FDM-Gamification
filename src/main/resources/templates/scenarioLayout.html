@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="en"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      xmlns:th="http://www.thymeleaf.org" layout:decorate="~{headinglayout.html}">
+      xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="~{headinglayout.html}">
 <head>
     <meta charset="UTF-8"/>
     <title>Default title for my pages</title>
@@ -21,8 +22,6 @@
     </nav>
 </th:block>
 
-
-
 <div layout:fragment="content">
     <div class="sidenav">
         <div class="sidenav sidenav-column">
@@ -31,14 +30,18 @@
         </div>
     </div>
     <div class="container2" layout:fragment="content2">
-        <th:block layout:fragment="questionTitle">
+        <div class="info" layout:fragment="info">
+            <h1 th:text="${infoTitle}"></h1>
+            <div class="textArea">
+                <p th:text="${infoText}">
+            </div>
+        </div>
+        <div class="container3" layout:fragment="content3">
             
-
-
-
-        </th:block>
-
-
+        </div>
+        <div class="result" th:style="'display:'+ ${score != null ? 'block' : 'none'}" layout:fragment="result">
+            <p id="score" th:text="'Score: ' + ${score}" th:value="${score}"></p>
+        </div>
     </div>
 </div>
 </body>
