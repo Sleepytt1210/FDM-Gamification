@@ -118,7 +118,7 @@ public class ChallengeService {
      * Return questions map of a challenge.
      *
      * @param id Id of the challenge.
-     * @return Map<Integer, Question> questions: Map of questions with their id as key.
+     * @return List<Question> questions: Map of questions with their id as key.
      */
     @Transactional
     public List<Question> getQuestions(Integer id){
@@ -170,10 +170,14 @@ public class ChallengeService {
 
         oldChallenge = challengeRepo.saveAndFlush(oldChallenge);
         List<Question> newQuestions = newChallenge.getQuestions();
-
         Map<Boolean, ChallengeFeedback> newFeedback = newChallenge.getChallengeFeedback();
+
         if (newQuestions != null && !newQuestions.isEmpty()) {
-            newQuestions.forEach((v) -> questionService.update(v.getQuestionId(), v));
+            Challenge finalOldChallenge = oldChallenge;
+            newQuestions.forEach((v) -> {
+                if(v.getQuestionId() == null) v.setChallenge(finalOldChallenge);
+                questionService.update(v.getQuestionId(), v);
+            });
         }
         if (newFeedback != null && !newFeedback.isEmpty()) {
             newFeedback.forEach((k, v) -> challengeFeedbackService.update(v.getFeedback_id(), v.getFeedback_title(), v.getFeedback_text()));

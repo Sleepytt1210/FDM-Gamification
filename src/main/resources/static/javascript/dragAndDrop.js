@@ -46,9 +46,6 @@ $(function () {
         move(cids0, "score0");
         move(cids1, "score1");
         move(cids2, "score2");
-
-        // Remove everything in choice list after migration.
-        $("#choices > li").remove();
         btnToggle();
     }
 

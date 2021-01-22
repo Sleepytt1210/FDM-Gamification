@@ -38,8 +38,12 @@
             <input accept="image/jpeg, image/png" class="hidden" id="thumbnail" name="pic" type="file">
             <div class="image-display" id="image-upload-wrapper" th:with="completeUrl='data:'+*{thumbnail.fileType}+';base64, '+*{thumbnail.base64String},
                  hasUrl=${!challenge.thumbnail.base64String.isBlank() && !challenge.thumbnail.base64String.isEmpty()}">
-                <img id="preview" th:alt="*{thumbnail.fileName}" th:src="${completeUrl}"
+                <img id="preview"
+                     th:alt="*{thumbnail.fileName}"
+                     th:src="${completeUrl}"
                      th:style="${hasUrl ? 'display: block;' : 'display: none;'}">
+            </div>
+            <div class="errorMessage" th:if="${#fields.hasErrors('thumbnail')}" th:text="${#fields.errors('thumbnail')[0]}">
             </div>
         </div>
         <div class="form-group">
