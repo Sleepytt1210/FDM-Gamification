@@ -1,3 +1,5 @@
+import {btnToggle, showScore} from "./repeatedCode";
+
 const local = window.localStorage;
 
 $(function () {
@@ -12,12 +14,12 @@ $(function () {
     const scoreHTML = $("#score").attr("value");
     const score = local.getItem(qidString);
 
+    btnToggle();
+
     btn.click(function () {
 
 
         const cid = ($('input[name=choices]:checked')).val();
-
-
 
         // Set qidString to temp before server side calculation
         local.setItem(qidString, "temp");
@@ -31,32 +33,12 @@ $(function () {
     // If score exists in local storage indicates that a submission is made.
     if (score){
         const cid = local.getItem(cidName);
-        if (score === "temp") {
-            local.setItem(qidString, scoreHTML);
-        } else {
-            $("#score").html('Score: ' + score);
-            $(".result").show();
-
-
-
-        }
+        showScore(score,qidString,scoreHTML,local);
         $('#' + cid).prop('checked', true);
         btnToggle();
     }
 
-    function btnToggle() {
-        if ($('btn:checked').length) {
-            btn.prop("disabled", true);
-            btn.css("cursor", "not-allowed");
-            btn.prop("title", "Please choose an answer first");
-        } else {
-            btn.prop("disabled", false);
-            btn.removeAttr("title");
-            btn.css("cursor", "pointer");
-        }
-    }
+
 }
-
-
 
 )

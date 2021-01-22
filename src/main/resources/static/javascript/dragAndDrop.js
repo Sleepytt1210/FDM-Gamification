@@ -1,5 +1,6 @@
-const local = window.localStorage;
+import {btnToggle, showScore} from "./repeatedCode";
 
+const local = window.localStorage;
 $(function () {
 
     const url = window.location.href;
@@ -12,6 +13,8 @@ $(function () {
     const cids2Name = qidString + "_score2";
     const scoreHTML = $("#score").attr("value");
     const score = local.getItem(qidString);
+
+    btnToggle();
 
     btn.click(function () {
         // Gets id of choice for each column
@@ -39,12 +42,7 @@ $(function () {
         const cids0 = local.getItem(cids0Name);
         const cids1 = local.getItem(cids1Name);
         const cids2 = local.getItem(cids2Name);
-        if (score === "temp") {
-            local.setItem(qidString, scoreHTML);
-        } else {
-            $("#score").html('Score: ' + score);
-            $(".result").show();
-        }
+        showScore(score,qidString,scoreHTML,local);
         move(cids0, "score0");
         move(cids1, "score1");
         move(cids2, "score2");
@@ -72,17 +70,7 @@ $(function () {
         }
     });
 
-    function btnToggle() {
-        if ($('#choices li').length !== 0) {
-            btn.prop("disabled", true);
-            btn.css("cursor", "not-allowed");
-            btn.prop("title", "Please fill in the tables first");
-        } else {
-            btn.prop("disabled", false);
-            btn.removeAttr("title");
-            btn.css("cursor", "pointer");
-        }
-    }
+
 
     function move(cids, name) {
         cids.split(",").forEach((cid) => {

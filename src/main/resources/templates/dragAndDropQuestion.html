@@ -22,7 +22,7 @@
             <p th:text="${question.questionText}">
         </div>
 
-        <div class="container2" layout:fragment="dragAndDrop">
+        <div>
             <form th:action="@{/scenario/__${sid}__/__${qid}__}" method="post" th:object="${question}">
                 <div class="choiceContainer">
                     <ul id="choices" class="droptrue">

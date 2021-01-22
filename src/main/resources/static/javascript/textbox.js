@@ -1,3 +1,5 @@
+import {btnToggle, showScore} from "./repeatedCode";
+
 const local = window.localStorage;
 
 $(function () {
@@ -12,7 +14,7 @@ $(function () {
     const scoreHTML = $("#score").attr("value");
     const score = local.getItem(qidString);
 
-
+    btnToggle();
 
     btn.click(function () {
 
@@ -32,27 +34,10 @@ $(function () {
 
     if (score){
         const answer = local.getItem(answerName);
-        if (score === "temp") {
-            local.setItem(qidString, scoreHTML);
-        } else {
-            $("#score").html('Score: ' + score);
-            $(".result").show();
-        }
-        $('answer').val(answer);
+        showScore(score,qidString,scoreHTML,local);
+        $('#answer').val(answer);
         btnToggle();
     }
 
-
-    function btnToggle() {
-        if ($('btn:checked').length) {
-            btn.prop("disabled", true);
-            btn.css("cursor", "not-allowed");
-            btn.prop("title", "Please choose an answer first");
-        } else {
-            btn.prop("disabled", false);
-            btn.removeAttr("title");
-            btn.css("cursor", "pointer");
-        }
-    }
 
 })

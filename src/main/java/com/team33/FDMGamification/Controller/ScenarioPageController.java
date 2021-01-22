@@ -85,9 +85,7 @@ public class ScenarioPageController {
 
 
         Choice correctChoice = choiceService.findById(cid);
-        if (correctChoice.getChoiceWeight() == 1){
-            score++;
-        }
+        score = correctChoice.getChoiceWeight();
 
         populateQuestionAndChoices(model,sid,qid);
         model.addAttribute("score", score);
@@ -103,8 +101,11 @@ public class ScenarioPageController {
     {
         int score = 0;
 
-        Choice correctChoice = choiceService.findById(1);
-        if (correctChoice.getChoiceText().contains(answer)){
+        List<Choice> choices = questionService.getChoices(qid);
+
+
+        //The weight makes no difference on the textbox variations
+        if (choices.get(0).getChoiceText().equalsIgnoreCase(answer)){
             score+=2;
         }
         populateQuestionAndChoices(model,sid,qid);

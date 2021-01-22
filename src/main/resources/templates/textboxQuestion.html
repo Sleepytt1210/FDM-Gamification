@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Question</title>
-    <link rel="stylesheet" href="../static/css/question.css" type="text/css" th:href="@{/css/textbox.css}">
+    <link rel="stylesheet"  type="text/css" th:href="@{/css/textbox.css}">
     <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@600&display=swap" rel="stylesheet">
     <script th:src="@{/javascript/textbox.js}"></script>
 </head>
@@ -32,9 +32,10 @@
 
 
         </form>
+        <div class="result" layout:fragment="result" th:style="'display:'+ ${score != null ? 'block' : 'none'}">
+            <p id="score" th:text="'Score: ' + ${score}" th:value="${score}"></p>
+        </div>
     </div>
-    <div class="result" layout:fragment="result" th:style="'display:'+ ${score != null ? 'block' : 'none'}">
-        <p id="score" th:text="'Score: ' + ${score}" th:value="${score}"></p>
-    </div>
+
 </body>
 </html>
