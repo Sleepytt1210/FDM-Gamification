@@ -5,6 +5,14 @@ html{
     scroll-behavior: smooth;
 }
 
+.heading {
+    height: 400px;
+    transition: 0.5s;
+}
+.heading h1{
+    margin-top: 200px;
+}
+
 /*First section where users choose a stream*/
 .chooseStream{
     margin-bottom: 50px;

@@ -9,7 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@600&display=swap" rel="stylesheet">
 </head>
 <body>
-<div layout:fragment="content">
+<div class="container" layout:fragment="content">
     <div class="title">
         <h2>Scenarios</h2>
     </div>
@@ -38,13 +38,13 @@
             <th:block th:each="scenario : ${ST}">
                 <a th:href="@{scenario/__${scenario.id}__}">
                     <table>
-                        <tr>
+                        <tr class="row1">
                             <th th:text="${scenario.challengeTitle}"></th>
                         </tr>
-                        <tr>
-                            <th th:text="${scenario.description}"></th>
+                        <tr class="row2">
+                            <th>Image Placeholder</th>
                         </tr>
-                        <tr>
+                        <tr class="row3">
                             <th>Score:</th>
                         </tr>
                     </table>
@@ -55,13 +55,13 @@
             <th:block th:each="scenario : ${BI}">
                 <a th:href="@{scenario/__${scenario.id}__}">
                     <table>
-                        <tr>
-                            <th th:text="${scenario.challengeTitle}">Business Intelligence Scenario 1</th>
+                        <tr class="row1">
+                            <th th:text="${scenario.challengeTitle}"></th>
                         </tr>
-                        <tr>
-                            <th th:text="${scenario.description}">Description</th>
+                        <tr class="row2">
+                            <th th:text="${scenario.description}"></th>
                         </tr>
-                        <tr>
+                        <tr class="row3">
                             <th>Score:</th>
                         </tr>
                     </table>
@@ -73,13 +73,13 @@
                 <a th:href="@{scenario/__${scenario.id}__}">
                     <table>
                         <a th:href="@{/scenario/__${scenario.id}__}"></a>
-                        <tr>
-                            <th th:text="${scenario.challengeTitle}">Technical Operations Scenario 1</th>
+                        <tr class="row1">
+                            <th th:text="${scenario.challengeTitle}"></th>
                         </tr>
-                        <tr>
-                            <th th:text="${scenario.description}">Description</th>
+                        <tr class="row2">
+                            <th th:text="${scenario.description}"></th>
                         </tr>
-                        <tr>
+                        <tr class="row3">
                             <th>Score:</th>
                         </tr>
                     </table>

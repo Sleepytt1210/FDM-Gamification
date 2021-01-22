@@ -8,7 +8,13 @@ body{
     justify-content: center;
 }
 
-
+.container{
+    margin-left: 20%;
+    margin-right: 20%;
+    margin-top: 1.25px;
+    padding-bottom: 5%;
+    box-shadow: 2px 0 8px 2px rgba(172, 172, 172, 0.5);
+}
 /*Navigation bar for choosing scenarios*/
 .scenarioNavbar ul{
     text-decoration: none;
@@ -18,8 +24,8 @@ body{
 }
 
 .scenarioNavbar ul li {
-    padding-left: 10px;
-    padding-right: 10px;
+    padding-left: 30px;
+    padding-right: 30px;
     font-size: 20px;
     color: black;
 }
@@ -60,13 +66,26 @@ body{
     cursor: pointer;
     transition: 0.5s;
 }
-
 .chooseScenario a{
-    text-decoration: none;
+     text-decoration: none;
+ }
+
+.chooseScenario a:visited{
+    color: black;
 }
 
-.chooseScenario tr{
+.chooseScenario .row1{
     background-color: #999999;
+    font-size: 30px;
+    height: 60px;
+}
+.chooseScenario .row2{
+    background-color: #b4b4b4;
+}
+.chooseScenario .row3{
+    background-color: #999999;
+    font-size: 25px;
+    height: 55px;
 }
 .chooseScenario tr, th{
     border: 1px solid black;

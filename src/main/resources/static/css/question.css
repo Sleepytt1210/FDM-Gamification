@@ -18,7 +18,7 @@
   border-radius: 5px;
   cursor: grab;
   text-align: center;
-  font-size: 1.3rem;
+  font-size: 0.7rem;
 }
 .droptrue .placeholder {
   box-shadow: none;
@@ -68,5 +68,4 @@ input[type=submit]:hover {
 .highlight {
   border: 1px dashed red;
 }
-
 /*# sourceMappingURL=question.css.map */

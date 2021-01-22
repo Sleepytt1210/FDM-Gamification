@@ -25,27 +25,19 @@
 <div layout:fragment="content">
     <div class="sidenav">
         <div class="sidenav sidenav-column">
-            <div class="scenario-redir">
-                <a th:text="${scenario.challengeTitle}" th:href="@{/scenario/__${scenario.id}__}"></a>
-            </div>
-            <div class="questions-list">
-                <ul class="sidebar-menu-list">
-                    <li th:each="question, questionStat : ${questions}" th:with="curQ=${questions[__${questionStat.index}__]}">
-                        <a th:text="${curQ.questionTitle}" th:href="@{/scenario/__${sid}__/__${curQ.questionId}__}"></a>
-                    </li>
-                </ul>
-            </div>
+            <ul class="sidebar-menu-list" layout:fragment="sidenav">
+            </ul>
         </div>
     </div>
     <div class="container2" layout:fragment="content2">
-        <div class="info">
+        <div class="info" layout:fragment="info">
             <h1 th:text="${infoTitle}"></h1>
             <div class="textArea">
                 <p th:text="${infoText}">
             </div>
         </div>
         <div class="container3" layout:fragment="content3">
-
+            
         </div>
         <div class="result" th:style="'display:'+ ${score != null ? 'block' : 'none'}" layout:fragment="result">
             <p id="score" th:text="'Score: ' + ${score}" th:value="${score}"></p>

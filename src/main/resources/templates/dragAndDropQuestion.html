@@ -2,11 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{scenarioLayout.html}"
-      th:with="infoTitle=${question.questionTitle},
-      infoText=${question.questionText},
-      scenario=${scenario},
-      questions=${questions},
-      score=${score}">
+      th:with="infoTitle=${question.questionTitle}, infoText=${question.questionText}, score=${score}">
 <head>
     <meta charset="UTF-8">
     <title>Question</title>
@@ -18,6 +14,9 @@
     <ul layout:fragment="sidenav">
         <li th:each="question, questionStat : ${questions}" th:with="curQ=${questions[__${questionStat.index}__]}">
             <a th:text="${curQ.questionTitle}" th:href="@{/scenario/__${sid}__/__${curQ.questionId}__}"></a>
+        </li>
+        <li class="finishedBtn">
+            <a th:href="@{/explore}">Finished</a>
         </li>
     </ul>
     <div layout:fragment="content3">
