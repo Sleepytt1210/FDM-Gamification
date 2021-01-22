@@ -3,6 +3,7 @@ package com.team33.FDMGamification.Controller;
 import com.team33.FDMGamification.Model.Challenge;
 import com.team33.FDMGamification.Model.Choice;
 import com.team33.FDMGamification.Model.Question;
+import com.team33.FDMGamification.Model.QuestionType;
 import com.team33.FDMGamification.Service.ChallengeService;
 import com.team33.FDMGamification.Service.ChoiceService;
 import com.team33.FDMGamification.Service.QuestionService;
@@ -14,6 +15,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.persistence.EntityNotFoundException;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.swing.*;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -70,6 +75,7 @@ public class ScenarioPageController {
         score += scoreCheck(cids2, 2);
 
         populateQuestionAndChoices(model, sid, qid);
+        choiceReasons(model,sid,qid);
 
         model.addAttribute("score", score);
         return "dragAndDropQuestion";
@@ -83,11 +89,11 @@ public class ScenarioPageController {
 
         int score = 0;
 
-
         Choice correctChoice = choiceService.findById(cid);
         score = correctChoice.getChoiceWeight();
 
         populateQuestionAndChoices(model,sid,qid);
+        choiceReasons(model,sid,qid);
         model.addAttribute("score", score);
 
 
@@ -109,6 +115,7 @@ public class ScenarioPageController {
             score+=2;
         }
         populateQuestionAndChoices(model,sid,qid);
+        choiceReasons(model,sid,qid);
         model.addAttribute("score", score);
 
 
@@ -145,4 +152,19 @@ public class ScenarioPageController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, ex.toString(), ex);
         }
     }
+
+    private void choiceReasons(Model model, Integer sid, Integer qid){
+
+        //list of choice
+        List<Choice> choices = questionService.getChoices(qid);
+        Integer count = 0;
+        //Array with reasons
+        String[] reasons = new String[choices.size()];
+        for (Choice choice : choices){
+            reasons[count] = choice.getChoiceReason();
+            count++;
+        }
+        model.addAttribute("reasons",reasons);
+    }
+
 }
