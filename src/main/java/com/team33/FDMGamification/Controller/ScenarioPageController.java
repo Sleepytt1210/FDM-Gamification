@@ -34,7 +34,7 @@ public class ScenarioPageController {
         try {
             if (!sid.equals(scenario.getId())) {
                 model.addAttribute("scenario", challengeService.findById(sid));
-                model.addAttribute("questions", challengeService.getQuestions(sid));
+                model.addAttribute("questions", questionService.getQuestions(sid));
             }
         } catch (EntityNotFoundException ex){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, ex.toString(), ex);
@@ -133,11 +133,11 @@ public class ScenarioPageController {
         try {
             model.addAttribute("scenario", challengeService.findById(sid));
             Question question = questionService.findById(qid);
-            model.addAttribute("questions", challengeService.getQuestions(sid));
+            model.addAttribute("questions", questionService.getQuestions(sid));
             if(question == null) {
                 throw new EntityNotFoundException("Question id " + qid + " does not exist in scenario id " + sid + " !!");
             }
-            List<Choice> choices = questionService.getChoices(qid);
+            List<Choice> choices = choiceService.getChoices(qid);
             model.addAttribute("question", question);
             model.addAttribute("choices", choices);
         } catch (EntityNotFoundException ex){

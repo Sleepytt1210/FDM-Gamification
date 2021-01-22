@@ -61,20 +61,6 @@ public class ChallengeFeedbackService {
     }
 
     /**
-     * Insert and persist both positive and negative challengeFeedback entities in ChallengeFeedback Table.
-     * @param challenge Foreign entity challenge to be added to.
-     * @param challengeFeedbacks ChallengeFeedback positive and negative entities with properties.
-     * @return Map<Boolean, ChallengeFeedback>: Both positive and negative ChallengeFeedbacks entities persisted in database.
-     */
-    public Map<Boolean, ChallengeFeedback> createBoth(Challenge challenge, Map<Boolean, ChallengeFeedback> challengeFeedbacks) {
-        ChallengeFeedback positive = challengeFeedbacks.get(true);
-        ChallengeFeedback negative = challengeFeedbacks.get(false);
-        create(challenge, positive);
-        create(challenge, negative);
-        return challengeFeedbacks;
-    }
-
-    /**
      * Find a challenge feedback by its ID.
      * @param challengeFeedbackId Id of challenge feedback.
      * @return ChallengeFeedback: Challenge feedback entity if found.
@@ -91,8 +77,8 @@ public class ChallengeFeedbackService {
      * @return ChallengeFeedback: Challenge feedback entity if found.
      * @throws EntityNotFoundException: If challenge feedback is not found.
      */
-    public ChallengeFeedback findByPositive(Integer challengeId, boolean positive) {
-        ChallengeFeedback feedback = challengeFeedbackRepo.findByChallengeIdAndChallengeFeedbackPositive(challengeId, positive);
+    public ChallengeFeedback findByPositive(Integer challengeId, boolean isPositive) {
+        ChallengeFeedback feedback = challengeFeedbackRepo.findByChallengeIdAndChallengeFeedbackPositive(challengeId, isPositive);
         if (feedback == null) throw new EntityNotFoundException("ChallengeFeedback not found!");
         return feedback;
     }
@@ -114,8 +100,8 @@ public class ChallengeFeedbackService {
      */
     public ChallengeFeedback update(Integer challengeFeedbackId, String challengeFeedbackTitle, String challengeFeedbackText) {
         ChallengeFeedback challengeFeedback = findById(challengeFeedbackId);
-        if(challengeFeedbackText != null) challengeFeedback.setFeedback_text(challengeFeedbackText);
-        if(challengeFeedbackTitle != null) challengeFeedback.setFeedback_title(challengeFeedbackTitle);
+        if(challengeFeedbackText != null) challengeFeedback.setFeedbackText(challengeFeedbackText);
+        if(challengeFeedbackTitle != null) challengeFeedback.setFeedbackTitle(challengeFeedbackTitle);
         return challengeFeedbackRepo.saveAndFlush(challengeFeedback);
     }
 

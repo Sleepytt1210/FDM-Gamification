@@ -86,7 +86,7 @@ public class AdminQuestionFormController {
             if(id == null) {
                 questionService.create(challengeId, question);
             } else {
-                questionService.update(id, question);
+                questionService.update(question);
             }
             status.setComplete();
             model.clear();

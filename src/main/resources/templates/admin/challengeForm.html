@@ -64,33 +64,33 @@
             <div class="feedback-box">
                 <label> Positive Feedback Title</label>
                 <div class="input-div">
-                    <input type="text" class="title-input" th:field="${challenge.challengeFeedback[true].feedback_title}">
+                    <input type="text" class="title-input" th:field="${challenge.challengeFeedback[true].feedbackTitle}">
                 </div>
                 <div class="errorMessage" th:if="${#fields.hasErrors('${challenge.challengeFeedback[true].feedback_title}')}"
-                     th:errors="${challenge.challengeFeedback[true].feedback_title}">
+                     th:errors="${challenge.challengeFeedback[true].feedbackTitle}">
                 </div>
                 <label> Positive Feedback Text</label>
                 <div class="input-div">
-                    <textarea class="feedback" th:field="${challenge.challengeFeedback[true].feedback_text}"></textarea>
+                    <textarea class="feedback" th:field="${challenge.challengeFeedback[true].feedbackText}"></textarea>
                 </div>
                 <div class="errorMessage" th:if="${#fields.hasErrors('${challenge.challengeFeedback[true].feedback_text}')}"
-                     th:errors="${challenge.challengeFeedback[true].feedback_text}">
+                     th:errors="${challenge.challengeFeedback[true].feedbackText}">
                 </div>
             </div>
             <div class="feedback-box">
                 <label>Negative Feedback</label>
                 <div class="input-div">
-                    <input type="text" class="title-input" th:field="${challenge.challengeFeedback[false].feedback_title}">
+                    <input type="text" class="title-input" th:field="${challenge.challengeFeedback[false].feedbackTitle}">
                 </div>
                 <div class="errorMessage" th:if="${#fields.hasErrors('${challenge.challengeFeedback[false].feedback_title}')}"
-                     th:errors="${challenge.challengeFeedback[false].feedback_title}">
+                     th:errors="${challenge.challengeFeedback[false].feedbackTitle}">
                 </div>
                 <label>Negative Feedback Text</label>
                 <div class="input-div">
-                    <textarea class="feedback" th:field="${challenge.challengeFeedback[false].feedback_text}"></textarea>
+                    <textarea class="feedback" th:field="${challenge.challengeFeedback[false].feedbackText}"></textarea>
                 </div>
                 <div class="errorMessage" th:if="${#fields.hasErrors('${challenge.challengeFeedback[false].feedback_text}')}"
-                     th:errors="${challenge.challengeFeedback[false].feedback_text}">
+                     th:errors="${challenge.challengeFeedback[false].feedbackText}">
                 </div>
             </div>
         </div>

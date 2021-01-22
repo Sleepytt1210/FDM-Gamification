@@ -88,7 +88,7 @@ public class AdminChallengeFormController {
             if(id == null){
                 challengeService.create(challenge);
             }else {
-                challengeService.update(id, challenge);
+                challengeService.update(challenge);
             }
             status.setComplete();
             model.asMap().clear();

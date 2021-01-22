@@ -1,6 +1,7 @@
 package com.team33.FDMGamification.Model;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Table(name = "Rating")
@@ -12,7 +13,7 @@ public class Rating {
     private Integer ratingId;
 
     @Column(name = "rating_value")
-    private Integer ratingValue;
+    private Integer ratingValue = 0;
 
     @ManyToOne
     @JoinColumn(name = "challenge_id")
@@ -37,8 +38,8 @@ public class Rating {
         return ratingValue;
     }
 
-    public void setRatingValue(Integer rating_value) {
-        this.ratingValue = rating_value;
+    public void setRatingValue(Integer ratingValue) {
+        if(ratingValue != null) this.ratingValue = ratingValue;
     }
 
     public Challenge getChallenge() {
@@ -47,6 +48,24 @@ public class Rating {
 
     public void setChallenge(Challenge challenge) {
         this.challenge = challenge;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Rating rating = (Rating) o;
+
+        if (!Objects.equals(ratingId, rating.ratingId)) return false;
+        return ratingValue.equals(rating.ratingValue);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = ratingId != null ? ratingId.hashCode() : 0;
+        result = 31 * result + ratingValue.hashCode();
+        return result;
     }
 
     @Override

@@ -1,10 +1,10 @@
 package com.team33.FDMGamification.Model;
 
-import com.team33.FDMGamification.Validation.Annotation.NullOrNotEqualChallengeID;
 import com.team33.FDMGamification.Validation.Annotation.NullOrNotEqualQuestionID;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
+import java.util.Objects;
 
 @Entity(name = "Choice")
 public class Choice {
@@ -20,10 +20,8 @@ public class Choice {
     @Column(name = "choice_text")
     private String choiceText = "";
 
-    @Min(value = 0, message = "Must be ≥ 0")
-    @Max(value = 2, message = "Must be ≤ 2")
     @Column(name = "choice_weight")
-    private int choiceWeight;
+    private @Min(value = 0, message = "Must be ≥ 0") @Max(value = 2, message = "Must be ≤ 2") Integer choiceWeight;
 
     @NotBlank(message = "Please do not leave this field blank!")
     @Pattern(regexp = "^[^<>]*$", message = "Angle brackets (<, >) are not allowed!")
@@ -49,24 +47,24 @@ public class Choice {
         return choiceText;
     }
 
-    public void setChoiceText(String choice_text) {
-        this.choiceText = choice_text;
+    public void setChoiceText(String choiceText) {
+        if(choiceText!= null) this.choiceText = choiceText;
     }
 
-    public int getChoiceWeight() {
+    public Integer getChoiceWeight() {
         return choiceWeight;
     }
 
-    public void setChoiceWeight(int score) {
-        this.choiceWeight = score;
+    public void setChoiceWeight(Integer choiceWeight) {
+        if(choiceWeight != null) this.choiceWeight = choiceWeight;
     }
 
     public String getChoiceReason() {
         return choiceReason;
     }
 
-    public void setChoiceReason(String choice_reason) {
-        this.choiceReason = choice_reason;
+    public void setChoiceReason(String choiceReason) {
+        if(choiceReason != null) this.choiceReason = choiceReason;
     }
 
     public Question getQuestion() {
@@ -83,6 +81,28 @@ public class Choice {
 
     public void setChoiceId(Integer id) {
         this.choiceId = id;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Choice choice = (Choice) o;
+
+        if (!Objects.equals(choiceId, choice.choiceId)) return false;
+        if (!choiceText.equals(choice.choiceText)) return false;
+        if (!choiceWeight.equals(choice.choiceWeight)) return false;
+        return choiceReason.equals(choice.choiceReason);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = choiceId != null ? choiceId.hashCode() : 0;
+        result = 31 * result + choiceText.hashCode();
+        result = 31 * result + choiceWeight.hashCode();
+        result = 31 * result + choiceReason.hashCode();
+        return result;
     }
 
     @Override
