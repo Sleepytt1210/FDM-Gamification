@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -51,26 +52,9 @@ public class RatingService {
      * @return Rating: Rating entity persisted in database.
      */
     public Rating create(Challenge challenge, Rating rating) {
-        rating.setChallenge(challenge);
-        rating = ratingRepo.saveAndFlush(rating);
-        cls.addRating(challenge, rating);
+        challenge.addRating(rating);
+        cls.update(challenge);
         return rating;
-    }
-
-    /**
-     * Insert and persist a collection of ratings into Rating Table.
-     *
-     * @param challenge Foreign entity challenge to be added to.
-     * @param ratings A collection of rating entities with properties to be persisted.
-     * @return Set<Rating> ratings
-     */
-    public Set<Rating> createAll(Challenge challenge, Set<Rating> ratings) {
-        for (Rating rating : ratings) {
-            rating.setChallenge(challenge);
-            rating = ratingRepo.saveAndFlush(rating);
-            cls.addRating(challenge, rating);
-        }
-        return ratings;
     }
 
     /**
@@ -91,6 +75,13 @@ public class RatingService {
      */
     public List<Rating> getAll() {
         return ratingRepo.findAll();
+    }
+
+    /**
+     * Return ratings list of a challenge
+     */
+    public List<Rating> getRatings(Integer challengeId) {
+        return ratingRepo.getRatingsByChallenge_Id(challengeId);
     }
 
     /**

@@ -13,6 +13,12 @@
     text-align: right;
 }
 
+/*Side Nav*/
+.sidenav{
+    text-align: center;
+    padding: 20px 0;
+}
+
 /*Modal Style*/
 
 .fa-exclamation-triangle{

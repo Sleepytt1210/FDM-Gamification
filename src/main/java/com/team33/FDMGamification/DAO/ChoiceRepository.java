@@ -9,11 +9,15 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Repository
+@Transactional
 public interface ChoiceRepository extends JpaRepository<Choice, Integer> {
 
-    @Transactional
+    @Query("SELECT c FROM Choice c WHERE c.question.questionId = :questionId")
+    List<Choice> getChoicesByQuestion_QuestionId(@Param("questionId") Integer questionId);
+
     @Modifying(clearAutomatically = true)
     @Query("UPDATE Choice c SET c.question = :question WHERE c.choiceId = :choiceId")
     void replaceQuestion(@Param("question") Question question, @Param("choiceId") Integer choiceId);

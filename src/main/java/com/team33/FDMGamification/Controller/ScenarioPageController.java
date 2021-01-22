@@ -34,7 +34,7 @@ public class ScenarioPageController {
         try {
             if (!sid.equals(scenario.getId())) {
                 model.addAttribute("scenario", challengeService.findById(sid));
-                model.addAttribute("questions", challengeService.getQuestions(sid));
+                model.addAttribute("questions", questionService.getQuestions(sid));
             }
         } catch (EntityNotFoundException ex){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, ex.toString(), ex);
@@ -45,7 +45,7 @@ public class ScenarioPageController {
     @GetMapping("/{qid}")
     public String questionPage(@PathVariable("sid") Integer sid, @PathVariable("qid") Integer qid,
                                Model model){
-        populateQuestionAndChoices(model, sid, qid);
+        populateChallengeQuestionAndChoices(model, sid, qid);
         Question question = (Question) model.getAttribute("question");
         switch (question.getQuestionType()){
             case TEXTBOX: return "textboxQuestion";
@@ -68,7 +68,7 @@ public class ScenarioPageController {
         score += scoreCheck(cids1, 1);
         score += scoreCheck(cids2, 2);
 
-        populateQuestionAndChoices(model, sid, qid);
+        populateChallengeQuestionAndChoices(model, sid, qid);
 
         model.addAttribute("score", score);
         return "dragAndDropQuestion";
@@ -88,7 +88,7 @@ public class ScenarioPageController {
             score++;
         }
 
-        populateQuestionAndChoices(model,sid,qid);
+        populateChallengeQuestionAndChoices(model,sid,qid);
         model.addAttribute("score", score);
 
 
@@ -106,7 +106,7 @@ public class ScenarioPageController {
         if (correctChoice.getChoiceText().contains(answer)){
             score+=2;
         }
-        populateQuestionAndChoices(model,sid,qid);
+        populateChallengeQuestionAndChoices(model,sid,qid);
         model.addAttribute("score", score);
 
 
@@ -129,14 +129,15 @@ public class ScenarioPageController {
 
 
 
-    private void populateQuestionAndChoices(Model model, Integer sid, Integer qid) {
+    private void populateChallengeQuestionAndChoices(Model model, Integer sid, Integer qid) {
         try {
+            model.addAttribute("scenario", challengeService.findById(sid));
             Question question = questionService.findById(qid);
-            model.addAttribute("questions", challengeService.getQuestions(sid));
+            model.addAttribute("questions", questionService.getQuestions(sid));
             if(question == null) {
                 throw new EntityNotFoundException("Question id " + qid + " does not exist in scenario id " + sid + " !!");
             }
-            List<Choice> choices = questionService.getChoices(qid);
+            List<Choice> choices = choiceService.getChoices(qid);
             model.addAttribute("question", question);
             model.addAttribute("choices", choices);
         } catch (EntityNotFoundException ex){

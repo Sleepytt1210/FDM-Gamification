@@ -12,7 +12,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.management.InstanceAlreadyExistsException;
+import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
+import javax.persistence.PersistenceContext;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +29,8 @@ public class QuestionService {
     private ChallengeService cls;
     @Autowired
     private ChoiceService chs;
+    @PersistenceContext
+    private EntityManager entityManager;
 
     /**
      * Insert and persist data into Question Table with properties and foreign key ID.
@@ -36,10 +40,17 @@ public class QuestionService {
      * @param questionText  Text of question.
      * @param completion    Number of completions of question.
      * @param questionType  Type of current question.
+     * @param choices       Choices of question.
      * @return Question: Question entity persisted in database.
      */
-    public Question create(Integer challengeId, String questionTitle, String questionText, Integer completion, QuestionType questionType) {
+    public Question create(Integer challengeId, String questionTitle, String questionText,
+                           Integer completion, QuestionType questionType, List<Choice> choices) {
         Question question = new Question(questionTitle, questionText, completion, questionType);
+        if(choices != null && !choices.isEmpty()){
+            for (Choice choice : choices) {
+                question.addChoice(choice);
+            }
+        }
         return create(challengeId, question);
     }
 
@@ -63,33 +74,8 @@ public class QuestionService {
      * @return Question: Question entity persisted in database.
      */
     public Question create(Challenge challenge, Question question) {
-        question.setChallenge(challenge);
-        if(question.getQuestionId() == null) {
-            // Save questions without choices first due to empty question id.
-            List<Choice> tempChoices = question.getChoices();
-            question.setChoices(new ArrayList<>());
-            question = questionRepo.saveAndFlush(question);
-            if(tempChoices != null && tempChoices.size() > 0) chs.createAll(question, tempChoices);
-            question = findById(question.getQuestionId());
-        }else {
-            question = questionRepo.saveAndFlush(question);
-        }
-        challenge.getQuestions().add(question);
-        return question;
-    }
-
-    /**
-     * Insert and persist a collection of questions into Question Table.
-     *
-     * @param challenge Foreign entity challenge to be added to.
-     * @param questions A collection of question entities to be persisted in database.
-     * @return List<Question>: A list of persisted question entities.
-     */
-    public List<Question> createAll(Challenge challenge, List<Question> questions){
-        for(Question question : questions){
-            create(challenge, question);
-        }
-        return challenge.getQuestions();
+        challenge.addQuestion(question);
+        return questionRepo.saveAndFlush(question);
     }
 
     /**
@@ -121,15 +107,17 @@ public class QuestionService {
     }
 
     /**
-     * Return choices map of a question.
+     * Return questions list of a challenge.
      *
-     * @param id Id of the question.
-     * @return List<Choice> choices: Map of choices with their id as key.
+     * @param challengeId Id of a challenge.
+     * @return List<Question> questions: Map of questions with their id as key.
      */
-    @Transactional
-    public List<Choice> getChoices(Integer id){
-        return findById(id).getChoices();
+    public List<Question> getQuestions(Integer challengeId){
+        return questionRepo.getQuestionsByChallenge_Id(challengeId);
     }
+
+
+
 
     /**
      * Update existing question in database with properties.
@@ -138,50 +126,26 @@ public class QuestionService {
      * @param questionTitle New title of question.
      * @param questionText  New text of question.
      * @param completion    New completion count of question.
-     * @param choices       New choices map of question.
      * @return Question: Updated question entity.
      */
-    public Question update(Integer questionId, String questionTitle, String questionText, Integer completion, QuestionType questionType, List<Choice> choices) {
-        Question tempNew = new Question(questionTitle, questionText, completion, questionType);
-        tempNew.setChoices(choices);
-        return update(questionId, tempNew);
+    public Question update(Integer questionId, String questionTitle, String questionText, Integer completion, QuestionType questionType) {
+        if(questionId== null) throw new IllegalArgumentException("Use create for new entity!");
+        Question question = findById(questionId);
+        question.setQuestionTitle(questionTitle);
+        question.setQuestionText(questionText);
+        question.setQuestionCompletion(completion);
+        question.setQuestionType(questionType);
+        return questionRepo.saveAndFlush(question);
     }
 
     /**
      * Updated existing question in database with question entity.
      *
-     * @param questionId  Id of question to be updated.
-     * @param newQuestion Question entity with updated value.
+     * @param question Question entity with updated value.
      * @return Question: Updated question entity.
      */
-    public Question update(Integer questionId, Question newQuestion) {
-
-        if(questionId == null) return create(newQuestion.getChallenge(), newQuestion);
-
-        Question oldQuestion = findById(questionId);
-        if (newQuestion.getQuestionTitle() != null) {
-            oldQuestion.setQuestionTitle(newQuestion.getQuestionTitle());
-        }
-        if (newQuestion.getQuestionText() != null) {
-            oldQuestion.setQuestionText(newQuestion.getQuestionText());
-        }
-        if (newQuestion.getQuestionCompletion() != null) {
-            oldQuestion.setQuestionCompletion(newQuestion.getQuestionCompletion());
-        }
-        if (newQuestion.getQuestionType() != null) {
-            oldQuestion.setQuestionType(newQuestion.getQuestionType());
-        }
-        if (newQuestion.getChallenge() != null &&
-                !newQuestion.getChallenge().getId().equals(oldQuestion.getChallenge().getId())) {
-            updateChallenge(cls.findById(newQuestion.getChallenge().getId()), oldQuestion);
-        }
-
-        oldQuestion = questionRepo.saveAndFlush(oldQuestion);
-        List<Choice> newChoices = newQuestion.getChoices();
-        if (newChoices != null && !newChoices.isEmpty()) {
-            newChoices.forEach((v) -> chs.update(v.getChoiceId(), v.getChoiceText(), v.getChoiceWeight(), v.getChoiceReason(), questionId));
-        }
-        return oldQuestion;
+    public Question update(Question question) {
+        return update(question.getQuestionId(), question.getQuestionTitle(), question.getQuestionText(), question.getQuestionCompletion(), question.getQuestionType());
     }
 
     /**
@@ -226,7 +190,7 @@ public class QuestionService {
      */
     public void delete(Question question) {
         // To ensure bidirectional persistence in database
-        question.getChallenge().getQuestions().removeIf(question1 -> question1.getQuestionId().equals(question.getQuestionId()));
+        question.getChallenge().removeQuestion(question);
         questionRepo.delete(question);
     }
 
@@ -237,7 +201,7 @@ public class QuestionService {
      */
     public void batchDelete(Iterable<Question> questions) {
         // To ensure bidirectional persistence in database
-        questions.forEach(q -> q.getChallenge().getQuestions().removeIf(question1 -> question1.getQuestionId().equals(q.getQuestionId())));
+        questions.forEach(q -> q.getChallenge().getQuestions().remove(q));
         questionRepo.deleteAll(questions);
     }
 }

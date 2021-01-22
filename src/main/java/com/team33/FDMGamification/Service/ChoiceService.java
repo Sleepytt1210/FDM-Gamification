@@ -53,24 +53,8 @@ public class ChoiceService {
      * @return Choice: Choice entity persisted in database.
      */
     public Choice create(Question question, Choice choice) {
-        choice.setQuestion(question);
-        choice = choiceRepo.saveAndFlush(choice);
-        question.getChoices().add(choice);
-        return choice;
-    }
-
-    /**
-     * Insert and persist a collection of choices in Choice Table.
-     *
-     * @param question Foreign entity question to be added to.
-     * @param choices A collection of choice to be persisted.
-     * @return List<Choice>: A list of persisted choices entities.
-     */
-    public List<Choice> createAll(Question question, Iterable<Choice> choices) {
-        for (Choice choice: choices) {
-            create(question, choice);
-        }
-        return question.getChoices();
+        question.addChoice(choice);
+        return choiceRepo.saveAndFlush(choice);
     }
 
     /**
@@ -92,20 +76,27 @@ public class ChoiceService {
     }
 
     /**
+     * Return choices map of a question.
+     *
+     * @param questionId Id of the question.
+     * @return List<Choice> choices: Map of choices with their id as key.
+     */
+    public List<Choice> getChoices(Integer questionId){
+        return choiceRepo.getChoicesByQuestion_QuestionId(questionId);
+    }
+
+    /**
      * Update existing choice in database with properties.
      * @param choiceId Id of choice to be updated.
      * @param choiceText New text of choice.
      * @param weight New weight of choice.
      * @return Choice: Updated choice entity.
      */
-    public Choice update(Integer choiceId, String choiceText, Integer weight, String choiceReason, Integer questionId) {
-        if(choiceId == null) return create(questionId, choiceText, weight, choiceReason);
+    public Choice update(Integer choiceId, String choiceText, Integer weight, String choiceReason) {
         Choice choice = findById(choiceId);
-        if(choiceText != null) choice.setChoiceText(choiceText);
-        if(weight != null) choice.setChoiceWeight(weight);
-        if(choiceReason != null) choice.setChoiceReason(choiceReason);
-        if(questionId != null && !choice.getQuestion().getQuestionId().equals(questionId))
-            updateQuestion(qts.findById(questionId), choice);
+        choice.setChoiceText(choiceText);
+        choice.setChoiceWeight(weight);
+        choice.setChoiceReason(choiceReason);
         return choiceRepo.saveAndFlush(choice);
     }
 
