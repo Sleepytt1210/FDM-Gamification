@@ -4,13 +4,17 @@
     height: 100%;
     width: 160px;
     position: fixed;
+    padding: 20px 15px;
     z-index: 1;
     top: 0;
     left: 0;
     background-color: #fff;
     overflow-x: hidden;
-    padding-top: 20px;
     box-shadow: 0 2px 5px 2px #acacac;
+}
+
+.scenario-redir{
+    border-bottom: 1px solid #acacac;
 }
 
 .sidenav-column {
@@ -18,8 +22,8 @@
 }
 
 .sidenav a {
-    padding: 12px 30px;
     text-decoration: none;
+    padding: 12px 10px;
     font-size: 20px;
     color: #202025;
     display: block;

@@ -2,7 +2,11 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{scenarioLayout.html}"
-      th:with="infoTitle=${question.questionTitle}, infoText=${question.questionText}, score=${score}">
+      th:with="infoTitle=${question.questionTitle},
+      infoText=${question.questionText},
+      scenario=${scenario},
+      questions=${questions},
+      score=${score}">
 <head>
     <meta charset="UTF-8">
     <title>Question</title>
