@@ -124,7 +124,7 @@ public class QuestionService {
      * Return choices map of a question.
      *
      * @param id Id of the question.
-     * @return Map<Integer, Choice> choices: Map of choices with their id as key.
+     * @return List<Choice> choices: Map of choices with their id as key.
      */
     @Transactional
     public List<Choice> getChoices(Integer id){

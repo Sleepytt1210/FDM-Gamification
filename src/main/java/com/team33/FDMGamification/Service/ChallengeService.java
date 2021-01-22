@@ -118,7 +118,7 @@ public class ChallengeService {
      * Return questions map of a challenge.
      *
      * @param id Id of the challenge.
-     * @return Map<Integer, Question> questions: Map of questions with their id as key.
+     * @return List<Question> questions: Map of questions with their id as key.
      */
     @Transactional
     public List<Question> getQuestions(Integer id){
