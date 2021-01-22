@@ -19,7 +19,7 @@ $(function () {
             "Delete": function() {
                 form.append(dialog.data("button")).submit();
             },
-            Cancel: function() {
+            "Cancel": function() {
                 $(this).dialog("close");
             }
         }
@@ -48,6 +48,10 @@ $(function () {
         const del = $(".delete-button");
         del.prop("disabled", !any);
     })
+
+    /*
+     * Long text trimming
+     */
 
     $(".text-column").each(function(){
         trimmer(this);
