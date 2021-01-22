@@ -106,7 +106,7 @@ public class AdminQuestionFormController {
         String uri = request.getRequestURI()+"?addChoice";
         try {
             Choice tempC = new Choice();
-            question.getChoices().add(tempC);
+            question.addChoice(tempC);
         } catch (Exception ex) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, ex.getMessage(), ex);
@@ -121,8 +121,8 @@ public class AdminQuestionFormController {
                                HttpServletRequest request) {
         try {
             String uri = request.getRequestURI()+"?addChoice";
-            Choice choice = question.getChoices().get(idx);
-            question.getChoices().remove(idx.intValue());
+            Choice choice = question.getChoiceByIndex(idx);
+            question.removeChoice(idx.intValue());
             // If it's form edit, delete the persisted choice from database as well.
             if(choice.getChoiceId() != null) choiceService.delete(choice.getChoiceId());
             return "redirect:"+uri;
