@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en" layout:decorate="~{scenarioLayout.html}"
-      th:with="infoTitle=${scenario.challengeTitle}, infoText=${scenario.description}"
+      th:with="infoTitle=${scenario.challengeTitle},
+      infoText=${scenario.description}, scenario=${scenario},
+      questions=${scenario.questions}"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -10,19 +12,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@600&display=swap" rel="stylesheet">
 </head>
     <body>
-        <ul layout:fragment="sidenav">
-            <li th:each="question, questionStat : ${questions}" th:with="curQ=${questions[__${questionStat.index}__]}">
-                <a th:text="${curQ.questionTitle}" th:href="@{/scenario/__${sid}__/__${curQ.questionId}__}"></a>
-            </li>
-            <li class="finishedBtn">
-                <a th:href="@{/explore}">Finished</a>
-            </li>
-        </ul>
 
-        <div layout:fragment="content2">
-            <p class="challengeTitle" th:text="${scenario.challengeTitle}"></p>
-            <p class="challengeInfo" th:text="${scenario.description}"></p>
-            <p class="challengeInfo">Choose a question from the side navigation bar to begin.</p>
-        </div>
     </body>
 </html>
