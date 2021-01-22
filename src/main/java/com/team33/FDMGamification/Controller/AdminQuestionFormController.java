@@ -7,6 +7,7 @@ import com.team33.FDMGamification.Service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -51,11 +52,13 @@ public class AdminQuestionFormController {
     }
 
     @GetMapping("/{id}")
-    public ModelAndView getQuestionView(@PathVariable("id") Integer id) {
+    public ModelAndView getQuestionView(@PathVariable("id") Integer id, Model model) {
         ModelAndView mav = new ModelAndView("admin/questionForm");
         try {
-            Question question = questionService.findById(id);
-            mav.addObject("question", question);
+            if(!model.containsAttribute("question")) {
+                Question question = questionService.findById(id);
+                mav.addObject("question", question);
+            }
         } catch (EntityNotFoundException ex) {
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND, ex.getMessage(), ex);
@@ -64,8 +67,8 @@ public class AdminQuestionFormController {
     }
 
     @GetMapping("/new")
-    public String createQuestion(ModelMap model) {
-        if(model.getAttribute("question") == null) model.addAttribute("question", new Question());
+    public String createQuestion(Model model) {
+        if(!model.containsAttribute("question")) model.addAttribute("question", new Question());
         return "admin/questionForm";
     }
 

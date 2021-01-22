@@ -124,7 +124,7 @@ public class QuestionService {
      * Return choices map of a question.
      *
      * @param id Id of the question.
-     * @return Map<Integer, Choice> choices: Map of choices with their id as key.
+     * @return List<Choice> choices: Map of choices with their id as key.
      */
     @Transactional
     public List<Choice> getChoices(Integer id){
@@ -155,6 +155,9 @@ public class QuestionService {
      * @return Question: Updated question entity.
      */
     public Question update(Integer questionId, Question newQuestion) {
+
+        if(questionId == null) return create(newQuestion.getChallenge(), newQuestion);
+
         Question oldQuestion = findById(questionId);
         if (newQuestion.getQuestionTitle() != null) {
             oldQuestion.setQuestionTitle(newQuestion.getQuestionTitle());
