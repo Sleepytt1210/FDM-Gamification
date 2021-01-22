@@ -19,6 +19,9 @@
     padding: 20px 0;
 }
 
+.sidebar-menu-list a{
+    padding: 12px 30px;
+}
 /*Modal Style*/
 
 .fa-exclamation-triangle{
