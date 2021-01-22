@@ -13,10 +13,15 @@
             <li th:each="question : ${questions}" th:with="curQ=${questions[__${question.key}__]}">
                 <a th:text="${curQ.questionTitle}" th:href="@{/scenario/__${sid}__/__${curQ.questionId}__}"></a>
             </li>
+            <li class="finishedBtn">
+                <a th:href="@{/explore}">Finished</a>
+            </li>
         </ul>
 
         <div layout:fragment="content2">
-            <p th:text="${scenario.challengeTitle}"></p>
+            <p class="challengeTitle" th:text="${scenario.challengeTitle}"></p>
+            <p class="challengeInfo" th:text="${scenario.description}"></p>
+            <p class="challengeInfo">Choose a question from the side navigation bar to begin.</p>
         </div>
     </body>
 </html>

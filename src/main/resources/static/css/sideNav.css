@@ -30,7 +30,12 @@
     padding: 20px 0;
     list-style: none;
     margin: auto;
-
+}
+.sidebar-menu-list a:hover{
+    background-color: #b4b4b4;
+}
+.sidebar-menu-list a:active{
+    color: #398fff;
 }
 
 .sidebar-menu{
