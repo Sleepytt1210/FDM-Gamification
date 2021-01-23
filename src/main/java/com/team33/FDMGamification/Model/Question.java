@@ -140,6 +140,11 @@ public class Question {
         this.choices.remove(index);
     }
 
+    public Integer completionIncrement(){
+        this.questionCompletion++;
+        return this.questionCompletion;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
