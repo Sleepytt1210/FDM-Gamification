@@ -103,15 +103,15 @@ public class AdminQuestionFormController {
     public String addChoice(@ModelAttribute("question") Question question,
                             @PathVariable(value = "id", required = false) Integer id,
                             HttpServletRequest request) {
-        String uri = request.getRequestURI()+"?addChoice";
         try {
+            String uri = request.getRequestURI()+"?addChoice";
             Choice tempC = new Choice();
             question.addChoice(tempC);
+            return "redirect:"+uri;
         } catch (Exception ex) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, ex.getMessage(), ex);
         }
-        return "redirect:"+uri;
     }
 
     @PostMapping(value = {"/new","/{id}"}, params = {"removeChoice"})
@@ -120,7 +120,7 @@ public class AdminQuestionFormController {
                                @RequestParam("removeChoice") Integer idx,
                                HttpServletRequest request) {
         try {
-            String uri = request.getRequestURI()+"?addChoice";
+            String uri = request.getRequestURI()+"?removeChoice";
             Choice choice = question.getChoiceByIndex(idx);
             question.removeChoice(idx.intValue());
             // If it's form edit, delete the persisted choice from database as well.
