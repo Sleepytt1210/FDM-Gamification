@@ -53,19 +53,18 @@ public class RatingService {
      */
     public Rating create(Challenge challenge, Rating rating) {
         challenge.addRating(rating);
-        cls.update(challenge);
-        return rating;
+        return ratingRepo.saveAndFlush(rating);
     }
 
     /**
      * Find rating by its ID.
      *
-     * @param id Id of rating.
+     * @param ratingId Id of rating.
      * @return Rating: Rating entity if found:
      * @throws EntityNotFoundException If rating is not found.
      */
-    public Rating findById(Integer id) {
-        return ratingRepo.findById(id).orElseThrow(() -> new EntityNotFoundException("Rating not found!"));
+    public Rating findById(Integer ratingId) {
+        return ratingRepo.findById(ratingId).orElseThrow(() -> new EntityNotFoundException("Rating not found!"));
     }
 
     /**
