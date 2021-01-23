@@ -1,6 +1,5 @@
 package com.team33.FDMGamification.Model;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,6 +17,10 @@ public class AdminDetails extends Admin implements UserDetails {
 
     public AdminDetails(Admin admin) {
         super(admin.getUsername(), admin.getFirstname(), admin.getLastname(),admin.getEmail(), admin.getPassword(), admin.getPhoneNo());
+    }
+
+    public AdminDetails() {
+        super();
     }
 
     @Override

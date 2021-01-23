@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @RunWith(SpringRunner.class)
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE, connection = EmbeddedDatabaseConnection.H2)
-@ActiveProfiles("test")
+@ActiveProfiles(value = "test")
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class DatabaseTests {
 
@@ -123,26 +123,15 @@ public class DatabaseTests {
     public void setup() {
         try {
             System.out.println("Initializing...");
-            challenge1 = new Challenge("Challenge one", "This is challenge one.", Stream.ST, 0);
-            question1 = new Question("Question one", "This is question one.", 0, QuestionType.DRAG_DROP);
-            feedback1 = new ChallengeFeedback("Congratulation!", "You scored well!", true);
-            feedback2 = new ChallengeFeedback("Oh no!", "You need to work harder!", false);
-            challenge1.updateFeedbacksProperties(feedback1, feedback2);
-            choice1 = new Choice("A", 2, "Best choice");
-            question1.addChoice(choice1);
-            choice2 = new Choice("B", 1, "Bad choice");
-            question1.addChoice(choice2);
-            challenge1.addQuestion(question1);
-            rating1 = new Rating(5);
-            challenge1.addRating(rating1);
-            rating2 = new Rating(3);
-            challenge1.addRating(rating2);
-            rating3 = new Rating(1);
-            challenge1.addRating(rating3);
-            /*
-             * Save challenge 1 in database
-             */
-            challengeS.create(challenge1);
+            challenge1 = challengeS.findById(1);
+            question1 = questionS.findById(1);
+            choice1 = choiceS.findById(1);
+            choice2 = choiceS.findById(2);
+            rating1 = ratingS.findById(1);
+            rating2 = ratingS.findById(2);
+            rating3 = ratingS.findById(3);
+            feedback1 = challengeFbS.findById(1);
+            feedback2 = challengeFbS.findById(2);
             System.out.println("Finished initializing");
         } catch (Exception e) {
             System.err.println(e.getMessage());
@@ -270,7 +259,7 @@ public class DatabaseTests {
 
     @Test
     public void testQuestionFindById() {
-        assertEquals("This is question one.", questionS.findById(question1.getQuestionId()).getQuestionText());
+        assertEquals(question1.getQuestionText(), questionS.findById(question1.getQuestionId()).getQuestionText());
         assertThrows(EntityNotFoundException.class, () -> questionS.findById(2), "Expected Entity Not Found to be thrown!");
     }
 
@@ -289,7 +278,7 @@ public class DatabaseTests {
         String newQuestionText = "This is question 1.";
         Integer newCompletion = 100;
 
-        assertEquals("This is question one.", questionS.findById(question1.getQuestionId()).getQuestionText());
+        assertEquals(question1.getQuestionText(), questionS.findById(question1.getQuestionId()).getQuestionText());
         questionS.update(question1.getQuestionId(), newQuestionTitle, newQuestionText, newCompletion, null);
 
         Question updatedQuestion = questionS.findById(question1.getQuestionId());
@@ -614,8 +603,7 @@ public class DatabaseTests {
 
     @Test
     public void testAverageRatingOnChallenge_WithUpdate() {
-        Integer newRating = 2;
-        assertDoesNotThrow(() -> ratingS.create(challenge1.getId(), newRating));
+        assertDoesNotThrow(() -> ratingS.create(challenge1.getId(), 2));
         String res = "2.8";
         assertEquals(res, challengeS.findById(challenge1.getId()).getAvgRating());
     }
@@ -758,7 +746,7 @@ public class DatabaseTests {
         QuestionType newQuestionType = QuestionType.MULTIPLE_CHOICE;
 
         // Ensure question not updated
-        assertEquals("This is question one.", questionS.findById(questionId).getQuestionText());
+        assertEquals(question1.getQuestionText(), questionS.findById(questionId).getQuestionText());
 
         // Update the question
         questionS.update(questionId, newQuestionTitle, newQuestionText, newCompletion, newQuestionType);
