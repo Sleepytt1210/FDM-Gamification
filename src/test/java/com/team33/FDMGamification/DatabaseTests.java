@@ -17,10 +17,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.persistence.EntityNotFoundException;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -674,31 +671,29 @@ public class DatabaseTests {
         newChallenge.setStream(Stream.ST);
 
         // Populate questions
-        List<Question> newQuestions = newChallenge.getQuestions();
-
         Question question51 = new Question("Question 5.1", "This is question 5.1", 0, QuestionType.MULTIPLE_CHOICE);
-        question51.setChallenge(newChallenge);
-        List<Choice> choices51 = question51.getChoices();
+        List<Choice> choices51 = new ArrayList<>();
         choices51.add(new Choice("Choice 5.1.1", 2, "Perfect choice"));
         choices51.add(new Choice("Choice 5.1.2", 1, "Not bad"));
         choices51.add(new Choice("Choice 5.1.3", 0, "Bad choice"));
         for (Choice choice: choices51) {
-            choice.setQuestion(question51);
+            question51.addChoice(choice);
         }
 
-        newQuestions.add(question51);
+        newChallenge.addQuestion(question51);
 
         Question question52 = new Question("Question 5.2", "This is question 5.2", 0, QuestionType.TEXTBOX);
-        question52.setChallenge(newChallenge);
-        List<Choice> choices52 = question52.getChoices();
+        List<Choice> choices52 = new ArrayList<>();
         choices52.add(new Choice("Choice 5.2.1", 2, "Perfect choice"));
         for (Choice choice: choices52) {
-            choice.setQuestion(question52);
+            question52.addChoice(choice);
         }
 
-        newQuestions.add(question52);
+        newChallenge.addQuestion(question52);
 
+        // Persist challenge
         Challenge updatedChallenge = challengeS.create(newChallenge);
+
         // Ensure 2 questions are persisted
         assertEquals(2, updatedChallenge.getQuestions().size());
 
@@ -715,7 +710,7 @@ public class DatabaseTests {
     }
 
     /*
-     * Simulate creating new children form and select a parent entity so associate to.
+     * Simulate creating new children form and select a parent entity to associate to.
      */
     @Test
     public void testQuestionCreationAndAssociateToExistingChallenge() {
@@ -915,7 +910,7 @@ public class DatabaseTests {
     }
 
     @Test
-    public void testCreateChoiceFromChallenge() {
+    public void testCreateChoiceFromExistingChallenge() {
         String newChallengeDescription = "This challenge is updated";
         Integer newChallengeCompletion = 15;
 
@@ -942,6 +937,42 @@ public class DatabaseTests {
         assertEquals(challenge1.getChallengeTitle(), updatedChallenge.getChallengeTitle());
         assertEquals(newChallengeDescription, updatedChallenge.getDescription());
         assertEquals(newChallengeCompletion, updatedChallenge.getCompletion());
+
+        // Check choice update
+        assertEquals(newChoiceText, updatedChoice.getChoiceText());
+        assertEquals(newChoiceWeight, updatedChoice.getChoiceWeight());
+        assertEquals(newChoiceReason, updatedChoice.getChoiceReason());
+    }
+
+    @Test
+    public void testCreateChoiceFromExistingQuestion() {
+        String newQuestionTitle = "This question is updated";
+        Integer newQuestionCompletion = 10;
+        QuestionType newQuestionType = QuestionType.MULTIPLE_CHOICE;
+
+        String newChoiceText = "C";
+        int newChoiceWeight = 0;
+        String newChoiceReason = "Worst choice";
+
+        // Create an updated dummy challenge (Not persisted)
+        question1.setQuestionTitle(newQuestionTitle);
+        question1.setQuestionCompletion(newQuestionCompletion);
+        question1.setQuestionType(newQuestionType);
+
+        // Create an update dummy choice that is linked to dummy question1 (Not persisted)
+        Choice choice = new Choice(newChoiceText, newChoiceWeight, newChoiceReason);
+        question1.addChoice(choice);
+
+        // Update
+        questionS.update(question1);
+
+        // After updates
+        Question updatedQuestion = questionS.findById(question1.getQuestionId());
+        Choice updatedChoice = updatedQuestion.getChoiceByIndex(question1.getChoices().size()-1);
+
+        // Check Question update
+        assertEquals(newQuestionTitle, updatedQuestion.getQuestionTitle());
+        assertEquals(newQuestionCompletion, updatedQuestion.getQuestionCompletion());
 
         // Check choice update
         assertEquals(newChoiceText, updatedChoice.getChoiceText());
