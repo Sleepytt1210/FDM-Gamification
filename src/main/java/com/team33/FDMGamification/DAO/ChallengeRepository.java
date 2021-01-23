@@ -11,9 +11,10 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 @Repository
-@Transactional
+@org.springframework.transaction.annotation.Transactional(readOnly = true)
 public interface ChallengeRepository extends JpaRepository<Challenge, Integer> {
 
+    @Transactional
     @Query("SELECT chl FROM Challenge chl WHERE chl.stream = :stream")
     List<Challenge> findChallengesByStreamEquals(@Param("stream") Stream stream);
 }

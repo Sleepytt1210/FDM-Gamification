@@ -17,17 +17,14 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.persistence.EntityNotFoundException;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE, connection = EmbeddedDatabaseConnection.H2)
-@ActiveProfiles("test")
+@ActiveProfiles(value = "test")
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class DatabaseTests {
 
@@ -126,26 +123,15 @@ public class DatabaseTests {
     public void setup() {
         try {
             System.out.println("Initializing...");
-            challenge1 = new Challenge("Challenge one", "This is challenge one.", Stream.ST, 0);
-            question1 = new Question("Question one", "This is question one.", 0, QuestionType.DRAG_DROP);
-            feedback1 = new ChallengeFeedback("Congratulation!", "You scored well!", true);
-            feedback2 = new ChallengeFeedback("Oh no!", "You need to work harder!", false);
-            challenge1.updateFeedbacksProperties(feedback1, feedback2);
-            choice1 = new Choice("A", 2, "Best choice");
-            question1.addChoice(choice1);
-            choice2 = new Choice("B", 1, "Bad choice");
-            question1.addChoice(choice2);
-            challenge1.addQuestion(question1);
-            rating1 = new Rating(5);
-            challenge1.addRating(rating1);
-            rating2 = new Rating(3);
-            challenge1.addRating(rating2);
-            rating3 = new Rating(1);
-            challenge1.addRating(rating3);
-            /*
-             * Save challenge 1 in database
-             */
-            challengeS.create(challenge1);
+            challenge1 = challengeS.findById(1);
+            question1 = questionS.findById(1);
+            choice1 = choiceS.findById(1);
+            choice2 = choiceS.findById(2);
+            rating1 = ratingS.findById(1);
+            rating2 = ratingS.findById(2);
+            rating3 = ratingS.findById(3);
+            feedback1 = challengeFbS.findById(1);
+            feedback2 = challengeFbS.findById(2);
             System.out.println("Finished initializing");
         } catch (Exception e) {
             System.err.println(e.getMessage());
@@ -273,7 +259,7 @@ public class DatabaseTests {
 
     @Test
     public void testQuestionFindById() {
-        assertEquals("This is question one.", questionS.findById(question1.getQuestionId()).getQuestionText());
+        assertEquals(question1.getQuestionText(), questionS.findById(question1.getQuestionId()).getQuestionText());
         assertThrows(EntityNotFoundException.class, () -> questionS.findById(2), "Expected Entity Not Found to be thrown!");
     }
 
@@ -292,7 +278,7 @@ public class DatabaseTests {
         String newQuestionText = "This is question 1.";
         Integer newCompletion = 100;
 
-        assertEquals("This is question one.", questionS.findById(question1.getQuestionId()).getQuestionText());
+        assertEquals(question1.getQuestionText(), questionS.findById(question1.getQuestionId()).getQuestionText());
         questionS.update(question1.getQuestionId(), newQuestionTitle, newQuestionText, newCompletion, null);
 
         Question updatedQuestion = questionS.findById(question1.getQuestionId());
@@ -617,8 +603,7 @@ public class DatabaseTests {
 
     @Test
     public void testAverageRatingOnChallenge_WithUpdate() {
-        Integer newRating = 2;
-        assertDoesNotThrow(() -> ratingS.create(challenge1.getId(), newRating));
+        assertDoesNotThrow(() -> ratingS.create(challenge1.getId(), 2));
         String res = "2.8";
         assertEquals(res, challengeS.findById(challenge1.getId()).getAvgRating());
     }
@@ -674,31 +659,29 @@ public class DatabaseTests {
         newChallenge.setStream(Stream.ST);
 
         // Populate questions
-        List<Question> newQuestions = newChallenge.getQuestions();
-
         Question question51 = new Question("Question 5.1", "This is question 5.1", 0, QuestionType.MULTIPLE_CHOICE);
-        question51.setChallenge(newChallenge);
-        List<Choice> choices51 = question51.getChoices();
+        List<Choice> choices51 = new ArrayList<>();
         choices51.add(new Choice("Choice 5.1.1", 2, "Perfect choice"));
         choices51.add(new Choice("Choice 5.1.2", 1, "Not bad"));
         choices51.add(new Choice("Choice 5.1.3", 0, "Bad choice"));
         for (Choice choice: choices51) {
-            choice.setQuestion(question51);
+            question51.addChoice(choice);
         }
 
-        newQuestions.add(question51);
+        newChallenge.addQuestion(question51);
 
         Question question52 = new Question("Question 5.2", "This is question 5.2", 0, QuestionType.TEXTBOX);
-        question52.setChallenge(newChallenge);
-        List<Choice> choices52 = question52.getChoices();
+        List<Choice> choices52 = new ArrayList<>();
         choices52.add(new Choice("Choice 5.2.1", 2, "Perfect choice"));
         for (Choice choice: choices52) {
-            choice.setQuestion(question52);
+            question52.addChoice(choice);
         }
 
-        newQuestions.add(question52);
+        newChallenge.addQuestion(question52);
 
+        // Persist challenge
         Challenge updatedChallenge = challengeS.create(newChallenge);
+
         // Ensure 2 questions are persisted
         assertEquals(2, updatedChallenge.getQuestions().size());
 
@@ -715,7 +698,7 @@ public class DatabaseTests {
     }
 
     /*
-     * Simulate creating new children form and select a parent entity so associate to.
+     * Simulate creating new children form and select a parent entity to associate to.
      */
     @Test
     public void testQuestionCreationAndAssociateToExistingChallenge() {
@@ -763,7 +746,7 @@ public class DatabaseTests {
         QuestionType newQuestionType = QuestionType.MULTIPLE_CHOICE;
 
         // Ensure question not updated
-        assertEquals("This is question one.", questionS.findById(questionId).getQuestionText());
+        assertEquals(question1.getQuestionText(), questionS.findById(questionId).getQuestionText());
 
         // Update the question
         questionS.update(questionId, newQuestionTitle, newQuestionText, newCompletion, newQuestionType);
@@ -915,7 +898,7 @@ public class DatabaseTests {
     }
 
     @Test
-    public void testCreateChoiceFromChallenge() {
+    public void testCreateChoiceFromExistingChallenge() {
         String newChallengeDescription = "This challenge is updated";
         Integer newChallengeCompletion = 15;
 
@@ -942,6 +925,42 @@ public class DatabaseTests {
         assertEquals(challenge1.getChallengeTitle(), updatedChallenge.getChallengeTitle());
         assertEquals(newChallengeDescription, updatedChallenge.getDescription());
         assertEquals(newChallengeCompletion, updatedChallenge.getCompletion());
+
+        // Check choice update
+        assertEquals(newChoiceText, updatedChoice.getChoiceText());
+        assertEquals(newChoiceWeight, updatedChoice.getChoiceWeight());
+        assertEquals(newChoiceReason, updatedChoice.getChoiceReason());
+    }
+
+    @Test
+    public void testCreateChoiceFromExistingQuestion() {
+        String newQuestionTitle = "This question is updated";
+        Integer newQuestionCompletion = 10;
+        QuestionType newQuestionType = QuestionType.MULTIPLE_CHOICE;
+
+        String newChoiceText = "C";
+        int newChoiceWeight = 0;
+        String newChoiceReason = "Worst choice";
+
+        // Create an updated dummy challenge (Not persisted)
+        question1.setQuestionTitle(newQuestionTitle);
+        question1.setQuestionCompletion(newQuestionCompletion);
+        question1.setQuestionType(newQuestionType);
+
+        // Create an update dummy choice that is linked to dummy question1 (Not persisted)
+        Choice choice = new Choice(newChoiceText, newChoiceWeight, newChoiceReason);
+        question1.addChoice(choice);
+
+        // Update
+        questionS.update(question1);
+
+        // After updates
+        Question updatedQuestion = questionS.findById(question1.getQuestionId());
+        Choice updatedChoice = updatedQuestion.getChoiceByIndex(question1.getChoices().size()-1);
+
+        // Check Question update
+        assertEquals(newQuestionTitle, updatedQuestion.getQuestionTitle());
+        assertEquals(newQuestionCompletion, updatedQuestion.getQuestionCompletion());
 
         // Check choice update
         assertEquals(newChoiceText, updatedChoice.getChoiceText());

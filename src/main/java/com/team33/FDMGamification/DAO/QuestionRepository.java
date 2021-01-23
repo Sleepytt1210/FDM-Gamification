@@ -14,7 +14,7 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 @Repository
-@Transactional
+@org.springframework.transaction.annotation.Transactional(readOnly = true)
 public interface QuestionRepository extends JpaRepository<Question, Integer> {
 
     @Query("SELECT q FROM Question q WHERE q.questionType = :questionType")

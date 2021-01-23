@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.management.InstanceAlreadyExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
+import javax.persistence.FlushModeType;
 import javax.persistence.PersistenceContext;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,12 +24,13 @@ import java.util.Map;
 public class QuestionService {
 
     private static final Logger log = LoggerFactory.getLogger(QuestionService.class);
+
     @Autowired
     private QuestionRepository questionRepo;
+
     @Autowired
     private ChallengeService cls;
-    @Autowired
-    private ChoiceService chs;
+
     @PersistenceContext
     private EntityManager entityManager;
 
@@ -95,7 +97,10 @@ public class QuestionService {
      * @return List<Question>: All the questions in database.
      */
     public List<Question> getAll() {
-        return questionRepo.findAll();
+        List<Question> result = questionRepo.findAll();
+        // Avoid auto persistence
+        entityManager.setFlushMode(FlushModeType.COMMIT);
+        return result;
     }
 
     public List<Question> getQuestionsByType(String type) {
@@ -116,9 +121,6 @@ public class QuestionService {
         return questionRepo.getQuestionsByChallenge_Id(challengeId);
     }
 
-
-
-
     /**
      * Update existing question in database with properties.
      *
@@ -126,6 +128,7 @@ public class QuestionService {
      * @param questionTitle New title of question.
      * @param questionText  New text of question.
      * @param completion    New completion count of question.
+     * @param questionType  New question type of question.
      * @return Question: Updated question entity.
      */
     public Question update(Integer questionId, String questionTitle, String questionText, Integer completion, QuestionType questionType) {
@@ -170,7 +173,7 @@ public class QuestionService {
      * @return Question: Updated challenge entity.
      */
     public Question completionIncrement(Question question){
-        question.setQuestionCompletion(question.getQuestionCompletion() + 1);
+        question.completionIncrement();
         return questionRepo.saveAndFlush(question);
     }
 

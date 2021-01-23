@@ -242,6 +242,11 @@ public class Challenge {
         }
     }
 
+    public Integer completionIncrement(){
+        this.completion++;
+        return this.completion;
+    }
+
     /**
      * Calculate the average value of ratings.
      *
@@ -292,7 +297,6 @@ public class Challenge {
                 ", stream='" + stream + '\'' +
                 ", completion=" + completion +
                 ", avgRating=" + avgRating +
-                ", feedback=" + challengeFeedback +
                 '}';
     }
 

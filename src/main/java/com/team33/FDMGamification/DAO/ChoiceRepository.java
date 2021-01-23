@@ -12,12 +12,13 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 @Repository
-@Transactional
+@org.springframework.transaction.annotation.Transactional(readOnly = true)
 public interface ChoiceRepository extends JpaRepository<Choice, Integer> {
 
     @Query("SELECT c FROM Choice c WHERE c.question.questionId = :questionId")
     List<Choice> getChoicesByQuestion_QuestionId(@Param("questionId") Integer questionId);
 
+    @Transactional
     @Modifying(clearAutomatically = true)
     @Query("UPDATE Choice c SET c.question = :question WHERE c.choiceId = :choiceId")
     void replaceQuestion(@Param("question") Question question, @Param("choiceId") Integer choiceId);

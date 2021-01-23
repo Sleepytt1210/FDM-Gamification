@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
+import javax.persistence.FlushModeType;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import java.util.*;
@@ -17,16 +18,10 @@ import java.util.*;
 public class ChallengeService {
 
     private final Logger log = LoggerFactory.getLogger(ChallengeService.class);
+
     @Autowired
     private ChallengeRepository challengeRepo;
-    @Autowired
-    private QuestionService questionService;
-    @Autowired
-    private ChallengeFeedbackService challengeFeedbackService;
-    @Autowired
-    private ThumbnailService thumbnailService;
-    @Autowired
-    private RatingService ratingService;
+
     @PersistenceContext
     private EntityManager entityManager;
 
@@ -99,7 +94,10 @@ public class ChallengeService {
      * @return List<Challenge>: All the challenge in the database.
      */
     public List<Challenge> getAll() {
-        return challengeRepo.findAll();
+        List<Challenge> result = challengeRepo.findAll();
+        // Avoid auto persistence
+        entityManager.setFlushMode(FlushModeType.COMMIT);
+        return result;
     }
 
     /**
@@ -108,9 +106,11 @@ public class ChallengeService {
      * @param challengeId  Id of challenge to be updated.
      * @param title        New title of challenge.
      * @param description  New description of challenge.
-     * @param thumbnail    New thumbnail url of challenge.
      * @param stream       New stream of challenge.
      * @param completion   New completion count of challenge.
+     * @param thumbnail    New thumbnail of challenge.
+     * @param positiveFeedback New positive feedback of challenge.
+     * @param negativeFeedback New negative feedback of challenge.
      * @return Challenge: Updated challenge entity.
      */
     @Transactional
@@ -123,16 +123,17 @@ public class ChallengeService {
     }
 
     /**
+     * Update existing challenge in database with properties.
      *
-     * @param challenge
-     * @param title
-     * @param description
-     * @param completion
-     * @param stream
-     * @param thumbnail
-     * @param positiveFeedback
-     * @param negativeFeedback
-     * @return
+     * @param challenge    Challenge entity to be updated.
+     * @param title        New title of challenge.
+     * @param description  New description of challenge.
+     * @param stream       New stream of challenge.
+     * @param completion   New completion count of challenge.
+     * @param thumbnail    New thumbnail of challenge.
+     * @param positiveFeedback New positive feedback of challenge.
+     * @param negativeFeedback New negative feedback of challenge.
+     * @return Challenge: Updated challenge entity.
      */
     public Challenge update(Challenge challenge, String title, String description,
                             Stream stream, Integer completion,
@@ -161,7 +162,7 @@ public class ChallengeService {
      * @return Challenge: Updated challenge entity.
      */
     public Challenge completionIncrement(Challenge challenge){
-        challenge.setCompletion(challenge.getCompletion() + 1);
+        challenge.completionIncrement();
         return challengeRepo.saveAndFlush(challenge);
     }
 

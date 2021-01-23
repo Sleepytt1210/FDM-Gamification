@@ -84,7 +84,7 @@ public class AdminChallengeFormController {
                 return "admin/challengeForm";
             }
             processImage(picData, model, challenge);
-            challenge.setThumbnail(thumbnail);
+            challenge.updateThumbnailProperties(thumbnail);
             if(id == null){
                 challengeService.create(challenge);
             }else {
