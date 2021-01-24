@@ -9,7 +9,6 @@
   padding: 10px 15px 20px;
   border-radius: 8px;
   box-shadow: 0 2px 5px 0 #cecece;
-  /* Change the color of autofill any color ;) */
 }
 .container .login-form .login-form-header {
   font-family: "Mandali", "sans-serif";
@@ -23,7 +22,7 @@
 .container .login-form .form-group input, .container .login-form .submit input, .container .login-form .error input {
   box-shadow: inset 0 0 2px 0 #909090;
   filter: none;
-  background: #fcfcfc;
+  background: #f9f9fc;
   color: #3b3a3a;
   border: 1px solid #aaaccc;
 }
@@ -68,12 +67,6 @@
 }
 .container .login-form .login-button:focus {
   border: 1px solid black;
-}
-.container .login-form input:-webkit-autofill,
-.container .login-form input:-webkit-autofill:hover,
-.container .login-form input:-webkit-autofill:focus,
-.container .login-form input:-webkit-autofill:active {
-  -webkit-box-shadow: 0 0 0 30px #909090 inset !important;
 }
 
 /*# sourceMappingURL=login.css.map */
