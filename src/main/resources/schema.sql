@@ -19,7 +19,8 @@ CREATE TABLE Challenge
     challenge_description TEXT        NOT NULL,
     challenge_completion  INT(11)     NOT NULL,
     challenge_stream      varchar(10) NOT NULL,
-    avg_rating            varchar(25) DEFAULT 0
+    challenge_total_score INT(11)     NOT NULL DEFAULT 0,
+    avg_rating            varchar(25) NOT NULL DEFAULT 0
 ) AUTO_INCREMENT = 1;
 
 CREATE TABLE Question
@@ -29,6 +30,7 @@ CREATE TABLE Question
     question_text       TEXT        NOT NULL,
     question_completion INT(11)     NOT NULL,
     question_type       VARCHAR(50) NOT NULL,
+    question_total_score INT(11)    NOT NULL DEFAULT 0,
     challenge_id        INT(11)     NOT NULL,
     FOREIGN KEY (challenge_id) REFERENCES Challenge (challenge_id) ON DELETE CASCADE
 ) AUTO_INCREMENT = 1;

@@ -15,13 +15,8 @@
     <script th:src="@{/javascript/dragAndDrop.js}"></script>
 </head>
 <body>
-    <ul layout:fragment="sidenav">
-        <li th:each="question, questionStat : ${questions}" th:with="curQ=${questions[__${questionStat.index}__]}">
-            <a th:text="${curQ.questionTitle}" th:href="@{/scenario/__${sid}__/__${curQ.questionId}__}"></a>
-        </li>
-    </ul>
     <div layout:fragment="content3">
-        <form th:action="@{/scenario/__${sid}__/__${qid}__}" method="post" th:object="${question}">
+        <form th:action="@{/scenario/__${sid}__/__${qid}__}" class="user-question-form" method="post" th:object="${question}">
             <div class="choiceContainer">
                 <ul id="choices" class="droptrue">
                     <li th:each="choice, choiceStat : ${choices}" th:id="'ch'+${choice.choiceId}" class="choice">

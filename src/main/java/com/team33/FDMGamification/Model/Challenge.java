@@ -35,6 +35,9 @@ public class Challenge {
     @Column(name = "challenge_completion")
     private Integer completion = 0;
 
+    @Column(name = "challenge_total_score")
+    private Integer totalScore = 0;
+
     @Column(name = "avg_rating")
     private String avgRating = "No rating";
 
@@ -123,11 +126,19 @@ public class Challenge {
         if(completion != null) this.completion = completion;
     }
 
+    public Integer getTotalScore() {
+        return totalScore;
+    }
+
+    private void setTotalScore(Integer totalScore) {
+        this.totalScore = totalScore;
+    }
+
     public String getAvgRating() {
         return avgRating;
     }
 
-    public void setAvgRating(String rating) {
+    private void setAvgRating(String rating) {
         this.avgRating = rating;
     }
 
@@ -172,10 +183,21 @@ public class Challenge {
         }
     }
 
+    public void removeRating(Integer id) {
+        this.ratings.removeIf(rating -> rating.getRatingId().equals(id));
+        this.avgRating = average(this.ratings);
+    }
+
+    public void removeRating(int index) {
+        this.ratings.remove(index);
+        this.avgRating = average(this.ratings);
+    }
+
     public void addQuestion(Question question){
         if(question != null) {
             question.setChallenge(this);
             this.questions.add(question);
+            this.totalScore = totalScore(this.questions);
         }
     }
 
@@ -190,14 +212,17 @@ public class Challenge {
 
     public void removeQuestion(int index){
         this.questions.remove(index);
+        this.totalScore = totalScore(this.questions);
     }
 
     public void removeQuestion(Integer qid){
         this.questions.removeIf(question -> qid.equals(question.getQuestionId()));
+        this.totalScore = totalScore(this.questions);
     }
 
     public void removeQuestion(Question question){
         this.questions.remove(question);
+        this.totalScore = totalScore(this.questions);
     }
 
     /**
@@ -250,7 +275,7 @@ public class Challenge {
     /**
      * Calculate the average value of ratings.
      *
-     * @param ratings Set of ratings to be calculated.
+     * @param ratings List of ratings to be calculated.
      * @return String: Average value of ratings with one decimal point.
      */
     private String average(List<Rating> ratings) {
@@ -259,6 +284,20 @@ public class Challenge {
             avg += cur.getRatingValue();
         }
         return String.format("%.1f", ((avg * 1.0) / (ratings.size() * 1.0)));
+    }
+
+    /**
+     * Calculate the total score of questions.
+     *
+     * @param questions List of questions to be calculated.
+     * @return Integer: The total score.
+     */
+    private Integer totalScore(List<Question> questions) {
+        int total = 0;
+        for(Question question : questions) {
+            total += question.getQuestionTotalScore();
+        }
+        return total;
     }
 
     @Override

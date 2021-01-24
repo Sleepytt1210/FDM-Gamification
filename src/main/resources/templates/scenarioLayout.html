@@ -7,6 +7,7 @@
     <meta charset="UTF-8"/>
     <title>Default title for my pages</title>
     <link href="../static/css/heading.css" rel="stylesheet" th:href="@{/css/sideNav.css}">
+    <script th:src="@{/javascript/reset.js}"></script>
 </head>
 <body>
 <th:block layout:fragment="heading">
@@ -14,6 +15,7 @@
         <a class="navbar-brand" th:href="'https://www.fdmgroup.com'">
             <img alt="FDMlogo" class="logo" src="../static/images/FDMlogo.png" th:src="@{/images/FDMlogo.png}">
         </a>
+        <button id="reset">Reset</button>
         <ul id="navbar-menu-list" layout:fragment="nav-menu-list">
             <li><a href="/home" th:href="@{/home}">Home</a></li>
             <li><a href="/explore" th:href="@{/explore}">Explore</a></li>
@@ -31,7 +33,7 @@
             <div class="questions-list">
                 <ul class="sidebar-menu-list">
                     <li th:each="question, questionStat : ${questions}" th:with="curQ=${questions[__${questionStat.index}__]}">
-                        <a th:text="${curQ.questionTitle}" th:href="@{/scenario/__${sid}__/__${curQ.questionId}__}"></a>
+                        <a th:text="${curQ.questionTitle}" th:href="@{/scenario/__${sid}__/__${curQ.questionId}__}" th:id="${curQ.questionId}"></a>
                     </li>
                 </ul>
             </div>

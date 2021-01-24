@@ -55,18 +55,26 @@ public class ScenarioPageController {
         return "dragAndDropQuestion";
     }
 
+    // All required false because one or two of the columns can be false.
     @PostMapping(value = "/{qid}", params = {"dragAndDrop"})
     public String submitQuestion(Model model,
                                  @PathVariable("sid") Integer sid, @PathVariable("qid") Integer qid,
                                  @RequestParam(value = "score0", required = false) Integer[] cids0,
                                  @RequestParam(value = "score1", required = false) Integer[] cids1,
-                                 @RequestParam(value = "score2", required = false) Integer[] cids2
+                                 @RequestParam(value = "score2", required = false) Integer[] cids2,
+                                 @RequestParam(value = "compInc", required = false) Integer compInc
     ) {
         int score = 0;
 
         score += scoreCheck(cids0, 0);
         score += scoreCheck(cids1, 1);
         score += scoreCheck(cids2, 2);
+
+        if(compInc != null) {
+            System.out.println("Question completion increase by 1");
+            Question question = questionService.findById(qid);
+            questionService.completionIncrement(question);
+        }
 
         populateChallengeQuestionAndChoices(model, sid, qid);
 
@@ -77,11 +85,18 @@ public class ScenarioPageController {
     @PostMapping(value = "/{qid}", params = {"radioQuestion"})
     public String submitQuestion(Model model,
                                  @PathVariable("sid") Integer sid, @PathVariable("qid") Integer qid,
-                                 @RequestParam(value = "choices") Integer cid)
+                                 @RequestParam(value = "choices") Integer cid,
+                                 @RequestParam(value = "compInc", required = false) Integer compInc
+    )
     {
 
         int score = 0;
 
+        if(compInc != null) {
+            System.out.println("Question completion increase by 1");
+            Question question = questionService.findById(qid);
+            questionService.completionIncrement(question);
+        }
 
         Choice correctChoice = choiceService.findById(cid);
         if (correctChoice.getChoiceWeight() == 1){
@@ -98,12 +113,20 @@ public class ScenarioPageController {
     @PostMapping(value = "/{qid}", params = {"textboxQuestion"})
     public String submitQuestion(Model model,
                                  @PathVariable("sid") Integer sid, @PathVariable("qid") Integer qid,
-                                 @RequestParam(value = "answer") String answer)
+                                 @RequestParam(value = "answer") String answer,
+                                 @RequestParam(value = "compInc", required = false) Integer compInc
+    )
     {
         int score = 0;
 
-        Choice correctChoice = choiceService.findById(1);
-        if (correctChoice.getChoiceText().contains(answer)){
+        if(compInc != null) {
+            System.out.println("Question completion increase by 1");
+            Question question = questionService.findById(qid);
+            questionService.completionIncrement(question);
+        }
+
+        List<Choice> correctChoice = choiceService.getChoices(qid);
+        if (correctChoice.get(0).getChoiceText().contains(answer)){
             score+=2;
         }
         populateChallengeQuestionAndChoices(model,sid,qid);
