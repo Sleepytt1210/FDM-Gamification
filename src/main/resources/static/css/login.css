@@ -1,52 +1,79 @@
-body{
-    margin: 0;
-    font-family: 'Raleway', sans-serif;
-    height: 100%;
+.container {
+  margin-top: 160px;
+}
+.container .login-form {
+  margin: 15px auto;
+  font-family: "Helvetica", sans-serif;
+  width: 30%;
+  border: 1px solid #c8c8c8;
+  padding: 10px 15px 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px 0 #cecece;
+  /* Change the color of autofill any color ;) */
+}
+.container .login-form .login-form-header {
+  font-family: "Mandali", "sans-serif";
+  font-size: 30px;
+}
+.container .login-form .form-group, .container .login-form .submit, .container .login-form .error {
+  width: 70%;
+  margin: 0 auto;
+  padding: 2px 10px;
+}
+.container .login-form .form-group input, .container .login-form .submit input, .container .login-form .error input {
+  box-shadow: inset 0 0 2px 0 #909090;
+  filter: none;
+  background: #fcfcfc;
+  color: #3b3a3a;
+  border: 1px solid #aaaccc;
+}
+.container .login-form .form-group .error, .container .login-form .submit .error, .container .login-form .error .error {
+  width: 100%;
+  border: 1px solid #ff2a36;
+  background: #fff0f1;
+  color: #ff2a36;
+}
+.container .login-form .form-group .error .warning-icon, .container .login-form .submit .error .warning-icon, .container .login-form .error .error .warning-icon {
+  float: left;
+  display: inline-block;
+}
+.container .login-form .form-group .error .warning-icon .fa .fa-times-circle, .container .login-form .submit .error .warning-icon .fa .fa-times-circle, .container .login-form .error .error .warning-icon .fa .fa-times-circle {
+  font-size: 20px;
+}
+.container .login-form label {
+  font-size: 18px;
+  color: #454545;
+}
+.container .login-form .label {
+  text-align: left;
+}
+.container .login-form .error, .container .login-form input, .container .login-form .login-button {
+  border-radius: 7px;
+  padding: 12px 20px;
+  font-size: 15px;
+  margin: 10px auto;
+  width: 100%;
+}
+.container .login-form .login-button {
+  outline: none;
+  background: #2196F3;
+  color: #fff;
+  border: none;
+}
+.container .login-form .login-button:hover {
+  cursor: pointer;
+  color: #454545;
+  background: #b2c5ff;
+  transition: 0.5s;
+}
+.container .login-form .login-button:focus {
+  border: 1px solid black;
+}
+.container .login-form input:-webkit-autofill,
+.container .login-form input:-webkit-autofill:hover,
+.container .login-form input:-webkit-autofill:focus,
+.container .login-form input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px #909090 inset !important;
 }
 
-/*Top of page navigation bar*/
-header {
-    background-color: #202025;
-    padding: 20px;
-    position: fixed;
-    width: 100%;
-    height: 50px;
-}
-
-header .logo{
-    width: auto;
-    height: 60px;
-    float: left;
-    padding-left: 30px;
-}
-div.desc{
-    positon: fixed;
-    padding-top: 10%;
-    padding-left: 38%;
-    font-size: 250%;
-}
-
-form.loginForm{
-
-    width: 30% ;
-    padding-left: 30%;
-    padding-right: 30%;
-    padding-top: 5%;
-    font-size: 160%;
-}
-input{
-    font-size: 30px;
-}
-
-button{
-    color: black;
-    margin: 10px auto;
-    width: 5rem;
-    border: 2px solid #000;
-    border-radius: 3px;
-    height: 2rem;
-}
-
-button:hover{
-    opacity: 0.8;
-}
+/*# sourceMappingURL=login.css.map */
