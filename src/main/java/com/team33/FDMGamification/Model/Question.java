@@ -131,7 +131,7 @@ public class Question {
         if(choice != null) {
             choice.setQuestion(this);
             this.choices.add(choice);
-            totalScore(this.choices);
+            this.questionTotalScore = totalScore(this.choices);
         }
     }
 
@@ -146,12 +146,12 @@ public class Question {
 
     public void removeChoice(Integer choiceId){
         this.choices.removeIf(choice -> choiceId.equals(choice.getChoiceId()));
-        totalScore(this.choices);
+        this.questionTotalScore = totalScore(this.choices);
     }
 
     public void removeChoice(int index){
         this.choices.remove(index);
-        totalScore(this.choices);
+        this.questionTotalScore = totalScore(this.choices);
     }
 
     public Integer completionIncrement(){
