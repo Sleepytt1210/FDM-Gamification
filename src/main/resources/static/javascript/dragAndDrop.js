@@ -2,16 +2,23 @@ const local = window.localStorage;
 
 $(function () {
 
-    const url = window.location.href;
+    const url = new URL(window.location.href).pathname;
     const urlSplit = url.match(/scenario\/(\d+)\/(\d+)/);
     const qid = urlSplit[2];
     const qidString = 'q' + qid;
+    const challengeId = urlSplit[1];
+    const chidString = 'ch' + challengeId;
     const btn = $("#submit");
     const cids0Name = qidString + "_score0";
     const cids1Name = qidString + "_score1";
     const cids2Name = qidString + "_score2";
     const scoreHTML = $("#score").attr("value");
     const score = local.getItem(qidString);
+    const curChalQuesIds = $(".sidebar-menu-list > li > a").map(function () {
+        return $(this).attr("id");
+    }).get();
+
+    console.log(curChalQuesIds)
 
     btn.click(function () {
         // Gets id of choice for each column
@@ -24,6 +31,18 @@ $(function () {
         const cids2 = $("#score2 li input").map(function () {
             return $(this).val();
         }).get().join(",");
+
+        // Adds to general completion
+        if(!score){
+            const completion = local.getItem(chidString);
+            if(completion) {
+                local.setItem(chidString, String(Number(completion)+1));
+            }else{
+                local.setItem(chidString, "1");
+            }
+            $("<input type='hidden' name='compInc' value='1'/>").appendTo($(".user-question-form"));
+        }
+
 
         // Set qidString to temp before server side calculation
         local.setItem(qidString, "temp");

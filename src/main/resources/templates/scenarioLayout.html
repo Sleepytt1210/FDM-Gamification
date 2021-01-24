@@ -33,7 +33,7 @@
             <div class="questions-list">
                 <ul class="sidebar-menu-list">
                     <li th:each="question, questionStat : ${questions}" th:with="curQ=${questions[__${questionStat.index}__]}">
-                        <a th:text="${curQ.questionTitle}" th:href="@{/scenario/__${sid}__/__${curQ.questionId}__}"></a>
+                        <a th:text="${curQ.questionTitle}" th:href="@{/scenario/__${sid}__/__${curQ.questionId}__}" th:id="${curQ.questionId}"></a>
                     </li>
                 </ul>
             </div>

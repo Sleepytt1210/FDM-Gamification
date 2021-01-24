@@ -16,7 +16,7 @@
 </head>
 <body>
     <div layout:fragment="content3">
-        <form th:action="@{/scenario/__${sid}__/__${qid}__}" method="post" th:object="${question}">
+        <form th:action="@{/scenario/__${sid}__/__${qid}__}" class="user-question-form" method="post" th:object="${question}">
             <div class="choiceContainer">
                 <ul id="choices" class="droptrue">
                     <li th:each="choice, choiceStat : ${choices}" th:id="'ch'+${choice.choiceId}" class="choice">
