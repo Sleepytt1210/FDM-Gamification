@@ -45,7 +45,7 @@ public class ScenarioPageController {
     @GetMapping("/{qid}")
     public String questionPage(@PathVariable("sid") Integer sid, @PathVariable("qid") Integer qid,
                                Model model){
-        populateChallengeQuestionAndChoices(model, sid, qid);
+        populateChallengeQuestionAndChoices(model, sid, qid, false, false);
         Question question = (Question) model.getAttribute("question");
         switch (question.getQuestionType()){
             case TEXTBOX: return "textboxQuestion";
@@ -62,7 +62,8 @@ public class ScenarioPageController {
                                  @RequestParam(value = "score0", required = false) Integer[] cids0,
                                  @RequestParam(value = "score1", required = false) Integer[] cids1,
                                  @RequestParam(value = "score2", required = false) Integer[] cids2,
-                                 @RequestParam(value = "compInc", required = false) Integer compInc
+                                 @RequestParam(value = "quesInc", required = false) Integer quesInc,
+                                 @RequestParam(value = "chalInc", required = false) Integer chalInc
     ) {
         int score = 0;
 
@@ -70,13 +71,7 @@ public class ScenarioPageController {
         score += scoreCheck(cids1, 1);
         score += scoreCheck(cids2, 2);
 
-        if(compInc != null) {
-            System.out.println("Question completion increase by 1");
-            Question question = questionService.findById(qid);
-            questionService.completionIncrement(question);
-        }
-
-        populateChallengeQuestionAndChoices(model, sid, qid);
+        populateChallengeQuestionAndChoices(model, sid, qid, (chalInc != null), (quesInc != null));
 
         model.addAttribute("score", score);
         return "dragAndDropQuestion";
@@ -86,24 +81,19 @@ public class ScenarioPageController {
     public String submitQuestion(Model model,
                                  @PathVariable("sid") Integer sid, @PathVariable("qid") Integer qid,
                                  @RequestParam(value = "choices") Integer cid,
-                                 @RequestParam(value = "compInc", required = false) Integer compInc
+                                 @RequestParam(value = "quesInc", required = false) Integer quesInc,
+                                 @RequestParam(value = "chalInc", required = false) Integer chalInc
     )
     {
 
         int score = 0;
-
-        if(compInc != null) {
-            System.out.println("Question completion increase by 1");
-            Question question = questionService.findById(qid);
-            questionService.completionIncrement(question);
-        }
 
         Choice correctChoice = choiceService.findById(cid);
         if (correctChoice.getChoiceWeight() == 1){
             score++;
         }
 
-        populateChallengeQuestionAndChoices(model,sid,qid);
+        populateChallengeQuestionAndChoices(model,sid,qid, (chalInc != null),(quesInc != null));
         model.addAttribute("score", score);
 
 
@@ -114,30 +104,21 @@ public class ScenarioPageController {
     public String submitQuestion(Model model,
                                  @PathVariable("sid") Integer sid, @PathVariable("qid") Integer qid,
                                  @RequestParam(value = "answer") String answer,
-                                 @RequestParam(value = "compInc", required = false) Integer compInc
-    )
+                                 @RequestParam(value = "quesInc", required = false) Integer quesInc,
+                                 @RequestParam(value = "chalInc", required = false) Integer chalInc    )
     {
         int score = 0;
-
-        if(compInc != null) {
-            System.out.println("Question completion increase by 1");
-            Question question = questionService.findById(qid);
-            questionService.completionIncrement(question);
-        }
 
         List<Choice> correctChoice = choiceService.getChoices(qid);
         if (correctChoice.get(0).getChoiceText().contains(answer)){
             score+=2;
         }
-        populateChallengeQuestionAndChoices(model,sid,qid);
+        populateChallengeQuestionAndChoices(model,sid,qid, (chalInc != null), (quesInc != null));
         model.addAttribute("score", score);
 
 
         return "textboxQuestion";
     }
-
-
-
 
     private int scoreCheck(Integer[] cids, int weight){
         int score = 0;
@@ -152,17 +133,30 @@ public class ScenarioPageController {
 
 
 
-    private void populateChallengeQuestionAndChoices(Model model, Integer sid, Integer qid) {
+    private void populateChallengeQuestionAndChoices(Model model, Integer sid, Integer qid, boolean chalInc, boolean quesInc) {
         try {
-            model.addAttribute("scenario", challengeService.findById(sid));
+            Challenge challenge = challengeService.findById(sid);
+            model.addAttribute("scenario", challenge);
+
             Question question = questionService.findById(qid);
             model.addAttribute("questions", questionService.getQuestions(sid));
             if(question == null) {
                 throw new EntityNotFoundException("Question id " + qid + " does not exist in scenario id " + sid + " !!");
             }
+
             List<Choice> choices = choiceService.getChoices(qid);
             model.addAttribute("question", question);
             model.addAttribute("choices", choices);
+
+            // Completion increment
+            if(quesInc) {
+                questionService.completionIncrement(question);
+            }
+
+            if(chalInc) {
+                challengeService.completionIncrement(challenge);
+            }
+
         } catch (EntityNotFoundException ex){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, ex.toString(), ex);
         }

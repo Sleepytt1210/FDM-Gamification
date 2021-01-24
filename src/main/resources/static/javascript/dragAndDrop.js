@@ -1,5 +1,3 @@
-const local = window.localStorage;
-
 $(function () {
 
     const url = new URL(window.location.href).pathname;
@@ -22,10 +20,12 @@ $(function () {
     const cids1Name = qidString + "_score1";
     const cids2Name = qidString + "_score2";
 
+    // Elements
     const btn = $("#submit");
+    const form = $(".user-question-form");
 
     const curChalQuesIds = $(".sidebar-menu-list > li > a").map(function () {
-        return $(this).attr("id");
+        return 'q'+$(this).attr("id");
     }).get();
 
     // Drag and drop config
@@ -91,15 +91,26 @@ $(function () {
             return $(this).val();
         }).get().join(",");
 
+        // Minus old question score from total.
         minusChallengeTotal(challengeScore, chidString, score);
-
-        // Adds to general completion if first submission
-        if(!score) {
-            $("<input type='hidden' name='compInc' value='1'/>").appendTo($(".user-question-form"));
-        }
 
         // Set qidString to temp before server side calculation
         local.setItem(qidString, "temp");
+
+        // Check other questions in this challenge have submission
+        const isAllSubmitted = curChalQuesIds.map(function (qidString) {
+            return localStorage.getItem(qidString);
+        })
+
+        // Adds to general completion if first submission
+        if(!score) {
+            $("<input type='hidden' name='quesInc' value='1'/>").appendTo(form);
+
+            // If all challenges submitted
+            if(isAllSubmitted.every((element) => (element != null))){
+                $("<input type='hidden' name='chalInc' value='1'>").appendTo(form);
+            }
+        }
 
         // Save answers in local storage.
         local.setItem(cids0Name, cids0);
