@@ -40,6 +40,9 @@ public class Question {
     @Enumerated(EnumType.STRING)
     private QuestionType questionType = QuestionType.NONE;
 
+    @Column(name = "question_total_score")
+    private Integer questionTotalScore = 0;
+
     @NullOrNotEqualChallengeID(message = "Please select an associate challenge!")
     @ManyToOne
     @JoinColumn(name = "challenge_id")
@@ -108,6 +111,14 @@ public class Question {
         this.challenge = challenge;
     }
 
+    public Integer getQuestionTotalScore() {
+        return questionTotalScore;
+    }
+
+    private void setQuestionTotalScore(Integer questionTotalScore) {
+        this.questionTotalScore = questionTotalScore;
+    }
+
     public List<Choice> getChoices() {
         return choices;
     }
@@ -120,6 +131,7 @@ public class Question {
         if(choice != null) {
             choice.setQuestion(this);
             this.choices.add(choice);
+            totalScore(this.choices);
         }
     }
 
@@ -134,15 +146,31 @@ public class Question {
 
     public void removeChoice(Integer choiceId){
         this.choices.removeIf(choice -> choiceId.equals(choice.getChoiceId()));
+        totalScore(this.choices);
     }
 
     public void removeChoice(int index){
         this.choices.remove(index);
+        totalScore(this.choices);
     }
 
     public Integer completionIncrement(){
         this.questionCompletion++;
         return this.questionCompletion;
+    }
+
+    /**
+     * Calculate the total score of choices.
+     *
+     * @param choices List of choices to be calculated.
+     * @return Integer: The total score.
+     */
+    private Integer totalScore(List<Choice> choices) {
+        int total = 0;
+        for(Choice choice : choices) {
+            total += choice.getChoiceWeight();
+        }
+        return total;
     }
 
     @Override
