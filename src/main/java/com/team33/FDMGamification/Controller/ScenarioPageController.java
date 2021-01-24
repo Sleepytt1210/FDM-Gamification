@@ -55,12 +55,13 @@ public class ScenarioPageController {
         return "dragAndDropQuestion";
     }
 
+    // All required false because one or two of the columns can be false.
     @PostMapping(value = "/{qid}", params = {"dragAndDrop"})
     public String submitQuestion(Model model,
                                  @PathVariable("sid") Integer sid, @PathVariable("qid") Integer qid,
-                                 @RequestParam(value = "score0") Integer[] cids0,
-                                 @RequestParam(value = "score1") Integer[] cids1,
-                                 @RequestParam(value = "score2") Integer[] cids2,
+                                 @RequestParam(value = "score0", required = false) Integer[] cids0,
+                                 @RequestParam(value = "score1", required = false) Integer[] cids1,
+                                 @RequestParam(value = "score2", required = false) Integer[] cids2,
                                  @RequestParam(value = "compInc", required = false) Integer compInc
     ) {
         int score = 0;
