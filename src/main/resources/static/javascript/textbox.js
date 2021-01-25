@@ -1,4 +1,4 @@
-import {btnToggle, showScore} from "./repeatedCode";
+import {btnToggle, showScore} from "./repeatedCode.js";
 
 const local = window.localStorage;
 
@@ -14,7 +14,7 @@ $(function () {
     const scoreHTML = $("#score").attr("value");
     const score = local.getItem(qidString);
 
-    btnToggle();
+    btnToggle(btn);
 
     btn.click(function () {
 
@@ -36,7 +36,7 @@ $(function () {
         const answer = local.getItem(answerName);
         showScore(score,qidString,scoreHTML,local);
         $('#answer').val(answer);
-        btnToggle();
+        btnToggle(btn);
     }
 
 

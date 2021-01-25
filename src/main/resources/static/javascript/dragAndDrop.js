@@ -1,4 +1,4 @@
-import {btnToggle, showScore} from "./repeatedCode";
+import {btnToggle, showScore} from "./repeatedCode.js";
 
 const local = window.localStorage;
 $(function () {
@@ -14,7 +14,7 @@ $(function () {
     const scoreHTML = $("#score").attr("value");
     const score = local.getItem(qidString);
 
-    btnToggle();
+    btnToggle(btn);
 
     btn.click(function () {
         // Gets id of choice for each column
@@ -48,11 +48,7 @@ $(function () {
         move(cids2, "score2");
 
         const allIDs = (cids0 + cids1 + cids2).split(",");
-        // Remove everything in choice list after migration.
-        $("#choices > li").each(function () {
-            if (allIDs.includes($(this).attr("id")))$(this).remove();
-        });
-        btnToggle();
+        btnToggle(btn);
     }
 
     $("ul.droptrue").sortable({
@@ -69,7 +65,7 @@ $(function () {
             const cur = ui.item;
             // Set request parameter of input according to table column
             cur.find("input").attr("name", cur.parent()[0].id);
-            btnToggle();
+            btnToggle(btn);
         }
     });
 

@@ -1,4 +1,4 @@
-import {btnToggle, showScore} from "./repeatedCode";
+import {btnToggle, showScore} from "./repeatedCode.js";
 
 const local = window.localStorage;
 
@@ -14,7 +14,7 @@ $(function () {
     const scoreHTML = $("#score").attr("value");
     const score = local.getItem(qidString);
 
-    btnToggle();
+    btnToggle(btn);
 
     btn.click(function () {
 
@@ -35,7 +35,7 @@ $(function () {
         const cid = local.getItem(cidName);
         showScore(score,qidString,scoreHTML,local);
         $('#' + cid).prop('checked', true);
-        btnToggle();
+        btnToggle(btn);
     }
 
 

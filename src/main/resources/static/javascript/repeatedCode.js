@@ -1,6 +1,6 @@
 
 
-export function btnToggle() {
+export function btnToggle(btn) {
     if ($('#choices li').length !== 0) {
         btn.prop("disabled", true);
         btn.css("cursor", "not-allowed");
