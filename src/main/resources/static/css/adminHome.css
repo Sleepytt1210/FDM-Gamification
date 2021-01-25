@@ -13,6 +13,19 @@
     text-align: right;
 }
 
+/*Side Nav*/
+.sidenav{
+    text-align: center;
+    padding: 20px 0;
+}
+
+.sidebar-menu-list a{
+    padding: 12px 30px;
+}
+
+.sidebar-menu-list a:hover {
+    background-color: #d5effa;
+}
 /*Modal Style*/
 
 .fa-exclamation-triangle{

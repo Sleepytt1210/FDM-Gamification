@@ -51,7 +51,7 @@ public class ThumbnailService {
      * @return Thumbnail: Thumbnail entity persisted in database.
      */
     public Thumbnail create(Challenge challenge, Thumbnail thumbnail) {
-        thumbnail.setChallenge(challenge);
+        challenge.updateThumbnailProperties(thumbnail);
         return thumbnailRepo.saveAndFlush(thumbnail);
     }
 
@@ -85,23 +85,21 @@ public class ThumbnailService {
      * @return Thumbnail: Updated thumbnail entity.
      */
     public Thumbnail update(Integer thumbnailId, String base64String, String filename, String fileType) {
-        Thumbnail tempNew = new Thumbnail(base64String, filename, fileType);
-        return update(thumbnailId, tempNew);
+        Thumbnail thumbnail = findById(thumbnailId);
+        Challenge challenge = thumbnail.getChallenge();
+        Thumbnail newThumbnail = new Thumbnail(base64String, filename, fileType);
+        return update(challenge, newThumbnail);
     }
 
     /**
      * Update existing thumbnail in database with its ID.
      *
-     * @param thumbnailId     Id of thumbnail to be updated.
      * @param newThumbnail    Thumbnail entity with updated value.
      * @return Thumbnail: Updated thumbnail entity.
      */
-    public Thumbnail update(Integer thumbnailId, Thumbnail newThumbnail) {
-        Thumbnail oldThumbnail = findById(thumbnailId);
-        if (newThumbnail.getBase64String() != null) oldThumbnail.setBase64String(newThumbnail.getBase64String());
-        if (newThumbnail.getFileName() != null) oldThumbnail.setFileName(newThumbnail.getFileName());
-        if (newThumbnail.getFileType() != null) oldThumbnail.setFileType(newThumbnail.getFileType());
-        return thumbnailRepo.saveAndFlush(newThumbnail);
+    public Thumbnail update(Challenge challenge, Thumbnail newThumbnail) {
+        challenge = cls.update(challenge, null, null, null, null, newThumbnail, null, null);
+        return challenge.getThumbnail();
     }
 
     /**

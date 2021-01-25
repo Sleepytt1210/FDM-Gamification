@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
+@org.springframework.transaction.annotation.Transactional(readOnly = true)
 public interface AdminRepository extends JpaRepository<Admin, Integer> {
 
     @Query("SELECT a FROM Admin a WHERE a.username = :username")

@@ -9,9 +9,14 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Repository
+@org.springframework.transaction.annotation.Transactional(readOnly = true)
 public interface ChoiceRepository extends JpaRepository<Choice, Integer> {
+
+    @Query("SELECT c FROM Choice c WHERE c.question.questionId = :questionId")
+    List<Choice> getChoicesByQuestion_QuestionId(@Param("questionId") Integer questionId);
 
     @Transactional
     @Modifying(clearAutomatically = true)

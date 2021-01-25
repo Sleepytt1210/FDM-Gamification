@@ -77,7 +77,7 @@ public class AdminChoiceFormController {
             if(id == null) {
                 choiceService.create(questionId, choice);
             } else {
-                choiceService.update(id, choice.getChoiceText(), choice.getChoiceWeight(), choice.getChoiceReason(), questionId);
+                choiceService.update(id, choice.getChoiceText(), choice.getChoiceWeight(), choice.getChoiceReason());
             }
             status.setComplete();
             model.clear();

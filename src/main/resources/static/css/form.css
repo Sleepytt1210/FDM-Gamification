@@ -6,9 +6,9 @@
   text-align: left;
   width: 90%;
   margin: auto;
-  margin-top: 20px;
+  margin-top: 100px;
   margin-bottom: 90px;
-  margin-left: 160px;
+  margin-left: 160p;
 }
 
 .hidden {
@@ -137,7 +137,7 @@
 }
 .form-group textarea, .choice-section textarea {
   padding: 8px 10px 5px;
-  height: 200px;
+  height: 400px;
 }
 .form-group .image-display, .choice-section .image-display {
   background-image: url("../images/uploadImageBg.svg");

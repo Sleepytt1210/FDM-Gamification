@@ -1,6 +1,7 @@
 package com.team33.FDMGamification.Model;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Table(name = "Thumbnail")
@@ -49,7 +50,7 @@ public class Thumbnail {
     }
 
     public void setBase64String(String base64String) {
-        this.base64String = base64String;
+        if(base64String != null) this.base64String = base64String;
     }
 
     public String getFileName() {
@@ -57,7 +58,7 @@ public class Thumbnail {
     }
 
     public void setFileName(String fileName) {
-        this.fileName = fileName;
+        if(fileName != null) this.fileName = fileName;
     }
 
     public String getFileType() {
@@ -65,7 +66,7 @@ public class Thumbnail {
     }
 
     public void setFileType(String fileType) {
-        this.fileType = fileType;
+        if(fileType != null) this.fileType = fileType;
     }
 
     public Challenge getChallenge() {
@@ -74,6 +75,28 @@ public class Thumbnail {
 
     public void setChallenge(Challenge challenge) {
         this.challenge = challenge;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Thumbnail thumbnail = (Thumbnail) o;
+
+        if (!Objects.equals(id, thumbnail.id)) return false;
+        if (!base64String.equals(thumbnail.base64String)) return false;
+        if (!fileName.equals(thumbnail.fileName)) return false;
+        return fileType.equals(thumbnail.fileType);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + base64String.hashCode();
+        result = 31 * result + fileName.hashCode();
+        result = 31 * result + fileType.hashCode();
+        return result;
     }
 
     @Override

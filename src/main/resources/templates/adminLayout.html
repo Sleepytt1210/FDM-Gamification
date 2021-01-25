@@ -4,23 +4,21 @@
       xmlns:th="http://www.thymeleaf.org" layout:decorate="~{headinglayout.html}">
 <head>
     <link href="../static/css/sideNav.css" rel="stylesheet" th:href="@{/css/sideNav.css}">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Mandali&display=swap" rel="stylesheet">
+    <script th:src="${'https://cdn.tiny.cloud/1/'+@environment.getProperty('tinyMCEAPI')+'/tinymce/5/tinymce.min.js'}" referrerpolicy="origin"></script>
     <script>
         tinymce.init({
-            selector: '.feedback',
-            height: 200,
+            selector: '.editor',
+            height: 400, // Remember to change in css as well!
             width: '80%',
             menubar: false,
             plugins: [
-                'advlist autolink lists link image charmap print preview anchor',
-                'searchreplace visualblocks code fullscreen',
-                'insertdatetime media table paste code help wordcount'
+                'advlist autolink lists link image',
+                'media table paste code help wordcount'
             ],
             toolbar: 'undo redo | fontsizeselect |' +
                 'bold italic |' +
                 'bullist numlist outdent indent | ' +
-                'link | help',
+                'link image | code',
             contextmenu: 'link lists',
             skin_url: '/css/tinyMCESkin/skins/ui/tinyMCESkin',
             skin: 'tinyMCESkin',

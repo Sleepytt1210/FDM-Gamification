@@ -40,7 +40,7 @@ body{
 .title2{
     font-size: 20px;
 }
-.chooseScenario{
+.chooseStream{
     display: flex;
     justify-content: center;
     height: 100%;
@@ -52,7 +52,7 @@ body{
     height: auto;
 }
 
-.chooseScenario table{
+.chooseStream table{
     margin: 15px;
     width: 320px;
     height: 240px;
@@ -60,34 +60,35 @@ body{
     transition: 0.5s;
 }
 
-.chooseScenario table:hover{
+.chooseStream table:hover{
     width: 330px;
     height: 250px;
     cursor: pointer;
     transition: 0.5s;
+    box-shadow: 2px 0 8px 2px rgba(172, 172, 172, 5);
 }
-.chooseScenario a{
+.chooseStream a{
      text-decoration: none;
  }
 
-.chooseScenario a:visited{
+.chooseStream a:visited{
     color: black;
 }
 
-.chooseScenario .row1{
+.chooseStream .row1{
     background-color: #999999;
-    font-size: 30px;
+    font-size: 20px;
     height: 60px;
 }
-.chooseScenario .row2{
+.chooseStream .row2{
     background-color: #b4b4b4;
 }
-.chooseScenario .row3{
+.chooseStream .row3{
     background-color: #999999;
     font-size: 25px;
     height: 55px;
 }
-.chooseScenario tr, th{
+.chooseStream tr, th{
     border: 1px solid black;
     border-collapse: collapse;
 }

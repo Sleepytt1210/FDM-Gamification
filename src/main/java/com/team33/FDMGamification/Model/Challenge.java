@@ -24,7 +24,6 @@ public class Challenge {
     private String challengeTitle = "";
 
     @NotBlank(message = "Please do not leave this field blank!")
-    @Pattern(regexp = "^[^<>]*$", message = "Angle brackets (<, >) are not allowed!")
     @Column(name = "challenge_description")
     private String description = "";
 
@@ -36,30 +35,38 @@ public class Challenge {
     @Column(name = "challenge_completion")
     private Integer completion = 0;
 
+    @Column(name = "challenge_total_score")
+    private Integer totalScore = 0;
+
     @Column(name = "avg_rating")
     private String avgRating = "No rating";
 
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "challenge")
+    @OneToOne(fetch = FetchType.EAGER, mappedBy = "challenge",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
     private Thumbnail thumbnail = new Thumbnail(this);
 
     @Valid
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "challenge",
-            cascade = {CascadeType.MERGE, CascadeType.REMOVE, CascadeType.REFRESH, CascadeType.DETACH},
+            cascade = {CascadeType.ALL},
             orphanRemoval = true)
     private List<Question> questions = new ArrayList<>();
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "challenge",
-            cascade = {CascadeType.MERGE, CascadeType.REMOVE, CascadeType.REFRESH, CascadeType.DETACH},
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "challenge",
+            cascade = {CascadeType.ALL},
             orphanRemoval = true)
     @MapKeyColumn(name = "positive")
     private Map<Boolean, ChallengeFeedback> challengeFeedback = new HashMap<>();
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "challenge",
-            cascade = {CascadeType.MERGE, CascadeType.REMOVE, CascadeType.REFRESH, CascadeType.DETACH},
+            cascade = {CascadeType.ALL},
             orphanRemoval = true)
-    private Set<Rating> ratings = new HashSet<>();
+    private List<Rating> ratings = new ArrayList<>();
 
-    public Challenge(){}
+    public Challenge(){
+        this.challengeFeedback.put(true, null);
+        this.challengeFeedback.put(false, null);
+    }
 
     public Challenge(String challengeTitle, String description, Stream stream, Integer completion) {
         this.challengeTitle = challengeTitle;
@@ -67,6 +74,8 @@ public class Challenge {
         this.stream = stream;
         this.completion = completion;
         this.avgRating = "No rating";
+        this.challengeFeedback.put(true, null);
+        this.challengeFeedback.put(false, null);
     }
 
     public Integer getId() {
@@ -74,7 +83,7 @@ public class Challenge {
     }
 
     public void setId(Integer id) {
-        this.id = id;
+        if(id != null) this.id = id;
     }
 
     public String getChallengeTitle() {
@@ -82,7 +91,7 @@ public class Challenge {
     }
 
     public void setChallengeTitle(String title) {
-        this.challengeTitle = title;
+        if(title != null) this.challengeTitle = title;
     }
 
     public String getDescription() {
@@ -90,7 +99,7 @@ public class Challenge {
     }
 
     public void setDescription(String introduction) {
-        this.description = introduction;
+        if(introduction != null) this.description = introduction;
     }
 
     public Thumbnail getThumbnail() {
@@ -106,7 +115,7 @@ public class Challenge {
     }
 
     public void setStream(Stream stream) {
-        this.stream = stream;
+        if(stream != null) this.stream = stream;
     }
 
     public Integer getCompletion() {
@@ -114,22 +123,30 @@ public class Challenge {
     }
 
     public void setCompletion(Integer completion) {
-        this.completion = completion;
+        if(completion != null) this.completion = completion;
+    }
+
+    public Integer getTotalScore() {
+        return totalScore;
+    }
+
+    private void setTotalScore(Integer totalScore) {
+        this.totalScore = totalScore;
     }
 
     public String getAvgRating() {
         return avgRating;
     }
 
-    public void setAvgRating(String rating) {
+    private void setAvgRating(String rating) {
         this.avgRating = rating;
     }
 
-    public Set<Rating> getRatings() {
+    public List<Rating> getRatings() {
         return ratings;
     }
 
-    public void setRatings(Set<Rating> ratings) {
+    private void setRatings(List<Rating> ratings) {
         this.ratings = ratings;
     }
 
@@ -137,7 +154,7 @@ public class Challenge {
         return questions;
     }
 
-    public void setQuestions(List<Question> question) {
+    private void setQuestions(List<Question> question) {
         this.questions = question;
     }
 
@@ -145,8 +162,168 @@ public class Challenge {
         return challengeFeedback;
     }
 
-    public void setChallengeFeedback(Map<Boolean, ChallengeFeedback> challengeFeedback) {
+    public ChallengeFeedback getChallengeFeedback(boolean isPositive) {
+        return this.challengeFeedback.get(isPositive);
+    }
+
+    private void setChallengeFeedback(Map<Boolean, ChallengeFeedback> challengeFeedback) {
         this.challengeFeedback = challengeFeedback;
+    }
+
+    /**
+     * Add rating to a challenge entity and persist the relationship in database.
+     *
+     * @param rating    Rating entity to be added.
+     */
+    public void addRating(Rating rating) {
+        if(rating != null) {
+            rating.setChallenge(this);
+            this.ratings.add(rating);
+            this.avgRating = average(this.ratings);
+        }
+    }
+
+    public void removeRating(Integer id) {
+        this.ratings.removeIf(rating -> rating.getRatingId().equals(id));
+        this.avgRating = average(this.ratings);
+    }
+
+    public void removeRating(int index) {
+        this.ratings.remove(index);
+        this.avgRating = average(this.ratings);
+    }
+
+    public void addQuestion(Question question){
+        if(question != null) {
+            question.setChallenge(this);
+            this.questions.add(question);
+            this.totalScore = totalScore(this.questions);
+        }
+    }
+
+    public Question getQuestionById(Integer qid){
+        return this.questions.stream().filter(question -> question.getQuestionId().equals(qid)).findAny()
+                .orElseThrow(() -> new EntityNotFoundException("Question not found!"));
+    }
+
+    public Question getQuestionByIndex(int index){
+        return this.questions.get(index);
+    }
+
+    public void removeQuestion(int index){
+        this.questions.remove(index);
+        this.totalScore = totalScore(this.questions);
+    }
+
+    public void removeQuestion(Integer qid){
+        this.questions.removeIf(question -> qid.equals(question.getQuestionId()));
+        this.totalScore = totalScore(this.questions);
+    }
+
+    public void removeQuestion(Question question){
+        this.questions.remove(question);
+        this.totalScore = totalScore(this.questions);
+    }
+
+    /**
+     * Update thumbnail with a thumbnail object with updated properties.
+     *
+     * @param thumbnail Thumbnail object with updated properties.
+     */
+    public void updateThumbnailProperties(Thumbnail thumbnail){
+        if(thumbnail != null) {
+            this.thumbnail.setFileName(thumbnail.getFileName());
+            this.thumbnail.setFileType(thumbnail.getFileType());
+            this.thumbnail.setBase64String(thumbnail.getBase64String());
+        }
+    }
+
+    /**
+     * Update challenge feedbacks with challenge feedback objects with updated properties.
+     *
+     * @param positive Positive challenge feedback object with updated properties.
+     * @param negative Negative challenge feedback object with updated properties.
+     */
+    public void updateFeedbacksProperties(ChallengeFeedback positive, ChallengeFeedback negative){
+        if(positive != null){
+            ChallengeFeedback thisPositive = this.challengeFeedback.get(true);
+            if(thisPositive == null) {
+                positive.setChallenge(this);
+                this.challengeFeedback.put(true, positive);
+            }else {
+                if (positive.getFeedbackText() != null) thisPositive.setFeedbackText(positive.getFeedbackText());
+                if (positive.getFeedbackTitle() != null) thisPositive.setFeedbackText(positive.getFeedbackTitle());
+            }
+        }
+        if(negative != null){
+            ChallengeFeedback thisNegative = this.challengeFeedback.get(false);
+            if(thisNegative == null) {
+                negative.setChallenge(this);
+                this.challengeFeedback.put(false, negative);
+            }else {
+                if (negative.getFeedbackText() != null) thisNegative.setFeedbackText(negative.getFeedbackText());
+                if (negative.getFeedbackTitle() != null) thisNegative.setFeedbackText(negative.getFeedbackTitle());
+            }
+        }
+    }
+
+    public Integer completionIncrement(){
+        this.completion++;
+        return this.completion;
+    }
+
+    /**
+     * Calculate the average value of ratings.
+     *
+     * @param ratings List of ratings to be calculated.
+     * @return String: Average value of ratings with one decimal point.
+     */
+    private String average(List<Rating> ratings) {
+        int avg = 0;
+        for (Rating cur : ratings) {
+            avg += cur.getRatingValue();
+        }
+        return String.format("%.1f", ((avg * 1.0) / (ratings.size() * 1.0)));
+    }
+
+    /**
+     * Calculate the total score of questions.
+     *
+     * @param questions List of questions to be calculated.
+     * @return Integer: The total score.
+     */
+    private Integer totalScore(List<Question> questions) {
+        int total = 0;
+        for(Question question : questions) {
+            total += question.getQuestionTotalScore();
+        }
+        return total;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Challenge challenge = (Challenge) o;
+
+        if (!Objects.equals(id, challenge.id)) return false;
+        if (!challengeTitle.equals(challenge.challengeTitle)) return false;
+        if (!description.equals(challenge.description)) return false;
+        if (stream != challenge.stream) return false;
+        if (!completion.equals(challenge.completion)) return false;
+        return avgRating.equals(challenge.avgRating);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id.hashCode();
+        result = 31 * result + challengeTitle.hashCode();
+        result = 31 * result + description.hashCode();
+        result = 31 * result + stream.hashCode();
+        result = 31 * result + completion.hashCode();
+        result = 31 * result + avgRating.hashCode();
+        return result;
     }
 
     @Override
@@ -159,7 +336,6 @@ public class Challenge {
                 ", stream='" + stream + '\'' +
                 ", completion=" + completion +
                 ", avgRating=" + avgRating +
-                ", feedback=" + challengeFeedback +
                 '}';
     }
 

@@ -6,37 +6,44 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
+import javax.persistence.FlushModeType;
+import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
 import java.util.*;
 
 @Service
 public class ChallengeService {
 
     private final Logger log = LoggerFactory.getLogger(ChallengeService.class);
+
     @Autowired
     private ChallengeRepository challengeRepo;
-    @Autowired
-    private QuestionService questionService;
-    @Autowired
-    private ChallengeFeedbackService challengeFeedbackService;
-    @Autowired
-    private ThumbnailService thumbnailService;
-    @Autowired
-    private RatingService ratingService;
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     /**
      * Insert and persist data into Challenge Table with properties.
      *
      * @param title        Title of challenge.
-     * @param introduction Introduction text of challenge.
+     * @param description  Description text of challenge.
      * @param stream       Stream of the challenge.
      * @param completion   Number of completion.
+     * @param thumbnail    Thumbnail of challenge.
+     * @param positiveFeedback Positive feedback of challenge.
+     * @param negativeFeedback Negative feedback of challenge.
      * @return Challenge: Challenge entity persisted in database.
      */
-    public Challenge create(String title, String introduction, Stream stream, Integer completion) {
-        Challenge challenge = new Challenge(title, introduction, stream, completion);
+    public Challenge create(String title, String description,
+                            Stream stream, Integer completion,
+                            Thumbnail thumbnail,
+                            ChallengeFeedback positiveFeedback, ChallengeFeedback negativeFeedback) {
+        Challenge challenge = new Challenge(title, description, stream, completion);
+        challenge.updateThumbnailProperties(thumbnail);
+        challenge.updateFeedbacksProperties(positiveFeedback, negativeFeedback);
         return create(challenge);
     }
 
@@ -47,31 +54,7 @@ public class ChallengeService {
      * @return Challenge: Challenge entity persisted in database.
      */
     public Challenge create(Challenge challenge) {
-
-        // Create a temporary challenge with empty relational entities
-        Challenge tempNew = new Challenge(challenge.getChallengeTitle(), challenge.getDescription(), challenge.getStream(), challenge.getCompletion());
-        tempNew.setThumbnail(null);
-
-        List<Question> tempQuestions = null;
-        Map<Boolean, ChallengeFeedback> tempFeedbacks = null;
-        Set<Rating> ratings = null;
-        Thumbnail tempThumbnail = null;
-
-        // Temp store relational entities
-        if(challenge.getQuestions() != null && !challenge.getQuestions().isEmpty()) tempQuestions = challenge.getQuestions();
-        if(challenge.getChallengeFeedback() != null && !challenge.getChallengeFeedback().isEmpty()) tempFeedbacks = challenge.getChallengeFeedback();
-        if(challenge.getRatings() != null && !challenge.getRatings().isEmpty()) ratings = challenge.getRatings();
-        if(challenge.getThumbnail() != null) tempThumbnail = challenge.getThumbnail();
-
-        challenge = challengeRepo.saveAndFlush(tempNew);
-
-        // Update relational entities
-        if(tempThumbnail != null) thumbnailService.create(challenge, tempThumbnail);
-        if(tempQuestions != null && !tempQuestions.isEmpty()) questionService.createAll(challenge, tempQuestions);
-        if(tempFeedbacks != null && !tempFeedbacks.isEmpty()) challengeFeedbackService.createBoth(challenge, tempFeedbacks);
-        if(ratings != null && ratings.isEmpty()) ratingService.createAll(challenge, ratings);
-
-        return findById(challenge.getId());
+        return challengeRepo.saveAndFlush(challenge);
     }
 
     /**
@@ -111,18 +94,10 @@ public class ChallengeService {
      * @return List<Challenge>: All the challenge in the database.
      */
     public List<Challenge> getAll() {
-        return challengeRepo.findAll();
-    }
-
-    /**
-     * Return questions map of a challenge.
-     *
-     * @param id Id of the challenge.
-     * @return List<Question> questions: Map of questions with their id as key.
-     */
-    @Transactional
-    public List<Question> getQuestions(Integer id){
-        return findById(id).getQuestions();
+        List<Challenge> result = challengeRepo.findAll();
+        // Avoid auto persistence
+        entityManager.setFlushMode(FlushModeType.COMMIT);
+        return result;
     }
 
     /**
@@ -130,59 +105,54 @@ public class ChallengeService {
      *
      * @param challengeId  Id of challenge to be updated.
      * @param title        New title of challenge.
-     * @param introduction New introduction of challenge.
-     * @param thumbnail    New thumbnail url of challenge.
+     * @param description  New description of challenge.
      * @param stream       New stream of challenge.
      * @param completion   New completion count of challenge.
-     * @param questions    New questions map of challenge.
-     * @param feedbacks    New feedback map of challenge.
-     * @param ratings      New ratings set of challenge.
+     * @param thumbnail    New thumbnail of challenge.
+     * @param positiveFeedback New positive feedback of challenge.
+     * @param negativeFeedback New negative feedback of challenge.
      * @return Challenge: Updated challenge entity.
      */
-    public Challenge update(Integer challengeId, String title, String introduction, Thumbnail thumbnail,
-                            Stream stream, Integer completion, List<Question> questions,
-                            Map<Boolean, ChallengeFeedback> feedbacks, Set<Rating> ratings) {
-        Challenge tempNew = new Challenge(title, introduction, stream, completion);
-        tempNew.setQuestions(questions);
-        tempNew.setChallengeFeedback(feedbacks);
-        tempNew.setRatings(ratings);
-        tempNew.setThumbnail(thumbnail);
-        return update(challengeId, tempNew);
+    @Transactional
+    public Challenge update(Integer challengeId, String title, String description,
+                            Stream stream, Integer completion,
+                            Thumbnail thumbnail,
+                            ChallengeFeedback positiveFeedback, ChallengeFeedback negativeFeedback) {
+        Challenge challenge = findById(challengeId);
+        return update(challenge, title, description, stream, completion, thumbnail, positiveFeedback, negativeFeedback);
     }
 
     /**
-     * Update existing challenge in database with a challenge entity.
+     * Update existing challenge in database with properties.
      *
-     * @param challengeId  Id of the challenge to be updated.
-     * @param newChallenge Challenge entity with updated properties.
+     * @param challenge    Challenge entity to be updated.
+     * @param title        New title of challenge.
+     * @param description  New description of challenge.
+     * @param stream       New stream of challenge.
+     * @param completion   New completion count of challenge.
+     * @param thumbnail    New thumbnail of challenge.
+     * @param positiveFeedback New positive feedback of challenge.
+     * @param negativeFeedback New negative feedback of challenge.
      * @return Challenge: Updated challenge entity.
      */
-    public Challenge update(Integer challengeId, Challenge newChallenge) {
-        Challenge oldChallenge = findById(challengeId);
+    public Challenge update(Challenge challenge, String title, String description,
+                            Stream stream, Integer completion,
+                            Thumbnail thumbnail,
+                            ChallengeFeedback positiveFeedback, ChallengeFeedback negativeFeedback) {
 
-        // Null checks before update
-        if (newChallenge.getChallengeTitle() != null) oldChallenge.setChallengeTitle(newChallenge.getChallengeTitle());
-        if (newChallenge.getDescription() != null) oldChallenge.setDescription(newChallenge.getDescription());
-        if (newChallenge.getStream() != null) oldChallenge.setStream(newChallenge.getStream());
-        if (newChallenge.getCompletion() != null) oldChallenge.setCompletion(newChallenge.getCompletion());
-        if (newChallenge.getThumbnail() != null && newChallenge.getThumbnail().getId() != null)
-            thumbnailService.update(newChallenge.getThumbnail().getId(), newChallenge.getThumbnail());
+        challenge.setChallengeTitle(title);
+        challenge.setDescription(description);
+        challenge.setStream(stream);
+        challenge.setCompletion(completion);
+        challenge.updateThumbnailProperties(thumbnail);
+        challenge.updateFeedbacksProperties(positiveFeedback, negativeFeedback);
 
-        oldChallenge = challengeRepo.saveAndFlush(oldChallenge);
-        List<Question> newQuestions = newChallenge.getQuestions();
-        Map<Boolean, ChallengeFeedback> newFeedback = newChallenge.getChallengeFeedback();
+        return challengeRepo.saveAndFlush(challenge);
+    }
 
-        if (newQuestions != null && !newQuestions.isEmpty()) {
-            Challenge finalOldChallenge = oldChallenge;
-            newQuestions.forEach((v) -> {
-                if(v.getQuestionId() == null) v.setChallenge(finalOldChallenge);
-                questionService.update(v.getQuestionId(), v);
-            });
-        }
-        if (newFeedback != null && !newFeedback.isEmpty()) {
-            newFeedback.forEach((k, v) -> challengeFeedbackService.update(v.getFeedback_id(), v.getFeedback_title(), v.getFeedback_text()));
-        }
-        return oldChallenge;
+    public Challenge update(Challenge challenge){
+        if(challenge.getId() == null) throw new IllegalArgumentException("Use create for new entity!");
+        return update(challenge, challenge.getChallengeTitle(), challenge.getDescription(), challenge.getStream(), challenge.getCompletion(), challenge.getThumbnail(), challenge.getChallengeFeedback().get(true), challenge.getChallengeFeedback().get(false));
     }
 
     /**
@@ -192,7 +162,7 @@ public class ChallengeService {
      * @return Challenge: Updated challenge entity.
      */
     public Challenge completionIncrement(Challenge challenge){
-        challenge.setCompletion(challenge.getCompletion() + 1);
+        challenge.completionIncrement();
         return challengeRepo.saveAndFlush(challenge);
     }
 
@@ -221,31 +191,5 @@ public class ChallengeService {
      */
     public void batchDelete(Iterable<Challenge> challenges) {
         challengeRepo.deleteAll(challenges);
-    }
-
-    /**
-     * Add rating to a challenge entity and persist the relationship in database.
-     *
-     * @param challenge Challenge entity to add question.
-     * @param rating    Rating entity to be added.
-     */
-    public void addRating(Challenge challenge, Rating rating) {
-        challenge.getRatings().add(rating);
-        challenge.setAvgRating(average(challenge.getRatings()));
-        challengeRepo.saveAndFlush(challenge);
-    }
-
-    /**
-     * Calculate the average value of ratings.
-     *
-     * @param ratings Set of ratings to be calculated.
-     * @return String: Average value of ratings with one decimal point.
-     */
-    private String average(Set<Rating> ratings) {
-        int avg = 0;
-        for (Rating cur : ratings) {
-            avg += cur.getRatingValue();
-        }
-        return String.format("%.1f", ((avg * 1.0) / (ratings.size() * 1.0)));
     }
 }

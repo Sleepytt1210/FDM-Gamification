@@ -10,6 +10,8 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 
 @Entity(name = "Question")
@@ -27,7 +29,6 @@ public class Question {
     private String questionTitle = "";
 
     @NotBlank(message = "Please do not leave this field blank!")
-    @Pattern(regexp = "^[^<>]*$", message = "Angle brackets (<, >) are not allowed!")
     @Column(name = "question_text")
     private String questionText = "";
 
@@ -39,6 +40,9 @@ public class Question {
     @Enumerated(EnumType.STRING)
     private QuestionType questionType = QuestionType.NONE;
 
+    @Column(name = "question_total_score")
+    private Integer questionTotalScore = 0;
+
     @NullOrNotEqualChallengeID(message = "Please select an associate challenge!")
     @ManyToOne
     @JoinColumn(name = "challenge_id")
@@ -46,7 +50,7 @@ public class Question {
 
     @Valid
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "question",
-            cascade = {CascadeType.MERGE, CascadeType.REMOVE, CascadeType.REFRESH, CascadeType.DETACH},
+            cascade = {CascadeType.ALL},
             orphanRemoval = true)
     private List<Choice> choices = new ArrayList<>();
 
@@ -72,15 +76,15 @@ public class Question {
     }
 
     public void setQuestionTitle(String questionTitle) {
-        this.questionTitle = questionTitle;
+        if(questionTitle != null) this.questionTitle = questionTitle;
     }
 
     public String getQuestionText() {
         return questionText;
     }
 
-    public void setQuestionText(String question) {
-        this.questionText = question;
+    public void setQuestionText(String questionText) {
+        if(questionText != null) this.questionText = questionText;
     }
 
     public Integer getQuestionCompletion() {
@@ -88,7 +92,7 @@ public class Question {
     }
 
     public void setQuestionCompletion(Integer questionCompletion) {
-        this.questionCompletion = questionCompletion;
+        if(questionCompletion != null) this.questionCompletion = questionCompletion;
     }
 
     public QuestionType getQuestionType() {
@@ -96,7 +100,7 @@ public class Question {
     }
 
     public void setQuestionType(QuestionType questionType) {
-        this.questionType = questionType;
+        if(questionType != null) this.questionType = questionType;
     }
 
     public Challenge getChallenge() {
@@ -107,12 +111,90 @@ public class Question {
         this.challenge = challenge;
     }
 
+    public Integer getQuestionTotalScore() {
+        return questionTotalScore;
+    }
+
+    private void setQuestionTotalScore(Integer questionTotalScore) {
+        this.questionTotalScore = questionTotalScore;
+    }
+
     public List<Choice> getChoices() {
         return choices;
     }
 
-    public void setChoices(List<Choice> choices) {
+    private void setChoices(List<Choice> choices) {
         this.choices = choices;
+    }
+
+    public void addChoice(Choice choice){
+        if(choice != null) {
+            choice.setQuestion(this);
+            this.choices.add(choice);
+            this.questionTotalScore = totalScore(this.choices);
+        }
+    }
+
+    public Choice getChoiceByIndex(int index) {
+        return this.choices.get(index);
+    }
+
+    public Choice getChoiceById(Integer choiceId) {
+        return this.choices.stream().filter(choice -> choice.getChoiceId().equals(choiceId))
+                .findAny().orElseThrow(() -> new EntityNotFoundException("Choice not found!"));
+    }
+
+    public void removeChoice(Integer choiceId){
+        this.choices.removeIf(choice -> choiceId.equals(choice.getChoiceId()));
+        this.questionTotalScore = totalScore(this.choices);
+    }
+
+    public void removeChoice(int index){
+        this.choices.remove(index);
+        this.questionTotalScore = totalScore(this.choices);
+    }
+
+    public Integer completionIncrement(){
+        this.questionCompletion++;
+        return this.questionCompletion;
+    }
+
+    /**
+     * Calculate the total score of choices.
+     *
+     * @param choices List of choices to be calculated.
+     * @return Integer: The total score.
+     */
+    private Integer totalScore(List<Choice> choices) {
+        int total = 0;
+        for(Choice choice : choices) {
+            total += choice.getChoiceWeight();
+        }
+        return total;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Question question = (Question) o;
+
+        if (!Objects.equals(questionId, question.questionId)) return false;
+        if (!questionTitle.equals(question.questionTitle)) return false;
+        if (!questionText.equals(question.questionText)) return false;
+        if (!questionCompletion.equals(question.questionCompletion)) return false;
+        return questionType == question.questionType;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = questionId != null ? questionId.hashCode() : 0;
+        result = 31 * result + questionTitle.hashCode();
+        result = 31 * result + questionText.hashCode();
+        result = 31 * result + questionCompletion.hashCode();
+        result = 31 * result + questionType.hashCode();
+        return result;
     }
 
     @Override

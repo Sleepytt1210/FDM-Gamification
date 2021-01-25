@@ -1,3 +1,5 @@
+CREATE SCHEMA IF NOT EXISTS dbo;
+
 DROP TABLE IF EXISTS Thumbnail;
 
 DROP TABLE IF EXISTS Choice;
@@ -19,9 +21,8 @@ CREATE TABLE Challenge
     challenge_description TEXT        NOT NULL,
     challenge_completion  INT(11)     NOT NULL,
     challenge_stream      varchar(10) NOT NULL,
-    challenge_total_score INT(11)     NOT NULL DEFAULT 0,
-    avg_rating            varchar(25) NOT NULL DEFAULT 0
-) AUTO_INCREMENT = 1;
+    avg_rating            varchar(25) DEFAULT 'No rating'
+);
 
 CREATE TABLE Question
 (
@@ -30,10 +31,9 @@ CREATE TABLE Question
     question_text       TEXT        NOT NULL,
     question_completion INT(11)     NOT NULL,
     question_type       VARCHAR(50) NOT NULL,
-    question_total_score INT(11)    NOT NULL DEFAULT 0,
     challenge_id        INT(11)     NOT NULL,
     FOREIGN KEY (challenge_id) REFERENCES Challenge (challenge_id) ON DELETE CASCADE
-) AUTO_INCREMENT = 1;
+);
 
 CREATE TABLE Choice
 (
@@ -43,7 +43,7 @@ CREATE TABLE Choice
     choice_reason TEXT    NOT NULL,
     question_id   INT(11) NOT NULL,
     FOREIGN KEY (question_id) REFERENCES Question (question_id) ON DELETE CASCADE
-) AUTO_INCREMENT = 1;
+);
 
 CREATE TABLE Admin
 (
@@ -54,7 +54,7 @@ CREATE TABLE Admin
     phone_number VARCHAR(20)        NOT NULL,
     email        VARCHAR(50) UNIQUE NOT NULL,
     password     VARCHAR(100)       NOT NULL
-) AUTO_INCREMENT = 1;
+);
 
 CREATE TABLE ChallengeFeedback
 (
@@ -64,7 +64,7 @@ CREATE TABLE ChallengeFeedback
     positive       BOOLEAN     NOT NULL,
     challenge_id   INT(11)     NOT NULL,
     FOREIGN KEY (challenge_id) REFERENCES Challenge (challenge_id) ON DELETE CASCADE
-) AUTO_INCREMENT = 1;
+);
 
 CREATE TABLE Rating
 (
@@ -72,7 +72,7 @@ CREATE TABLE Rating
     rating_value INT(1)  NOT NULL,
     challenge_id INT(11) NOT NULL,
     FOREIGN KEY (challenge_id) REFERENCES Challenge (challenge_id) ON DELETE CASCADE
-) AUTO_INCREMENT = 1;
+);
 
 CREATE TABLE Thumbnail
 (
@@ -82,4 +82,4 @@ CREATE TABLE Thumbnail
     file_type    VARCHAR(50) NOT NULL,
     challenge_id INT(11),
     FOREIGN KEY (challenge_id) REFERENCES Challenge (challenge_id) ON DELETE CASCADE
-) AUTO_INCREMENT = 1;
+);

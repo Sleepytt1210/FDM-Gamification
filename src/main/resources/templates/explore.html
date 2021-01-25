@@ -4,17 +4,16 @@
       xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Scenarios</title>
+    <title>Explore</title>
     <link href="../static/css/explore.css" rel="stylesheet" th:href="@{/css/explore.css}">
-    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@600&display=swap" rel="stylesheet">
 </head>
 <body>
 <div class="container" layout:fragment="content">
     <div class="title">
-        <h2>Scenarios</h2>
+        <h2>Stream</h2>
     </div>
 
-    <section class="scenarioNavbar">
+    <section class="streamNavbar">
         <ul id="nav-tabs">
             <li id="ST">
                 Software Testing
@@ -33,7 +32,7 @@
     <div class="title2" id="title2">
         <h2>Choose a Scenario</h2>
     </div>
-    <section class="chooseScenario">
+    <section class="chooseStream">
         <div class="scene1" id="STtab">
             <th:block th:each="scenario : ${ST}">
                 <a th:href="@{scenario/__${scenario.id}__}">
@@ -45,7 +44,7 @@
                             <th>Image Placeholder</th>
                         </tr>
                         <tr class="row3">
-                            <th>Score:</th>
+                            <th></th>
                         </tr>
                     </table>
                 </a>
@@ -59,7 +58,7 @@
                             <th th:text="${scenario.challengeTitle}"></th>
                         </tr>
                         <tr class="row2">
-                            <th th:text="${scenario.description}"></th>
+                            <th>Image Placeholder</th>
                         </tr>
                         <tr class="row3">
                             <th>Score:</th>
@@ -77,7 +76,7 @@
                             <th th:text="${scenario.challengeTitle}"></th>
                         </tr>
                         <tr class="row2">
-                            <th th:text="${scenario.description}"></th>
+                            <th>Image Placeholder</th>
                         </tr>
                         <tr class="row3">
                             <th>Score:</th>
@@ -117,60 +116,6 @@
                 display(id);
             });
         });
-        // var x = document.getElementById("testinggames");
-        // var x2 = document.getElementById("businessgames");
-        // var x3 = document.getElementById("techgames");
-        // var x4 = document.getElementById("title2");
-        // var xALL = document.getElementsByClassName("scene1");
-        //
-        // function displayGame() {
-        //     x.style.display = "block";
-        //     x2.style.display = "none";
-        //     x3.style.display = "none";
-        //     x4.style.display = "none";
-        //     var i;
-        //     for (i = 0; i < xALL.length; i++) {
-        //         xALL[0].style.width = "auto";
-        //     }
-        // }
-        //
-        // function displayGame2() {
-        //     x2.style.display = "block";
-        //     x.style.display = "none";
-        //     x3.style.display = "none";
-        //     x4.style.display = "none";
-        //     var i;
-        //     for (i = 0; i < xALL.length; i++) {
-        //         xALL[1].style.width = "auto";
-        //     }
-        // }
-        //
-        // function displayGame3() {
-        //     x3.style.display = "block";
-        //     x.style.display = "none";
-        //     x2.style.display = "none";
-        //     x4.style.display = "none";
-        //
-        //     var i;
-        //     for (i = 0; i < xALL.length; i++) {
-        //         xALL[2].style.width = "auto";
-        //     }
-        // }
-        //
-        // function displayGame4() {
-        //     x3.style.display = "block";
-        //     x.style.display = "block";
-        //     x2.style.display = "block";
-        //     x4.style.display = "none";
-        // }
-        //
-        // if (sessionStorage.getItem("option") === "ST") {
-        //     displayGame();
-        // } else if (sessionStorage.getItem("option") === "BI") {
-        //     displayGame2();
-        // } else if (sessionStorage.getItem("option") === "TO") {
-        //     displayGame3();
-        // }
     </script>
 </div>
 
