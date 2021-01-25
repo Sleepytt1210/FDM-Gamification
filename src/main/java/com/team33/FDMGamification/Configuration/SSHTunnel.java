@@ -6,6 +6,7 @@ import com.jcraft.jsch.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
@@ -15,6 +16,10 @@ import javax.annotation.PreDestroy;
 
 @Component
 @PropertySource("classpath:sshConfig.properties")
+@ConditionalOnProperty(
+        value="ssh.tunnel.enabled",
+        havingValue = "true",
+        matchIfMissing = true)
 @Profile("dev")
 public class SSHTunnel {
 
@@ -63,9 +68,8 @@ public class SSHTunnel {
         log.info("Connected to " + host);
         int assignedPort = session.setPortForwardingL(lport, rhost, rport);
 
-        log.info("localhost:" + assignedPort +" -> "+ rhost + ":" + rport);
+        log.info("localhost:" + assignedPort + " -> " + rhost + ":" + rport);
         log.info("Port forwarded");
-
     }
 
     /**
@@ -74,7 +78,7 @@ public class SSHTunnel {
     @PreDestroy
     public void shutdown() {
         if (session != null && session.isConnected()) {
-            log.info("Session closed!");
+            log.info("SSH session closed!");
             session.disconnect();
         }
     }
