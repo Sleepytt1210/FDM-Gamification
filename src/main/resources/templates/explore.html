@@ -41,7 +41,12 @@
                             <th th:text="${scenario.challengeTitle}"></th>
                         </tr>
                         <tr class="row2">
-                            <th>Image Placeholder</th>
+                            <th class="image-display" id="image-upload-wrapper"
+                                th:with="completeUrl='data:'+${scenario.thumbnail.fileType}+';base64, '+${scenario.thumbnail.base64String}">
+                                <img id="preview"
+                                     th:alt="${scenario.thumbnail.fileName}"
+                                     th:src="${completeUrl}">
+                            </th>
                         </tr>
                         <tr class="row3">
                             <th></th>
