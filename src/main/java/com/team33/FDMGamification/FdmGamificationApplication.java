@@ -8,12 +8,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Base64Utils;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 
 @SpringBootApplication
@@ -51,7 +56,9 @@ public class FdmGamificationApplication {
 			for (int i = 0; i < n; i++) {
 				String[] line = br.readLine().split(",");
 				int comp = Integer.parseInt(line[2]);
+				Thumbnail processed = processImage(line[3]);
 				Challenge challenge = challengeService.create(new Challenge(line[0], line[1], Stream.valueOf(line[4]), comp));
+				challenge.updateThumbnailProperties(processed);
 				// Get number of questions
 				int m = (br.readLine().charAt(0) - '0');
 				for (int j = 0; j < m; j++) {
@@ -74,5 +81,20 @@ public class FdmGamificationApplication {
 		} catch (IOException e) {
 			log.error(e.getMessage());
 		}
+	}
+
+	private Thumbnail processImage(String path){
+		try {
+			File resource = new ClassPathResource(path).getFile();
+			Path filePath = resource.toPath();
+			String fileName = resource.getName();
+			String mimeType = Files.probeContentType(filePath);
+			String base64 = Base64Utils.encodeToString(Files.readAllBytes(resource.toPath()));
+
+			return new Thumbnail(fileName, mimeType, base64);
+		}catch (IOException e){
+			System.err.println(e.getMessage());
+		}
+		return null;
 	}
 }
