@@ -8,12 +8,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Base64Utils;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 
 @SpringBootApplication
@@ -51,28 +56,50 @@ public class FdmGamificationApplication {
 			for (int i = 0; i < n; i++) {
 				String[] line = br.readLine().split(",");
 				int comp = Integer.parseInt(line[2]);
-				Challenge challenge = challengeService.create(new Challenge(line[0], line[1], Stream.valueOf(line[4]), comp));
+				Challenge challenge = new Challenge(line[0], line[1], Stream.valueOf(line[4]), comp);
 				// Get number of questions
 				int m = (br.readLine().charAt(0) - '0');
 				for (int j = 0; j < m; j++) {
 					String[] qLine = br.readLine().split(",");
 					int qComp = Integer.parseInt(qLine[2]);
-					Question question = questionService.create(challenge, new Question(qLine[0], qLine[1], qComp, QuestionType.valueOf(qLine[3])));
+					Question question = new Question(qLine[0], qLine[1], qComp, QuestionType.valueOf(qLine[3]));
 					// Get number of choices
 					int c = (br.readLine().charAt(0) - '0');
 					for (int k = 0; k < c; k++) {
 						String[] cLine = br.readLine().split(",");
 						int cWeight = Integer.parseInt(cLine[2]);
 						Choice choice = new Choice(cLine[0], cWeight, cLine[1]);
-						choiceService.create(question, choice);
+						question.addChoice(choice);
 					}
+					challenge.addQuestion(question);
 				}
-				cfs.create(challenge, new ChallengeFeedback("Good Job", "You did so well, here's some links for reference", true));
-				cfs.create(challenge, new ChallengeFeedback("Oh No", "You did so badly, here's some links to improve yourself", false));
+				Thumbnail processed = processImage(line[3]);
+				challenge.updateThumbnailProperties(processed);
+
+				ChallengeFeedback pos =  new ChallengeFeedback("Good Job", "You did so well, here's some links for reference", true);
+				ChallengeFeedback neg =  new ChallengeFeedback("Oh No", "You did so badly, here's some links to improve yourself", false);
+				challenge.updateFeedbacksProperties(pos, neg);
+
+				challengeService.create(challenge);
 			}
 			log.info("Finished adding mock data.");
 		} catch (IOException e) {
 			log.error(e.getMessage());
 		}
+	}
+
+	private Thumbnail processImage(String path) {
+		try {
+			File resource = new ClassPathResource(path).getFile();
+			Path filePath = resource.toPath();
+			String fileName = resource.getName();
+			String mimeType = Files.probeContentType(filePath);
+			String base64 = Base64Utils.encodeToString(Files.readAllBytes(resource.toPath()));
+
+			return new Thumbnail(base64, fileName, mimeType);
+		}catch (IOException e){
+			System.err.println(e.getMessage());
+		}
+		return null;
 	}
 }

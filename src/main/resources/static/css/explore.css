@@ -16,21 +16,21 @@ body{
     box-shadow: 2px 0 8px 2px rgba(172, 172, 172, 0.5);
 }
 /*Navigation bar for choosing scenarios*/
-.scenarioNavbar ul{
+.streamNavbar ul{
     text-decoration: none;
     display: flex;
     list-style: none;
     justify-content: center;
 }
 
-.scenarioNavbar ul li {
+.streamNavbar ul li {
     padding-left: 30px;
     padding-right: 30px;
     font-size: 20px;
     color: black;
 }
 
-.scenarioNavbar ul li:hover{
+.streamNavbar ul li:hover{
     color: #398fff;
     cursor: pointer;
 }
