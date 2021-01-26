@@ -1,43 +1,27 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{scenarioLayout.html}">
+      layout:decorate="~{scenarioLayout.html}"
+      th:with="infoTitle=${question.questionTitle},
+      infoText=${question.questionText},
+      scenario=${scenario},
+      questions=${questions},
+      score=${score},
+      choices=${choices}">
 <head>
     <meta charset="UTF-8">
     <title>Question</title>
-    <link rel="stylesheet" href="../static/css/question.css" type="text/css" th:href="@{/css/textbox.css}">
+    <link rel="stylesheet"  type="text/css" th:href="@{/css/textbox.css}">
     <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@600&display=swap" rel="stylesheet">
-    <script th:src="@{/javascript/textbox.js}"></script>
+    <script type=module th:src="@{/javascript/textbox.js}"></script>
 </head>
 <body>
-    <ul layout:fragment="sidenav">
-        <li th:each="question, questionStat : ${questions}" th:with="curQ=${questions[__${questionStat.index}__]}">
-            <a th:text="${curQ.questionTitle}" th:href="@{/scenario/__${sid}__/__${curQ.questionId}__}"></a>
-        </li>
-        <li class="finishedBtn">
-            <a th:href="@{/explore}">Finished</a>
-        </li>
-    </ul>
-
-
-    <div layout:fragment="content2">
-        <h1 th:text="${question.questionTitle}"></h1>
-        <div class="textArea">
-            <p th:text="${question.questionText}">
-        </div>
+    <div layout:fragment="content3">
         <form th:action="@{/scenario/__${sid}__/__${qid}__}" method="post" th:object="${question}">
             <label>Type in your answer here:</label>
             <input name="answer" type="text" id="answer">
-
-
             <input id="submit" type="submit" name="textboxQuestion" value="Submit">
-
-
-
         </form>
-    </div>
-    <div class="result" layout:fragment="result" th:style="'display:'+ ${score != null ? 'block' : 'none'}">
-        <p id="score" th:text="'Score: ' + ${score}" th:value="${score}"></p>
     </div>
 </body>
 </html>
