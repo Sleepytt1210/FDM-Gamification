@@ -51,8 +51,11 @@
         </div>
         <div class="result" th:style="'display:'+ ${score != null ? 'block' : 'none'}" layout:fragment="result">
             <p id="score" th:text="'Score: ' + ${score}" th:value="${score}"></p>
-            
+            <div th:each="choice: ${choices}" th:text="${choice.choiceReason}">
+            </div>
         </div>
+
+
     </div>
 </div>
 </body>

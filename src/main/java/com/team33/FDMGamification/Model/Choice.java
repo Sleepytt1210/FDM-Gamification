@@ -16,7 +16,7 @@ public class Choice {
 
     @NotBlank(message = "Please do not leave this field blank!")
     @Pattern(regexp = "^[^<>]*$", message = "Angle brackets (<, >) are not allowed!")
-    @Size(max = 200, message = "Please provide a title not longer than 200 characters!")
+    @Size(max = 400, message = "Please provide a title not longer than 200 characters!")
     @Column(name = "choice_text")
     private String choiceText = "";
 
